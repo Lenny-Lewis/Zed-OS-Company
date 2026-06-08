@@ -25,9 +25,9 @@ export default function HomeHero() {
           className="w-auto h-16 md:h-24 object-contain mb-8"
           priority
         />
-        <h1 className="text-6xl md:text-8xl font-bold text-white">Reliable Supplies.</h1>
-        <h1 className="text-6xl md:text-8xl font-bold text-brand-accent">Professional Solutions.</h1>
-        <p className="text-brand-muted text-xl mt-5">
+        <h1 className="text-4xl md:text-8xl font-bold text-white">Reliable Supplies.</h1>
+        <h1 className="text-4xl md:text-8xl font-bold text-brand-accent">Professional Solutions.</h1>
+        <p className="text-brand-muted text-base md:text-xl mt-5">
           General Supplies &amp; Consultancy Services — Kisumu, Kenya
         </p>
         <div className="flex flex-col sm:flex-row gap-4 mt-10 justify-center">
