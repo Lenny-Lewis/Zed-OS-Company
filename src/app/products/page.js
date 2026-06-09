@@ -14,7 +14,7 @@ const categories = [
   {
     title: 'ICT Equipment',
     image: images.products.ict,
-    alt: 'ICT equipment and laptops',
+    alt: 'Modern ICT and software development workspace',
     description:
       'Laptops, desktops, printers, scanners, networking equipment, cables, and accessories.',
   },

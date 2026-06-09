@@ -32,6 +32,34 @@ const services = [
     description:
       'Expert guidance in supply chain management, business operations, and procurement strategy.',
   },
+  {
+    title: 'Software Systems',
+    image: images.digital.systems,
+    alt: 'Software development dashboard and multi-screen workspace',
+    description:
+      'Custom business systems, workflow tools, and internal platforms built to streamline operations.',
+  },
+  {
+    title: 'Websites',
+    image: images.digital.websites,
+    alt: 'Developer working on a website in a code editor',
+    description:
+      'Modern, responsive websites designed to present your brand, services, and operations clearly.',
+  },
+  {
+    title: 'Data Analytics',
+    image: images.digital.analytics,
+    alt: 'Data analytics and reporting visual on a laptop screen',
+    description:
+      'Dashboards, reports, and insights that help teams make faster, better-informed decisions.',
+  },
+  {
+    title: 'AI & ML',
+    image: images.digital.aiMl,
+    alt: 'Artificial intelligence concept image',
+    description:
+      'AI-assisted workflows and machine learning solutions for automation, analysis, and productivity.',
+  },
 ]
 
 export default function HomeServices() {
@@ -42,11 +70,11 @@ export default function HomeServices() {
           <p className="text-brand-accent text-xs uppercase tracking-widest">What We Offer</p>
           <h2 className="text-4xl font-bold text-white mt-3">Our Services</h2>
           <p className="text-brand-muted mt-4 max-w-2xl mx-auto">
-            End-to-end solutions tailored to every business need.
+            End-to-end solutions tailored to supply, operations, and digital transformation needs.
           </p>
         </Reveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mt-12">
           {services.map((service, index) => (
             <Reveal key={service.title} delay={index * 90}>
               <div className="bg-brand-card rounded-lg overflow-hidden border-t-4 border-brand-primary hover:border-brand-accent transition-colors duration-200">

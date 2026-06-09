@@ -69,6 +69,70 @@ const services = [
       'Institutional & NGO support',
     ],
   },
+  {
+    name: 'Software Systems',
+    bg: 'bg-brand-base',
+    image: images.digital.systems,
+    alt: 'Software systems development workspace',
+    description:
+      'We design and build custom software systems that automate manual work, improve visibility, and help teams run better operations.',
+    includes: [
+      'Internal business tools',
+      'Inventory and workflow systems',
+      'Client and project portals',
+      'Role-based dashboards',
+      'Process automation',
+      'System support and enhancement',
+    ],
+  },
+  {
+    name: 'Websites',
+    bg: 'bg-brand-deep',
+    image: images.digital.websites,
+    alt: 'Website development workspace',
+    description:
+      'We create modern websites that look sharp, load fast, and communicate your services with clarity across every device.',
+    includes: [
+      'Corporate websites',
+      'Landing pages',
+      'Responsive mobile-first design',
+      'Content updates and maintenance',
+      'Hosting guidance',
+      'Conversion-focused layouts',
+    ],
+  },
+  {
+    name: 'Data Analytics',
+    bg: 'bg-brand-base',
+    image: images.digital.analytics,
+    alt: 'Data analytics dashboard on a laptop',
+    description:
+      'We turn raw data into dashboards, reports, and insights that support planning, performance tracking, and decision-making.',
+    includes: [
+      'Business intelligence dashboards',
+      'Reporting and KPI tracking',
+      'Data cleaning and preparation',
+      'Trend and performance analysis',
+      'Operational insights',
+      'Decision support reporting',
+    ],
+  },
+  {
+    name: 'AI & ML',
+    bg: 'bg-brand-deep',
+    image: images.digital.aiMl,
+    alt: 'Artificial intelligence concept artwork',
+    description:
+      'We help clients explore practical AI and machine learning applications for automation, analysis, and smarter workflows.',
+    includes: [
+      'AI-assisted workflows',
+      'Predictive models',
+      'Classification and pattern detection',
+      'Automation opportunities',
+      'Prototype development',
+      'AI strategy support',
+    ],
+  },
 ]
 
 export default function ServicesPage() {
@@ -77,9 +141,22 @@ export default function ServicesPage() {
       <PageHero
         label="WHAT WE OFFER"
         title="Our Services"
-        subtitle="End-to-end solutions for every business need."
+        subtitle="End-to-end solutions for supply, operations, and digital transformation."
         backgroundImage={images.pageHeroBg}
       />
+
+      <section className="bg-brand-base py-16 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <p className="text-brand-accent text-xs uppercase tracking-widest">Digital Capability</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mt-3">
+            We now build software systems, websites, data solutions, and AI-driven workflows.
+          </h2>
+          <p className="text-brand-muted mt-5 leading-relaxed">
+            Alongside our supply and consultancy work, we support businesses that need a stronger
+            digital presence, better internal systems, and sharper data-driven decisions.
+          </p>
+        </div>
+      </section>
 
       {services.map((service, index) => (
         <section key={service.name} className={`${service.bg} py-20 px-6`}>

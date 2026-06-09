@@ -8,7 +8,7 @@ export default function HomeHero() {
     <section className="relative bg-brand-base min-h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden">
       <Image
         src={images.hero}
-        alt="Warehouse and supply chain operations"
+        alt="Modern software development workspace"
         fill
         className="object-cover"
         priority
@@ -28,7 +28,7 @@ export default function HomeHero() {
         <h1 className="text-4xl md:text-8xl font-bold text-white">Reliable Supplies.</h1>
         <h1 className="text-4xl md:text-8xl font-bold text-brand-accent">Professional Solutions.</h1>
         <p className="text-brand-muted text-base md:text-xl mt-5">
-          General Supplies &amp; Consultancy Services — Kisumu, Kenya
+          General Supplies, Software Systems, Websites, Data Analytics &amp; AI Solutions — Kisumu, Kenya
         </p>
         <div className="flex flex-col sm:flex-row gap-4 mt-10 justify-center">
           <Link
@@ -45,7 +45,7 @@ export default function HomeHero() {
           </Link>
         </div>
         <p className="text-brand-muted text-sm mt-12 tracking-widest uppercase">
-          Integrity · Innovation · Customer Satisfaction
+          Integrity · Innovation · Digital Excellence
         </p>
       </Reveal>
     </section>

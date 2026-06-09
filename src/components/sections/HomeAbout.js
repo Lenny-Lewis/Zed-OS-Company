@@ -21,14 +21,15 @@ export default function HomeAbout() {
           </h2>
           <p className="text-brand-muted mt-6 leading-relaxed">
             Zed OS Technologies Limited is a registered Kenyan company based in Kisumu Town West,
-            specializing in General Supplies and Consultancy Services. We deliver reliable,
-            efficient, and professional solutions to individuals, private sector organizations,
-            NGOs, and government institutions.
+            specializing in General Supplies, Software Systems, Websites, Data Analytics, AI,
+            Machine Learning, and Consultancy Services. We deliver reliable, efficient, and
+            professional solutions to individuals, private sector organizations, NGOs, and
+            government institutions.
           </p>
           <p className="text-brand-muted mt-4 leading-relaxed">
             Our operations are guided by integrity, innovation, and customer satisfaction — with
             a commitment to quality service delivery, timely execution, and value for money
-            across East Africa.
+            across East Africa and in digital transformation projects.
           </p>
           <Link
             href="/about"
