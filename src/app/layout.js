@@ -10,11 +10,7 @@ export const metadata = {
   title: 'Zed OS Technologies Limited',
   description: 'General Supplies & Consultancy Services — Kisumu, Kenya',
   icons: {
-    icon: [
-      { url: '/favicon.svg', type: 'image/svg+xml' },
-      { url: '/favicon.ico', sizes: 'any' },
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-    ],
+    icon: '/icon.svg',
     apple: '/apple-touch-icon.png',
   },
 }
