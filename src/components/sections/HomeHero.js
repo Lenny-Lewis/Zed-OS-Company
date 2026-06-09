@@ -17,14 +17,6 @@ export default function HomeHero() {
       <div className="absolute inset-0 bg-brand-base/75" />
 
       <Reveal className="relative z-10 flex flex-col items-center">
-        <Image
-          src={images.logo}
-          alt="Zed OS Technologies Limited"
-          width={320}
-          height={120}
-          className="w-auto h-16 md:h-24 object-contain mb-8"
-          priority
-        />
         <h1 className="text-4xl md:text-8xl font-bold text-white">Reliable Supplies.</h1>
         <h1 className="text-4xl md:text-8xl font-bold text-brand-accent">Professional Solutions.</h1>
         <p className="text-brand-muted text-base md:text-xl mt-5">
