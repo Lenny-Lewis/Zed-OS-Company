@@ -42,6 +42,18 @@ const socialLinks = [
       </svg>
     ),
   },
+  {
+    href: 'https://x.com/zedostechnology',
+    label: 'X (Twitter)',
+    icon: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="w-5 h-5">
+        <path
+          d="M18.9 2H22l-6.77 7.73L23 22h-6.1l-4.78-6.26L6.64 22H3.5l7.24-8.27L1 2h6.25l4.32 5.7L18.9 2Zm-1.07 18h1.69L6.33 3.9H4.52L17.83 20Z"
+          fill="currentColor"
+        />
+      </svg>
+    ),
+  },
 ]
 
 export default function Footer() {
