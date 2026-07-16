@@ -129,7 +129,7 @@ export default function Footer() {
         <p className="text-brand-muted text-sm text-center mt-3">
           Made by{' '}
           <Link
-            href="https://load-lewis.vercel.app/"
+            href="https://www.lennoxlewis.co.ke/"
             target="_blank"
             rel="noreferrer"
             className="text-brand-accent font-semibold hover:text-white transition-colors duration-200"
