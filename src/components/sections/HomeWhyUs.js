@@ -29,28 +29,34 @@ const items = [
 
 function CheckIcon() {
   return (
-    <svg className="w-6 h-6 text-brand-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-    </svg>
+    <div className="w-10 h-10 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center text-white shrink-0">
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+      </svg>
+    </div>
   )
 }
 
 export default function HomeWhyUs() {
   return (
-    <section className="bg-brand-base py-24 px-6">
-      <div className="max-w-5xl mx-auto">
+    <section className="bg-black py-20 md:py-28 px-4 md:px-8">
+      <div className="max-w-[1400px] mx-auto">
         <Reveal className="text-center">
-          <p className="text-brand-accent text-xs uppercase tracking-widest">Our Edge</p>
-          <h2 className="text-4xl font-bold text-white mt-3">Why Clients Trust Us</h2>
+          <span className="text-white text-xs font-bold uppercase tracking-widest bg-neutral-900 px-4 py-1.5 rounded-full inline-block border border-neutral-800">
+            Our Edge
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-white mt-4 tracking-tight">Why Clients Trust Us</h2>
         </Reveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-14">
           {items.map((item, index) => (
             <Reveal key={item.title} delay={index * 80}>
-              <div className="bg-brand-card rounded-lg p-6">
-                <CheckIcon />
-                <h3 className="text-white font-bold mt-4">{item.title}</h3>
-                <p className="text-brand-muted text-sm mt-2 leading-relaxed">{item.description}</p>
+              <div className="bg-neutral-950 border border-neutral-900 rounded-3xl p-8 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1.5 flex flex-col justify-between hover:border-neutral-800">
+                <div>
+                  <CheckIcon />
+                  <h3 className="text-white font-bold text-xl mt-5">{item.title}</h3>
+                  <p className="text-neutral-300 text-sm mt-3 leading-relaxed font-normal">{item.description}</p>
+                </div>
               </div>
             </Reveal>
           ))}

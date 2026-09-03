@@ -58,51 +58,61 @@ export default function ProductsPage() {
         backgroundImage={images.pageHeroBg}
       />
 
-      <section className="bg-brand-base py-16 px-6">
-        <p className="text-brand-muted text-center max-w-3xl mx-auto leading-relaxed">
-          At Zed OS Technologies Limited, we supply a wide range of quality products to businesses,
-          institutions, NGOs, and government organizations across Kenya. All products are sourced
-          from trusted suppliers and delivered with speed and reliability.
-        </p>
+      <section className="bg-black py-12 md:py-16 px-4 md:px-8">
+        <div className="max-w-[1400px] mx-auto bg-neutral-950 rounded-[2.5rem] p-8 md:p-12 text-center shadow-2xl border border-neutral-900 max-w-4xl">
+          <p className="text-neutral-300 text-center max-w-3xl mx-auto leading-relaxed text-base font-normal">
+            At Zed OS Technologies Limited, we supply a wide range of quality products to businesses,
+            institutions, NGOs, and government organizations across Kenya. All products are sourced
+            from trusted suppliers and delivered with speed and reliability.
+          </p>
+        </div>
       </section>
 
-      <section className="bg-brand-deep py-20 px-6">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <section className="bg-black py-8 md:py-12 px-4 md:px-8">
+        <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {categories.map((category) => (
             <div
               key={category.title}
-              className="bg-brand-card rounded-xl overflow-hidden border-t-4 border-brand-primary hover:border-brand-accent transition-colors duration-200"
+              className="bg-neutral-950 rounded-3xl overflow-hidden border border-neutral-900 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1.5 group flex flex-col h-full hover:border-neutral-800"
             >
-              <div className="relative h-48">
+              <div className="relative h-56 overflow-hidden bg-black">
                 <Image
                   src={category.image}
                   alt={category.alt}
                   fill
-                  className="object-cover"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500 opacity-80"
                   sizes="(max-width: 1024px) 50vw, 33vw"
                 />
               </div>
-              <div className="p-8">
-                <h3 className="text-white font-bold text-xl">{category.title}</h3>
-                <p className="text-brand-muted text-sm mt-4 leading-relaxed">{category.description}</p>
+              <div className="p-8 flex flex-col flex-grow justify-between">
+                <div>
+                  <h3 className="text-white font-bold text-2xl group-hover:text-[#FCA311] transition-colors">{category.title}</h3>
+                  <p className="text-neutral-300 text-sm mt-3 leading-relaxed font-normal">{category.description}</p>
+                </div>
+                <div className="mt-6 pt-4 border-t border-neutral-900 flex items-center justify-between text-xs font-bold text-white">
+                  <span>Inquire Now</span>
+                  <span className="group-hover:translate-x-1 transition-transform">→</span>
+                </div>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="bg-brand-primary py-16 px-6 text-center">
-        <h2 className="text-3xl font-bold text-white">Need a Custom Quote?</h2>
-        <p className="text-white/80 mt-4 max-w-xl mx-auto">
-          Can&apos;t find what you need? We source on demand. Get in touch and we&apos;ll handle the
-          procurement for you.
-        </p>
-        <Link
-          href="/contact"
-          className="inline-block mt-8 bg-white text-brand-primary hover:bg-brand-accent hover:text-white px-8 py-3 rounded font-semibold transition-colors duration-200"
-        >
-          Request a Quote
-        </Link>
+      <section className="bg-black py-12 md:py-16 px-4 md:px-8 text-center">
+        <div className="max-w-[1400px] mx-auto bg-neutral-950 rounded-[2.5rem] p-10 md:p-16 shadow-2xl border border-neutral-900 text-white">
+          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">Need a Custom Quote?</h2>
+          <p className="text-neutral-300 mt-4 max-w-xl mx-auto leading-relaxed text-base font-normal">
+            Can&apos;t find what you need? We source on demand. Get in touch and we&apos;ll handle the
+            procurement for you.
+          </p>
+          <Link
+            href="/contact"
+            className="inline-block mt-8 bg-white hover:bg-neutral-200 text-black px-9 py-4 rounded-full font-bold text-sm tracking-wide transition-all shadow-md hover:scale-105"
+          >
+            Request a Quote
+          </Link>
+        </div>
       </section>
     </>
   )

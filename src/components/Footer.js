@@ -58,23 +58,23 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-brand-base border-t-2 border-brand-primary py-12 px-6">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="bg-black border-t border-neutral-900 py-16 px-6">
+      <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
         <div>
           <Logo size="footer" showTagline />
-          <p className="text-brand-muted text-sm mt-4 leading-relaxed">
+          <p className="text-neutral-400 text-sm mt-4 leading-relaxed font-normal">
             Registered in Kenya. Delivering quality supplies and consultancy services across East Africa.
           </p>
         </div>
 
         <div>
-          <h3 className="text-white font-semibold mb-4">Quick Links</h3>
-          <ul className="space-y-2">
+          <h3 className="text-white font-bold tracking-wider mb-4 uppercase text-xs">Quick Links</h3>
+          <ul className="space-y-2.5">
             {quickLinks.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-brand-muted hover:text-brand-accent text-sm transition-colors duration-200"
+                  className="text-neutral-400 hover:text-white text-sm font-medium transition-colors duration-200"
                 >
                   {link.label}
                 </Link>
@@ -84,10 +84,10 @@ export default function Footer() {
         </div>
 
         <div>
-          <h3 className="text-white font-semibold mb-4">Services</h3>
-          <ul className="space-y-2">
+          <h3 className="text-white font-bold tracking-wider mb-4 uppercase text-xs">Services</h3>
+          <ul className="space-y-2.5">
             {services.map((service) => (
-              <li key={service} className="text-brand-muted text-sm">
+              <li key={service} className="text-neutral-400 text-sm font-normal">
                 {service}
               </li>
             ))}
@@ -95,14 +95,14 @@ export default function Footer() {
         </div>
 
         <div>
-          <h3 className="text-white font-semibold mb-4">Contact</h3>
-          <ul className="space-y-2 text-brand-muted text-sm">
+          <h3 className="text-white font-bold tracking-wider mb-4 uppercase text-xs">Contact</h3>
+          <ul className="space-y-2.5 text-neutral-400 text-sm font-normal">
             <li>+254 758 296 887</li>
             <li>Lennoxlewis.lenny@gmail.com</li>
             <li>P.O. Box 2371-40100, Kisumu Town West, Kenya</li>
           </ul>
           <div className="mt-6">
-            <h4 className="text-white font-semibold mb-3">Follow</h4>
+            <h4 className="text-white font-bold tracking-wider mb-3 uppercase text-xs">Follow</h4>
             <div className="flex items-center gap-3">
               {socialLinks.map((link) => (
                 <Link
@@ -112,7 +112,7 @@ export default function Footer() {
                   rel="noreferrer"
                   aria-label={link.label}
                   title={link.label}
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-brand-primary text-brand-accent bg-brand-deep hover:bg-brand-primary hover:text-white transition-colors duration-200"
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-neutral-900 text-white border border-neutral-800 hover:bg-white hover:text-black transition-all duration-200 shadow-xs"
                 >
                   {link.icon}
                 </Link>
@@ -122,17 +122,17 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto mt-10 pt-6 border-t border-brand-primary">
-        <p className="text-brand-muted text-sm text-center">
+      <div className="max-w-[1400px] mx-auto mt-12 pt-8 border-t border-neutral-900 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p className="text-neutral-500 text-sm font-normal">
           © 2026 Zed OS Technologies Limited. All rights reserved.
         </p>
-        <p className="text-brand-muted text-sm text-center mt-3">
+        <p className="text-neutral-500 text-sm font-normal">
           Made by{' '}
           <Link
             href="https://www.lennoxlewis.co.ke/"
             target="_blank"
             rel="noreferrer"
-            className="text-brand-accent font-semibold hover:text-white transition-colors duration-200"
+            className="text-white font-bold hover:underline transition-all"
           >
             Lennox Lewis
           </Link>

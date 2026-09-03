@@ -12,40 +12,42 @@ const stats = [
 
 export default function HomeAbout() {
   return (
-    <section className="bg-brand-base py-24 px-6">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+    <section className="bg-black py-20 md:py-28 px-4 md:px-8">
+      <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center bg-neutral-950 rounded-[2.5rem] p-8 md:p-14 shadow-2xl border border-neutral-900">
         <Reveal>
-          <p className="text-brand-accent text-xs uppercase tracking-widest">About Us</p>
-          <h2 className="text-4xl font-bold text-white mt-3">
-            Built on Trust. Driven by Excellence.
+          <span className="text-white text-xs font-bold uppercase tracking-widest bg-neutral-900 px-3.5 py-1.5 rounded-full inline-block border border-neutral-800">
+            About Us
+          </span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mt-4 tracking-tight">
+            Built on Trust. <br className="hidden sm:block" />Driven by Excellence.
           </h2>
-          <p className="text-brand-muted mt-6 leading-relaxed">
+          <p className="text-neutral-300 mt-6 leading-relaxed text-base font-normal">
             Zed OS Technologies Limited is a registered Kenyan company based in Kisumu Town West,
             specializing in General Supplies, Software Systems, Websites, Data Analytics, AI,
             Machine Learning, and Consultancy Services. We deliver reliable, efficient, and
             professional solutions to individuals, private sector organizations, NGOs, and
             government institutions.
           </p>
-          <p className="text-brand-muted mt-4 leading-relaxed">
+          <p className="text-neutral-300 mt-4 leading-relaxed text-base font-normal">
             Our operations are guided by integrity, innovation, and customer satisfaction — with
-            a commitment to quality service delivery, timely execution, and value for money
-            across East Africa and in digital transformation projects.
+            a commitment to quality service delivery, timely execution, and value for money.
           </p>
           <Link
             href="/about"
-            className="inline-block mt-8 text-brand-accent hover:text-white font-semibold transition-colors duration-200"
+            className="inline-flex items-center gap-2 mt-8 bg-white hover:bg-neutral-200 text-black px-7 py-3.5 rounded-full font-bold text-sm tracking-wide transition-all shadow-md"
           >
-            Learn More →
+            <span>Learn More</span>
+            <span className="text-lg">→</span>
           </Link>
         </Reveal>
 
-        <Reveal delay={120} className="space-y-4">
-          <div className="relative h-56 rounded-xl overflow-hidden">
+        <Reveal delay={120} className="space-y-6">
+          <div className="relative h-64 md:h-72 rounded-3xl overflow-hidden shadow-md border border-neutral-800">
             <Image
               src={images.aboutOffice}
               alt="Modern office workspace"
               fill
-              className="object-cover"
+              className="object-cover opacity-80"
               sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>
@@ -53,10 +55,10 @@ export default function HomeAbout() {
             {stats.map((stat) => (
               <div
                 key={stat.label}
-                className="bg-brand-card rounded-xl p-8 text-center"
+                className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 text-center shadow-xs"
               >
-                <p className="text-3xl font-bold text-brand-accent">{stat.value}</p>
-                <p className="text-brand-muted text-sm mt-2">{stat.label}</p>
+                <p className="text-3xl font-black text-white">{stat.value}</p>
+                <p className="text-neutral-400 text-xs font-semibold mt-1 uppercase tracking-wider">{stat.label}</p>
               </div>
             ))}
           </div>

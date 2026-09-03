@@ -6,7 +6,7 @@ import { images } from '@/data/images'
 const services = [
   {
     name: 'General Supplies',
-    bg: 'bg-brand-base',
+    bg: 'bg-black',
     image: images.services.supplies,
     alt: 'General office and institutional supplies',
     description:
@@ -23,7 +23,7 @@ const services = [
   },
   {
     name: 'Vehicle Hire',
-    bg: 'bg-brand-deep',
+    bg: 'bg-[#0A0F1D]',
     image: images.services.vehicle,
     alt: 'Vehicle hire fleet',
     description:
@@ -39,7 +39,7 @@ const services = [
   },
   {
     name: 'Conference Facilities',
-    bg: 'bg-brand-base',
+    bg: 'bg-black',
     image: images.services.conference,
     alt: 'Conference and meeting facilities',
     description:
@@ -55,7 +55,7 @@ const services = [
   },
   {
     name: 'Consultancy Services',
-    bg: 'bg-brand-deep',
+    bg: 'bg-[#0A0F1D]',
     image: images.services.consultancy,
     alt: 'Business consultancy session',
     description:
@@ -71,7 +71,7 @@ const services = [
   },
   {
     name: 'Software Systems',
-    bg: 'bg-brand-base',
+    bg: 'bg-black',
     image: images.digital.systems,
     alt: 'Software systems development workspace',
     description:
@@ -87,7 +87,7 @@ const services = [
   },
   {
     name: 'Websites',
-    bg: 'bg-brand-deep',
+    bg: 'bg-[#0A0F1D]',
     image: images.digital.websites,
     alt: 'Website development workspace',
     description:
@@ -103,7 +103,7 @@ const services = [
   },
   {
     name: 'Data Analytics',
-    bg: 'bg-brand-base',
+    bg: 'bg-black',
     image: images.digital.analytics,
     alt: 'Data analytics dashboard on a laptop',
     description:
@@ -119,7 +119,7 @@ const services = [
   },
   {
     name: 'AI & ML',
-    bg: 'bg-brand-deep',
+    bg: 'bg-[#0A0F1D]',
     image: images.digital.aiMl,
     alt: 'Artificial intelligence concept artwork',
     description:
@@ -145,49 +145,56 @@ export default function ServicesPage() {
         backgroundImage={images.pageHeroBg}
       />
 
-      <section className="bg-brand-base py-16 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <p className="text-brand-accent text-xs uppercase tracking-widest">Digital Capability</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mt-3">
-            We now build software systems, websites, data solutions, and AI-driven workflows.
+      <section className="bg-black py-12 md:py-16 px-4 md:px-8">
+        <div className="max-w-[1400px] mx-auto bg-neutral-950 rounded-[2.5rem] p-8 md:p-12 text-center shadow-2xl border border-neutral-900 max-w-4xl">
+          <span className="text-white text-xs font-bold uppercase tracking-widest bg-neutral-900 px-4 py-1.5 rounded-full inline-block mb-3 border border-neutral-800">
+            Digital Capability
+          </span>
+          <h2 className="text-3xl md:text-5xl font-extrabold text-white mt-2 tracking-tight leading-tight">
+            Software Systems, Websites, Data Analytics &amp; AI-driven Workflows
           </h2>
-          <p className="text-brand-muted mt-5 leading-relaxed">
-            Alongside our supply and consultancy work, we support businesses that need a stronger
-            digital presence, better internal systems, and sharper data-driven decisions.
+          <p className="text-neutral-300 mt-4 leading-relaxed text-base font-normal max-w-2xl mx-auto">
+            Alongside our general supply and consultancy work, we empower organizations with high-performance
+            digital platforms, internal system automation, and actionable data analytics.
           </p>
         </div>
       </section>
 
-      {services.map((service, index) => (
-        <section key={service.name} className={`${service.bg} py-20 px-6`}>
-          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <Reveal className={index % 2 === 1 ? 'md:order-2' : ''}>
-              <h2 className="text-3xl font-bold text-white">{service.name}</h2>
-              <p className="text-brand-muted mt-4 leading-relaxed">{service.description}</p>
-              <h3 className="text-white font-semibold mt-8">What&apos;s Included</h3>
-              <ul className="mt-4 space-y-2">
-                {service.includes.map((item) => (
-                  <li key={item} className="text-brand-muted flex items-start gap-2">
-                    <span className="text-brand-accent mt-1">·</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
-            <Reveal delay={120} className={index % 2 === 1 ? 'md:order-1' : ''}>
-              <div className="relative h-72 rounded-xl overflow-hidden">
-                <Image
-                  src={service.image}
-                  alt={service.alt}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
+      <section className="bg-black py-8 md:py-12 px-4 md:px-8 space-y-8">
+        <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+          {services.map((service, index) => (
+            <Reveal key={service.name} delay={index * 60}>
+              <div className="bg-neutral-950 rounded-[2.5rem] p-8 md:p-12 border border-neutral-900 shadow-2xl flex flex-col h-full justify-between hover:border-neutral-800">
+                <div>
+                  <div className="relative h-60 rounded-3xl overflow-hidden mb-8 bg-black border border-neutral-900">
+                    <Image
+                      src={service.image}
+                      alt={service.alt}
+                      fill
+                      className="object-cover opacity-85"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
+                  </div>
+                  <h2 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">{service.name}</h2>
+                  <p className="text-neutral-300 mt-3 leading-relaxed text-sm font-normal">{service.description}</p>
+                </div>
+
+                <div className="mt-8 pt-6 border-t border-neutral-900">
+                  <h3 className="text-[#FCA311] font-bold text-xs uppercase tracking-wider mb-4">What&apos;s Included</h3>
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {service.includes.map((item) => (
+                      <li key={item} className="text-neutral-300 flex items-center gap-2 text-xs font-normal">
+                        <span className="w-1.5 h-1.5 rounded-full bg-white shrink-0" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </Reveal>
-          </div>
-        </section>
-      ))}
+          ))}
+        </div>
+      </section>
     </>
   )
 }

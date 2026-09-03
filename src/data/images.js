@@ -1,7 +1,8 @@
 export const images = {
-  logo: '/images/zed-os-logo.jpeg',
+  logo: '/images/zedlogo.jpeg',
+  devLogo: '/images/DevLogo.jpeg',
   director: '/images/Director.png',
-  hero: 'https://unsplash.com/photos/vpOeXr5wmR4/download?force=true',
+  hero: '/images/heroimage.png',
   pageHeroBg: '/images/page-hero-bg.jpg',
   aboutOffice: '/images/about-office.jpg',
   aboutTeam: '/images/about-team.jpg',

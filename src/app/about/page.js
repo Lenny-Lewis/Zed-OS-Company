@@ -47,28 +47,34 @@ export default function AboutPage() {
         backgroundImage={images.pageHeroBg}
       />
 
-      <section className="bg-brand-base py-20 px-6">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <section className="bg-black py-16 md:py-24 px-4 md:px-8">
+        <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center bg-neutral-950 rounded-[2.5rem] p-8 md:p-14 shadow-2xl border border-neutral-900">
           <Reveal>
-            <p className="text-brand-muted leading-relaxed">
+            <span className="text-white text-xs font-bold uppercase tracking-widest bg-neutral-900 px-3.5 py-1.5 rounded-full inline-block mb-3 border border-neutral-800">
+              Overview
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white leading-tight">
+              Delivering Excellence Across Kenya &amp; East Africa
+            </h2>
+            <p className="text-neutral-300 leading-relaxed text-base mt-4 font-normal">
               Zed OS Technologies Limited is a registered Kenyan company based in Kisumu Town West,
               specializing in General Supplies and Consultancy Services. The company was established
               to provide reliable, efficient, and professional solutions to individuals, private sector
               organizations, NGOs, and government institutions.
             </p>
-            <p className="text-brand-muted mt-4 leading-relaxed">
+            <p className="text-neutral-300 mt-4 leading-relaxed text-base font-normal">
               We pride ourselves on integrity, innovation, and customer satisfaction. Our operations
               are guided by a commitment to quality service delivery, timely execution, and value for
               money.
             </p>
           </Reveal>
           <Reveal delay={120}>
-            <div className="relative h-80 rounded-xl overflow-hidden">
+            <div className="relative h-80 md:h-96 rounded-3xl overflow-hidden shadow-md border border-neutral-800">
               <Image
                 src={images.aboutTeam}
                 alt="Zed OS Technologies team collaborating"
                 fill
-                className="object-cover"
+                className="object-cover opacity-80"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>
@@ -76,36 +82,36 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-brand-deep py-20 px-6">
-        <div className="max-w-6xl mx-auto">
+      <section className="bg-black py-16 md:py-24 px-4 md:px-8">
+        <div className="max-w-[1400px] mx-auto bg-neutral-950 rounded-[2.5rem] p-8 md:p-14 shadow-2xl border border-neutral-900">
           <Reveal className="text-center">
-            <p className="text-brand-accent text-xs uppercase tracking-widest">Leadership</p>
-            <h2 className="text-3xl font-bold text-white mt-3">Meet the Director</h2>
+            <span className="text-white text-xs font-bold uppercase tracking-widest bg-neutral-900 px-4 py-1.5 rounded-full inline-block border border-neutral-800">
+              Leadership
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-extrabold text-white mt-4 tracking-tight">Meet the Director</h2>
           </Reveal>
 
-          <Reveal delay={120} className="bg-brand-card rounded-xl p-8 md:p-10 max-w-4xl mx-auto mt-10">
-            <div className="grid grid-cols-1 md:grid-cols-[340px_minmax(0,1fr)] gap-8 items-start">
-              <div className="relative w-full h-96 md:h-[420px] rounded-xl overflow-hidden bg-transparent">
+          <Reveal delay={120} className="bg-neutral-900 rounded-3xl p-8 md:p-12 max-w-4xl mx-auto mt-12 border border-neutral-800 shadow-xs">
+            <div className="grid grid-cols-1 md:grid-cols-[300px_minmax(0,1fr)] gap-8 items-center">
+              <div className="relative w-full h-80 md:h-[380px] rounded-2xl overflow-hidden bg-black border border-neutral-800 shadow-sm">
                 <Image
                   src={images.director}
                   alt="Lennox Lewis Odhiambo, Founder and Director"
                   fill
-                  className="object-contain p-0"
-                  sizes="(max-width: 768px) 100vw, 340px"
+                  className="object-contain p-2"
+                  sizes="(max-width: 768px) 100vw, 300px"
                 />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-white">Lennox Lewis Odhiambo</h3>
-                <p className="text-brand-accent mt-1">Founder &amp; Director</p>
-                <p className="text-brand-muted mt-6 leading-relaxed">
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-white">Lennox Lewis Odhiambo</h3>
+                <p className="text-[#FCA311] font-bold mt-1 text-sm tracking-wide uppercase">Founder &amp; Director</p>
+                <p className="text-neutral-300 mt-5 leading-relaxed text-sm font-normal">
                   Lennox Lewis Odhiambo is a highly motivated and visionary Director with an excellent
                   background in supply chain management and business consultation. Under his leadership,
                   Zed OS Technologies Limited has grown steadily, establishing itself as a reliable
                   partner in delivering high-quality products and services. His commitment to excellence
                   and innovation drives the company&apos;s mission to provide solutions that meet and exceed
-                  customer expectations. With deep understanding of market dynamics, operational efficiency,
-                  and client relations, Lennox ensures every project is executed with precision and
-                  professionalism.
+                  customer expectations.
                 </p>
               </div>
             </div>
@@ -113,50 +119,25 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-brand-base py-20 px-6">
-        <div className="max-w-5xl mx-auto">
+      <section className="bg-black py-16 md:py-24 px-4 md:px-8">
+        <div className="max-w-[1400px] mx-auto">
           <Reveal className="text-center">
-            <p className="text-brand-accent text-xs uppercase tracking-widest">What Drives Us</p>
-            <h2 className="text-3xl font-bold text-white mt-3">Our Core Values</h2>
+            <span className="text-white text-xs font-bold uppercase tracking-widest bg-neutral-900 px-4 py-1.5 rounded-full inline-block border border-neutral-800">
+              What Drives Us
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-extrabold text-white mt-4 tracking-tight">Our Core Values</h2>
           </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
             {values.map((value, index) => (
               <Reveal key={value.title} delay={index * 90}>
-                <div className="bg-brand-card rounded-xl p-8 h-full">
-                  <h3 className="text-white font-bold text-xl">{value.title}</h3>
-                  <p className="text-brand-muted text-sm mt-4 leading-relaxed">{value.description}</p>
+                <div className="bg-neutral-950 border border-neutral-900 rounded-3xl p-8 h-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:border-neutral-800">
+                  <h3 className="text-white font-extrabold text-2xl">{value.title}</h3>
+                  <p className="text-neutral-300 text-sm mt-4 leading-relaxed font-normal">{value.description}</p>
                 </div>
               </Reveal>
             ))}
           </div>
-        </div>
-      </section>
-
-      <section className="bg-brand-deep py-20 px-6">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <Reveal>
-            <h2 className="text-3xl font-bold text-white">Key Strengths</h2>
-            <ul className="mt-10 space-y-4">
-              {strengths.map((strength) => (
-                <li key={strength} className="flex items-start gap-3">
-                  <StrengthIcon />
-                  <span className="text-brand-muted">{strength}</span>
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-          <Reveal delay={120}>
-            <div className="relative h-72 rounded-xl overflow-hidden">
-              <Image
-                src={images.aboutOffice}
-                alt="Professional office environment"
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
-          </Reveal>
         </div>
       </section>
     </>
