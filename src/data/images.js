@@ -9,7 +9,7 @@ export const images = {
   partnerHandshake: '/images/partner-handshake.jpg',
   services: {
     supplies: '/images/service-supplies.jpg',
-    vehicle: '/images/service-vehicle.jpg',
+    vehicle: '/images/carhire.jpg',
     conference: '/images/service-conference.jpg',
     consultancy: '/images/service-consultancy.jpg',
   },
@@ -17,7 +17,7 @@ export const images = {
     systems: '/images/digital-systems.jpg',
     websites: '/images/digital-websites.jpg',
     analytics: '/images/digital-analytics.jpg',
-    aiMl: '/images/digital-aiml.jpg',
+    aiMl: '/images/AI and ML.jpg',
   },
   products: {
     office: '/images/product-office.jpg',
