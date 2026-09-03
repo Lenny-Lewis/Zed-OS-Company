@@ -145,8 +145,8 @@ export default function ServicesPage() {
         backgroundImage={images.pageHeroBg}
       />
 
-      <section className="bg-black py-12 md:py-16 px-4 md:px-8">
-        <div className="max-w-[1400px] mx-auto bg-neutral-950 rounded-[2.5rem] p-8 md:p-12 text-center shadow-2xl border border-neutral-900 max-w-4xl">
+      <section className="bg-black py-12 md:py-16 px-6 md:px-12 text-center">
+        <div className="max-w-4xl mx-auto">
           <span className="text-white text-xs font-bold uppercase tracking-widest bg-neutral-900 px-4 py-1.5 rounded-full inline-block mb-3 border border-neutral-800">
             Digital Capability
           </span>

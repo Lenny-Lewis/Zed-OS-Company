@@ -72,8 +72,8 @@ export default function PartnerPage() {
         backgroundImage={images.pageHeroBg}
       />
 
-      <section className="bg-black py-16 md:py-24 px-4 md:px-8">
-        <div className="max-w-[1400px] mx-auto bg-neutral-950 rounded-[2.5rem] p-8 md:p-14 shadow-2xl border border-neutral-900">
+      <section className="bg-black py-16 md:py-24 px-6 md:px-12">
+        <div className="max-w-[1400px] mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
             <Reveal>
               <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">Why Partner With Us?</h2>
@@ -85,12 +85,12 @@ export default function PartnerPage() {
               </p>
             </Reveal>
             <Reveal delay={120}>
-              <div className="relative h-72 md:h-80 rounded-3xl overflow-hidden shadow-md border border-neutral-800">
+              <div className="relative h-72 md:h-80 rounded-3xl overflow-hidden shadow-xl">
                 <Image
                   src={images.partnerHandshake}
                   alt="Business partnership handshake"
                   fill
-                  className="object-cover opacity-80"
+                  className="object-cover opacity-90"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </div>

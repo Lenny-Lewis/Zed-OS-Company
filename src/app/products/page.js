@@ -58,9 +58,9 @@ export default function ProductsPage() {
         backgroundImage={images.pageHeroBg}
       />
 
-      <section className="bg-black py-12 md:py-16 px-4 md:px-8">
-        <div className="max-w-[1400px] mx-auto bg-neutral-950 rounded-[2.5rem] p-8 md:p-12 text-center shadow-2xl border border-neutral-900 max-w-4xl">
-          <p className="text-neutral-300 text-center max-w-3xl mx-auto leading-relaxed text-base font-normal">
+      <section className="bg-black py-10 md:py-14 px-6 md:px-12 text-center">
+        <div className="max-w-3xl mx-auto">
+          <p className="text-neutral-300 leading-relaxed text-base md:text-lg font-normal">
             At Zed OS Technologies Limited, we supply a wide range of quality products to businesses,
             institutions, NGOs, and government organizations across Kenya. All products are sourced
             from trusted suppliers and delivered with speed and reliability.
@@ -99,9 +99,9 @@ export default function ProductsPage() {
         </div>
       </section>
 
-      <section className="bg-black py-12 md:py-16 px-4 md:px-8 text-center">
-        <div className="max-w-[1400px] mx-auto bg-neutral-950 rounded-[2.5rem] p-10 md:p-16 shadow-2xl border border-neutral-900 text-white">
-          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">Need a Custom Quote?</h2>
+      <section className="bg-black py-12 md:py-16 px-6 md:px-12 text-center">
+        <div className="max-w-3xl mx-auto text-white">
+          <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight">Need a Custom Quote?</h2>
           <p className="text-neutral-300 mt-4 max-w-xl mx-auto leading-relaxed text-base font-normal">
             Can&apos;t find what you need? We source on demand. Get in touch and we&apos;ll handle the
             procurement for you.

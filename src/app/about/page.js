@@ -47,8 +47,8 @@ export default function AboutPage() {
         backgroundImage={images.pageHeroBg}
       />
 
-      <section className="bg-black py-16 md:py-24 px-4 md:px-8">
-        <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center bg-neutral-950 rounded-[2.5rem] p-8 md:p-14 shadow-2xl border border-neutral-900">
+      <section className="bg-black py-16 md:py-24 px-6 md:px-12">
+        <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <Reveal>
             <span className="text-white text-xs font-bold uppercase tracking-widest bg-neutral-900 px-3.5 py-1.5 rounded-full inline-block mb-3 border border-neutral-800">
               Overview
@@ -69,12 +69,12 @@ export default function AboutPage() {
             </p>
           </Reveal>
           <Reveal delay={120}>
-            <div className="relative h-80 md:h-96 rounded-3xl overflow-hidden shadow-md border border-neutral-800">
+            <div className="relative h-80 md:h-96 rounded-3xl overflow-hidden shadow-xl">
               <Image
                 src={images.aboutTeam}
                 alt="Zed OS Technologies team collaborating"
                 fill
-                className="object-cover opacity-80"
+                className="object-cover opacity-90"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>
@@ -93,19 +93,26 @@ export default function AboutPage() {
 
           <Reveal delay={120} className="bg-neutral-900 rounded-3xl p-8 md:p-12 max-w-4xl mx-auto mt-12 border border-neutral-800 shadow-xs">
             <div className="grid grid-cols-1 md:grid-cols-[300px_minmax(0,1fr)] gap-8 items-center">
-              <div className="relative w-full h-80 md:h-[380px] rounded-2xl overflow-hidden bg-black border border-neutral-800 shadow-sm">
+              <div className="relative w-full h-72 sm:h-80 md:h-[380px] overflow-hidden">
                 <Image
                   src={images.director}
                   alt="Lennox Lewis Odhiambo, Founder and Director"
                   fill
-                  className="object-contain p-2"
+                  className="object-contain"
                   sizes="(max-width: 768px) 100vw, 300px"
                 />
               </div>
               <div>
                 <h3 className="text-2xl sm:text-3xl font-extrabold text-white">Lennox Lewis Odhiambo</h3>
                 <p className="text-[#FCA311] font-bold mt-1 text-sm tracking-wide uppercase">Founder &amp; Director</p>
-                <p className="text-neutral-300 mt-5 leading-relaxed text-sm font-normal">
+                
+                {/* Mobile Summarized Description */}
+                <p className="text-neutral-300 mt-4 leading-relaxed text-sm font-normal md:hidden">
+                  Lennox Lewis Odhiambo is a visionary Director with expertise in supply chain management and business consulting. Under his leadership, Zed OS Technologies delivers innovative, high-quality enterprise solutions.
+                </p>
+
+                {/* Full Desktop Description */}
+                <p className="text-neutral-300 mt-5 leading-relaxed text-sm font-normal hidden md:block">
                   Lennox Lewis Odhiambo is a highly motivated and visionary Director with an excellent
                   background in supply chain management and business consultation. Under his leadership,
                   Zed OS Technologies Limited has grown steadily, establishing itself as a reliable
