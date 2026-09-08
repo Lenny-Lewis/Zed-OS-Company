@@ -83,7 +83,7 @@ export default function AboutPage() {
       </section>
 
       <section className="bg-black py-16 md:py-24 px-4 md:px-8">
-        <div className="max-w-[1400px] mx-auto bg-neutral-950 rounded-[2.5rem] p-8 md:p-14 shadow-2xl border border-neutral-900">
+        <div className="max-w-[1400px] mx-auto">
           <Reveal className="text-center">
             <span className="text-white text-xs font-bold uppercase tracking-widest bg-neutral-900 px-4 py-1.5 rounded-full inline-block border border-neutral-800">
               Leadership
