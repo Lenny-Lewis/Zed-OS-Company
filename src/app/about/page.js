@@ -108,17 +108,17 @@ export default function AboutPage() {
                 
                 {/* Mobile Summarized Description */}
                 <p className="text-neutral-300 mt-4 leading-relaxed text-sm font-normal md:hidden">
-                  Lennox Lewis Odhiambo is a visionary Director with expertise in supply chain management and business consulting. Under his leadership, Zed OS Technologies delivers innovative, high-quality enterprise solutions.
+                  Lennox Lewis Odhiambo is a visionary Director, full stack developer, and certified ML engineer with expertise in supply chain management and business consulting. Under his leadership, Zed OS Technologies delivers innovative, high-quality enterprise solutions.
                 </p>
 
                 {/* Full Desktop Description */}
                 <p className="text-neutral-300 mt-5 leading-relaxed text-sm font-normal hidden md:block">
-                  Lennox Lewis Odhiambo is a highly motivated and visionary Director with an excellent
-                  background in supply chain management and business consultation. Under his leadership,
-                  Zed OS Technologies Limited has grown steadily, establishing itself as a reliable
-                  partner in delivering high-quality products and services. His commitment to excellence
-                  and innovation drives the company&apos;s mission to provide solutions that meet and exceed
-                  customer expectations.
+                  Lennox Lewis Odhiambo is a highly motivated and visionary Director, full stack developer,
+                  and certified ML engineer with an excellent background in supply chain management and business
+                  consultation. Under his leadership, Zed OS Technologies Limited has grown steadily, establishing
+                  itself as a reliable partner in delivering high-quality products and services. His commitment
+                  to excellence and innovation drives the company&apos;s mission to provide solutions that meet and
+                  exceed customer expectations.
                 </p>
               </div>
             </div>
