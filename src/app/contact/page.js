@@ -7,7 +7,7 @@ import PageHero from '@/components/PageHero'
 import { images } from '@/data/images'
 
 const inputClass =
-  'w-full bg-neutral-900 border border-neutral-800 rounded-full px-5 py-3.5 text-white placeholder-neutral-500 focus:outline-none focus:border-neutral-600 transition-all text-sm font-medium'
+  'w-full rounded-full border border-white/15 bg-black/20 px-5 py-3.5 font-body text-sm font-light text-white placeholder-white/40 outline-none transition-colors focus:border-white/50'
 
 function PhoneIcon() {
   return (
@@ -94,7 +94,7 @@ export default function ContactPage() {
       />
 
       <div className="bg-black py-16 md:py-24 px-4 md:px-8">
-        <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 bg-neutral-950 rounded-[2.5rem] p-8 md:p-14 shadow-2xl border border-neutral-900">
+        <div className="liquid-glass max-w-[1400px] mx-auto grid grid-cols-1 gap-12 rounded-[2.5rem] p-8 md:grid-cols-2 md:p-14">
           <div>
             <div className="relative h-56 rounded-3xl overflow-hidden mb-8 shadow-xs border border-neutral-800">
               <Image
@@ -105,29 +105,29 @@ export default function ContactPage() {
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>
-            <h2 className="text-3xl font-extrabold text-white tracking-tight">Get In Touch</h2>
+            <h2 className="font-heading text-5xl italic leading-none tracking-[-2px] text-white">Get In Touch</h2>
 
             <ul className="mt-8 space-y-5">
               <li className="flex items-center gap-4">
-                <div className="w-11 h-11 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center shrink-0">
+                <div className="liquid-glass flex h-11 w-11 shrink-0 items-center justify-center rounded-full">
                   <PhoneIcon />
                 </div>
                 <span className="text-neutral-300 text-base font-medium">+254 758 296 887</span>
               </li>
               <li className="flex items-center gap-4">
-                <div className="w-11 h-11 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center shrink-0">
+                <div className="liquid-glass flex h-11 w-11 shrink-0 items-center justify-center rounded-full">
                   <EmailIcon />
                 </div>
                 <span className="text-neutral-300 text-base font-medium">Lennoxlewis.lenny@gmail.com</span>
               </li>
               <li className="flex items-center gap-4">
-                <div className="w-11 h-11 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center shrink-0">
+                <div className="liquid-glass flex h-11 w-11 shrink-0 items-center justify-center rounded-full">
                   <LocationIcon />
                 </div>
                 <span className="text-neutral-300 text-base font-medium">P.O. Box 2371-40100, Kisumu Town West, Kenya</span>
               </li>
               <li className="flex items-center gap-4">
-                <div className="w-11 h-11 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center shrink-0">
+                <div className="liquid-glass flex h-11 w-11 shrink-0 items-center justify-center rounded-full">
                   <ClockIcon />
                 </div>
                 <span className="text-neutral-300 text-base font-medium">Monday – Friday, 8:00 AM – 6:00 PM EAT</span>
@@ -135,7 +135,7 @@ export default function ContactPage() {
             </ul>
           </div>
 
-          <div className="bg-neutral-900 rounded-3xl p-8 md:p-10 border border-neutral-800 shadow-xs">
+          <div className="liquid-glass rounded-3xl p-8 md:p-10">
             {submitted ? (
               <div className="text-center py-12">
                 <div className="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center mx-auto shadow-md">
@@ -199,13 +199,13 @@ export default function ContactPage() {
                   value={form.message}
                   onChange={handleChange}
                   required
-                  className="w-full bg-neutral-900 border border-neutral-800 rounded-3xl p-5 text-white placeholder-neutral-500 focus:outline-none focus:border-neutral-600 transition-all text-sm font-medium"
+                  className="w-full rounded-3xl border border-white/15 bg-black/20 p-5 font-body text-sm font-light text-white placeholder-white/40 outline-none transition-colors focus:border-white/50"
                 />
                 <input type="text" name="_gotcha" className="hidden" tabIndex={-1} autoComplete="off" aria-hidden="true" />
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-white hover:bg-neutral-200 disabled:opacity-60 disabled:cursor-not-allowed text-black py-4 rounded-full font-bold text-sm tracking-wide transition-all shadow-md mt-2"
+                  className="mt-2 w-full rounded-full bg-white py-4 font-body text-sm font-medium tracking-wide text-black transition-colors hover:bg-white/85 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {isSubmitting ? 'Sending...' : 'Send Message'}
                 </button>

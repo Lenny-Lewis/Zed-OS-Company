@@ -147,10 +147,10 @@ export default function ServicesPage() {
 
       <section className="bg-black py-12 md:py-16 px-6 md:px-12 text-center">
         <div className="max-w-4xl mx-auto">
-          <span className="text-white text-xs font-bold uppercase tracking-widest bg-neutral-900 px-4 py-1.5 rounded-full inline-block mb-3 border border-neutral-800">
+          <span className="liquid-glass inline-block rounded-full px-4 py-1.5 font-body text-xs font-medium uppercase tracking-widest text-white/90">
             Digital Capability
           </span>
-          <h2 className="text-3xl md:text-5xl font-extrabold text-white mt-2 tracking-tight leading-tight">
+          <h2 className="mt-5 font-heading text-5xl italic leading-[0.9] tracking-[-2px] text-white md:text-6xl">
             Software Systems, Websites, Data Analytics &amp; AI-driven Workflows
           </h2>
           <p className="text-neutral-300 mt-4 leading-relaxed text-base font-normal max-w-2xl mx-auto">
@@ -164,7 +164,7 @@ export default function ServicesPage() {
         <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
           {services.map((service, index) => (
             <Reveal key={service.name} delay={index * 60}>
-              <div className="bg-neutral-950 rounded-[2.5rem] p-8 md:p-12 border border-neutral-900 shadow-2xl flex flex-col h-full justify-between hover:border-neutral-800">
+              <div className="liquid-glass flex h-full flex-col justify-between rounded-[2.5rem] p-8 transition-transform duration-300 hover:-translate-y-1 md:p-12">
                 <div>
                   <div className="relative h-60 rounded-3xl overflow-hidden mb-8 bg-black border border-neutral-900">
                     <Image
@@ -175,12 +175,12 @@ export default function ServicesPage() {
                       sizes="(max-width: 768px) 100vw, 50vw"
                     />
                   </div>
-                  <h2 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">{service.name}</h2>
+                  <h2 className="font-heading text-4xl italic leading-none tracking-[-1px] text-white md:text-5xl">{service.name}</h2>
                   <p className="text-neutral-300 mt-3 leading-relaxed text-sm font-normal">{service.description}</p>
                 </div>
 
-                <div className="mt-8 pt-6 border-t border-neutral-900">
-                  <h3 className="text-[#FCA311] font-bold text-xs uppercase tracking-wider mb-4">What&apos;s Included</h3>
+                <div className="mt-8 border-t border-white/10 pt-6">
+                  <h3 className="mb-4 text-xs font-medium uppercase tracking-wider text-white/60">What&apos;s Included</h3>
                   <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     {service.includes.map((item) => (
                       <li key={item} className="text-neutral-300 flex items-center gap-2 text-xs font-normal">
