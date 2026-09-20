@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import ScrollReveal from '@/components/ScrollReveal'
 
 const inputClass =
   'w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3.5 text-sm text-white placeholder-white/40 outline-none transition-colors focus:border-white/60'
@@ -58,7 +59,7 @@ export default function PartnerForm() {
 
   return (
     <section className="bg-black px-5 py-20 md:px-8 md:py-28">
-      <div className="mx-auto max-w-3xl border-y border-white/15 py-12 md:py-16">
+      <ScrollReveal className="mx-auto max-w-3xl border-y border-white/15 py-12 md:py-16">
         <p className="text-center text-xs font-medium uppercase tracking-[0.18em] text-white/55">Partner with ZedOS</p>
         <h2 className="mt-4 text-center text-4xl font-light tracking-[-0.04em] text-white sm:text-5xl">Start a Conversation</h2>
         <p className="mt-3 text-center text-base leading-relaxed text-white/65">
@@ -143,7 +144,7 @@ export default function PartnerForm() {
             {error ? <p className="text-red-400 text-sm text-center font-medium mt-2">{error}</p> : null}
           </form>
         )}
-      </div>
+      </ScrollReveal>
     </section>
   )
 }

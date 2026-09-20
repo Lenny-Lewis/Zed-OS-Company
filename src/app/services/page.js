@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import PageHero from '@/components/PageHero'
-import Reveal from '@/components/Reveal'
+import ScrollReveal from '@/components/ScrollReveal'
 import { images } from '@/data/images'
 
 const services = [
@@ -134,10 +134,9 @@ export default function ServicesPage() {
         label="WHAT WE OFFER"
         title="Our Services"
         subtitle="End-to-end solutions for supply, operations, and digital transformation."
-        backgroundImage={images.pageHeroBg}
       />
 
-      <section className="bg-black px-5 pb-8 pt-16 text-center md:px-8 md:pb-12 md:pt-20">
+      <section className="bg-black px-5 pb-8 pt-10 text-center md:px-8 md:pb-12 md:pt-14">
         <div className="mx-auto max-w-4xl">
           <span className="text-xs font-medium uppercase tracking-[0.18em] text-white/55">
             Digital Capability
@@ -155,7 +154,7 @@ export default function ServicesPage() {
       <section className="bg-black px-5 py-12 md:px-8 md:py-16">
         <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-x-12 gap-y-16 md:grid-cols-2">
           {services.map((service, index) => (
-            <Reveal key={service.name} delay={index * 60}>
+            <ScrollReveal key={service.name} delay={index * 90}>
               <article className="flex h-full flex-col justify-between">
                 <div>
                   <div className="relative mb-6 h-56 overflow-hidden bg-neutral-900 md:h-64">
@@ -183,7 +182,7 @@ export default function ServicesPage() {
                   </ul>
                 </div>
               </article>
-            </Reveal>
+            </ScrollReveal>
           ))}
         </div>
       </section>

@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { images } from '@/data/images'
-import Reveal from '@/components/Reveal'
+import ScrollReveal from '@/components/ScrollReveal'
 
 export default function HomeCTA() {
   return (
@@ -15,7 +15,7 @@ export default function HomeCTA() {
           sizes="100vw"
         />
         <div className="absolute inset-0 bg-black/70" />
-        <Reveal className="relative z-10 max-w-3xl mx-auto">
+        <ScrollReveal className="relative z-10 mx-auto max-w-3xl">
           <p className="text-xs font-medium uppercase tracking-[0.18em] text-white/60">Let&apos;s build what&apos;s next</p>
           <h2 className="mt-4 text-4xl font-light tracking-[-0.04em] text-white sm:text-5xl md:text-6xl">Ready to Work With Us?</h2>
           <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-white/75 sm:text-lg">
@@ -27,7 +27,7 @@ export default function HomeCTA() {
           >
             Get in Touch
           </Link>
-        </Reveal>
+        </ScrollReveal>
       </div>
     </section>
   )

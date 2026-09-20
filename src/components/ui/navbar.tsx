@@ -30,13 +30,13 @@ const Menu = ({ list }: MenuProps) => {
           {list?.map((item) => (
             <li key={item.id} className="relative" onMouseEnter={() => setHovered(item.id)} onMouseLeave={() => setHovered(null)}>
               <Link
-                className={`relative flex items-center justify-center rounded px-4 py-2.5 text-xs font-medium transition-all hover:bg-foreground/10 md:px-6 md:py-3 md:text-sm ${hovered === item.id ? "bg-foreground/10" : ""}`}
+                className={`relative flex items-center justify-center rounded px-4 py-2.5 text-xs font-medium transition-colors duration-300 hover:bg-current/10 md:px-6 md:py-3 md:text-sm ${hovered === item.id ? "bg-current/10" : ""}`}
                 href={item.url}
               >
                 {item.title}
               </Link>
               {hovered === item.id && !item.dropdown && (
-                <motion.div layout layoutId="cursor" className="absolute h-0.5 w-full bg-foreground" />
+                <motion.div layout layoutId="cursor" className="absolute h-0.5 w-full bg-current" />
               )}
               {item.dropdown && hovered === item.id && (
                 <div

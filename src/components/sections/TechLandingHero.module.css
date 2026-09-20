@@ -10,10 +10,6 @@
 .brand, .menuButton, .systemButton { pointer-events: auto; text-decoration: none; }
 .brand { gap: 7px; color: #090909; font-size: 13px; font-weight: 600; letter-spacing: -.035em; }
 .brand span, .navTags, .systemButton span { display: none; }
-.mark { width: 28px; height: 28px; overflow: visible; fill: #080808; }
-.heroBrand { display: none; position: fixed; z-index: 60; top: 18px; left: 16px; }
-.heroBrand a { display: flex; align-items: center; gap: 7px; color: #090909; font-size: 13px; font-weight: 600; letter-spacing: -.035em; text-decoration: none; }
-.heroBrand span { display: none; }
 .menuButton { gap: 7px; min-height: 32px; padding: 2px 10px 2px 2px; border-radius: 999px; background: #080808; color: #fff; font-size: 11px; }
 .menuButton i, .systemButton i { display: grid; width: 28px; height: 28px; place-items: center; border-radius: 50%; font-style: normal; }
 .menuButton i { background: #fff; color: #080808; }
@@ -34,6 +30,5 @@
 .secondaryAction { border: 1px solid rgba(0,0,0,.35); color: #080808; }
 .capabilityTags { display: flex; flex-wrap: wrap; gap: 6px; }
 .capabilityTags span { border: 1px solid rgba(0,0,0,.12); border-radius: 999px; background: rgba(255,255,255,.82); padding: 8px 11px; font-size: 11px; font-weight: 500; }
-@media (min-width: 768px) { .videoFrame { inset: 0; } .heroBrand { top: 26px; left: 32px; } .heroBrand span { display: inline; } .navbar { padding: 24px 32px; } .navLeft { gap: 12px; } .brand span, .navTags, .systemButton span { display: flex; } .mark { width: 32px; height: 32px; } .heroBrand .mark { width: 32px; height: 32px; } .menuButton, .systemButton { min-height: 36px; } .menuButton i, .systemButton i { width: 32px; height: 32px; } .menuNav { top: 24px; } .footerArea { padding: 150px 32px 26px; } .content { flex-direction: row; align-items: flex-end; justify-content: space-between; gap: 48px; } .copy h1 { font-size: clamp(2.5rem, 5.5vw, 4.5rem); } .capabilityTags { justify-content: flex-end; max-width: 270px; } }
-@media (min-width: 1024px) { .heroBrand { display: block; } }
+@media (min-width: 768px) { .videoFrame { inset: 0; } .navbar { padding: 24px 32px; } .navLeft { gap: 12px; } .brand span, .navTags, .systemButton span { display: flex; } .menuButton, .systemButton { min-height: 36px; } .menuButton i, .systemButton i { width: 32px; height: 32px; } .menuNav { top: 24px; } .footerArea { padding: 150px 32px 26px; } .content { flex-direction: row; align-items: flex-end; justify-content: space-between; gap: 48px; } .copy h1 { font-size: clamp(2.5rem, 5.5vw, 4.5rem); } .capabilityTags { justify-content: flex-end; max-width: 270px; } }
 @media (prefers-reduced-motion: reduce) { .videoFrame, .navbar, .footerArea, .eyebrow, .copy h1, .actions { transform: none !important; transition: none !important; } }

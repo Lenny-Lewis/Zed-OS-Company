@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import PageHero from '@/components/PageHero'
 import { images } from '@/data/images'
+import ScrollReveal from '@/components/ScrollReveal'
 
 const inputClass =
   'w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3.5 text-sm text-white placeholder-white/40 outline-none transition-colors focus:border-white/60'
@@ -90,12 +91,11 @@ export default function ContactPage() {
         label="REACH US"
         title="Contact Us"
         subtitle="We'd love to hear from you. Let's talk."
-        backgroundImage={images.pageHeroBg}
       />
 
-      <section className="bg-black px-5 py-20 md:px-8 md:py-28">
+      <section className="bg-black px-5 pb-20 pt-10 md:px-8 md:pb-28 md:pt-14">
         <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-14 md:grid-cols-2 md:gap-20">
-          <div>
+          <ScrollReveal>
             <div className="relative mb-8 h-56 overflow-hidden md:h-64">
               <Image
                 src={images.aboutOffice}
@@ -109,34 +109,34 @@ export default function ContactPage() {
             <h2 className="mt-4 text-4xl font-light tracking-[-0.04em] text-white md:text-6xl">Get In Touch</h2>
 
             <ul className="mt-8 divide-y divide-white/15 border-y border-white/15">
-              <li className="flex items-center gap-4 py-4">
+              <ScrollReveal as="li" delay={80} className="flex items-center gap-4 py-4">
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20">
                   <PhoneIcon />
                 </div>
                 <span className="text-sm text-white/70 md:text-base">+254 758 296 887</span>
-              </li>
-              <li className="flex items-center gap-4 py-4">
+              </ScrollReveal>
+              <ScrollReveal as="li" delay={160} className="flex items-center gap-4 py-4">
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20">
                   <EmailIcon />
                 </div>
                 <span className="break-all text-sm text-white/70 md:text-base">Lennoxlewis.lenny@gmail.com</span>
-              </li>
-              <li className="flex items-center gap-4 py-4">
+              </ScrollReveal>
+              <ScrollReveal as="li" delay={240} className="flex items-center gap-4 py-4">
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20">
                   <LocationIcon />
                 </div>
                 <span className="text-sm text-white/70 md:text-base">P.O. Box 2371-40100, Kisumu Town West, Kenya</span>
-              </li>
-              <li className="flex items-center gap-4 py-4">
+              </ScrollReveal>
+              <ScrollReveal as="li" delay={320} className="flex items-center gap-4 py-4">
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20">
                   <ClockIcon />
                 </div>
                 <span className="text-sm text-white/70 md:text-base">Monday – Friday, 8:00 AM – 6:00 PM EAT</span>
-              </li>
+              </ScrollReveal>
             </ul>
-          </div>
+          </ScrollReveal>
 
-          <div className="border-t border-white/15 pt-8 md:border-l md:border-t-0 md:pl-12 md:pt-0">
+          <ScrollReveal delay={120} className="border-t border-white/15 pt-8 md:border-l md:border-t-0 md:pl-12 md:pt-0">
             {submitted ? (
               <div className="text-center py-12">
                 <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white text-black">
@@ -213,7 +213,7 @@ export default function ContactPage() {
                 {error ? <p className="text-red-400 text-sm text-center font-medium mt-2">{error}</p> : null}
               </form>
             )}
-          </div>
+          </ScrollReveal>
         </div>
       </section>
     </>

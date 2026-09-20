@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import PageHero from '@/components/PageHero'
-import Reveal from '@/components/Reveal'
+import ScrollReveal from '@/components/ScrollReveal'
 import { images } from '@/data/images'
 
 const values = [
@@ -27,13 +27,12 @@ export default function AboutPage() {
       <PageHero
         label="WHO WE ARE"
         title="About Zed OS Technologies"
-        subtitle="Integrity. Innovation. Excellence."
-        backgroundImage={images.pageHeroBg}
+        subtitle="A Kisumu-based partner for reliable supply, smarter operations, and practical digital systems."
       />
 
-      <section className="bg-black px-5 py-20 md:px-8 md:py-28">
+      <section className="bg-black px-5 pb-20 pt-10 md:px-8 md:pb-28 md:pt-14">
         <div className="mx-auto grid max-w-[1400px] grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-20">
-          <Reveal>
+          <ScrollReveal>
             <span className="text-xs font-medium uppercase tracking-[0.18em] text-white/55">
               Overview
             </span>
@@ -51,8 +50,8 @@ export default function AboutPage() {
               are guided by a commitment to quality service delivery, timely execution, and value for
               money.
             </p>
-          </Reveal>
-          <Reveal delay={120}>
+          </ScrollReveal>
+          <ScrollReveal delay={120}>
             <div className="relative h-72 overflow-hidden md:h-96">
               <Image
                 src={images.aboutTeam}
@@ -62,20 +61,20 @@ export default function AboutPage() {
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>
-          </Reveal>
+          </ScrollReveal>
         </div>
       </section>
 
       <section className="bg-black px-5 py-20 md:px-8 md:py-28">
         <div className="max-w-[1400px] mx-auto">
-          <Reveal className="text-center">
+          <ScrollReveal className="text-center">
             <span className="text-xs font-medium uppercase tracking-[0.18em] text-white/55">
               Leadership
             </span>
             <h2 className="mt-4 text-4xl font-light tracking-[-0.04em] text-white sm:text-5xl md:text-6xl">Meet the Director</h2>
-          </Reveal>
+          </ScrollReveal>
 
-          <Reveal delay={120} className="mx-auto mt-12 max-w-5xl border-y border-white/15 py-8 md:py-12">
+          <ScrollReveal delay={120} className="mx-auto mt-12 max-w-5xl border-y border-white/15 py-8 md:py-12">
             <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-[300px_minmax(0,1fr)] md:gap-12">
               <div className="relative h-72 w-full overflow-hidden sm:h-80 md:h-[380px]">
                 <Image
@@ -94,27 +93,27 @@ export default function AboutPage() {
                 </p>
               </div>
             </div>
-          </Reveal>
+          </ScrollReveal>
         </div>
       </section>
 
       <section className="bg-black px-5 py-20 md:px-8 md:py-28">
         <div className="max-w-[1400px] mx-auto">
-          <Reveal className="text-center">
+          <ScrollReveal className="text-center">
             <span className="text-xs font-medium uppercase tracking-[0.18em] text-white/55">
               What Drives Us
             </span>
             <h2 className="mt-4 text-4xl font-light tracking-[-0.04em] text-white sm:text-5xl md:text-6xl">Our Core Values</h2>
-          </Reveal>
+          </ScrollReveal>
 
           <div className="mt-12 grid grid-cols-1 divide-y divide-white/15 md:grid-cols-3 md:divide-x md:divide-y-0">
             {values.map((value, index) => (
-              <Reveal key={value.title} delay={index * 90}>
+              <ScrollReveal key={value.title} delay={index * 90}>
                 <div className="h-full py-8 md:px-8 md:py-0 md:first:pl-0 md:last:pr-0">
                   <h3 className="text-3xl font-light tracking-[-0.04em] text-white">{value.title}</h3>
                   <p className="mt-4 text-sm leading-relaxed text-white/65">{value.description}</p>
                 </div>
-              </Reveal>
+              </ScrollReveal>
             ))}
           </div>
         </div>

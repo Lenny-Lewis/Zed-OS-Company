@@ -1,20 +1,21 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { images } from '@/data/images'
-import Reveal from '@/components/Reveal'
+import ScrollReveal from '@/components/ScrollReveal'
+import CountUp from '@/components/CountUp'
 
 const stats = [
-  { value: '24/7', label: 'Customer Support' },
-  { value: '100%', label: 'Quality Assured' },
-  { value: '5+', label: 'Years Experience' },
-  { value: '50+', label: 'Clients Served' },
+  { value: 24, suffix: '/7', label: 'Customer Support' },
+  { value: 100, suffix: '%', label: 'Quality Assured' },
+  { value: 5, suffix: '+', label: 'Years Experience' },
+  { value: 50, suffix: '+', label: 'Clients Served' },
 ]
 
 export default function HomeAbout() {
   return (
     <section className="bg-black px-5 py-20 md:px-8 md:py-28">
       <div className="mx-auto grid max-w-[1400px] grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-20">
-        <Reveal>
+        <ScrollReveal>
           <span className="text-xs font-medium uppercase tracking-[0.18em] text-white/55">
             About Us
           </span>
@@ -39,9 +40,9 @@ export default function HomeAbout() {
             <span>Learn More</span>
             <span className="text-lg">→</span>
           </Link>
-        </Reveal>
+        </ScrollReveal>
 
-        <Reveal delay={120} className="space-y-7">
+        <ScrollReveal delay={120} className="space-y-7">
           <div className="relative h-64 overflow-hidden md:h-80">
             <Image
               src={images.aboutOffice}
@@ -52,17 +53,18 @@ export default function HomeAbout() {
             />
           </div>
           <div className="grid grid-cols-2 border-t border-white/15 sm:grid-cols-4">
-            {stats.map((stat) => (
-              <div
+            {stats.map((stat, index) => (
+              <ScrollReveal
                 key={stat.label}
+                delay={180 + index * 90}
                 className="border-b border-r border-white/15 px-3 py-5 text-center last:border-r-0 sm:border-b-0"
               >
-                <p className="text-2xl font-light tracking-[-0.04em] text-white md:text-3xl">{stat.value}</p>
+                <p className="text-2xl font-light tracking-[-0.04em] text-white md:text-3xl"><CountUp value={stat.value} suffix={stat.suffix} /></p>
                 <p className="mt-1 text-[10px] font-medium uppercase tracking-[0.12em] text-white/45">{stat.label}</p>
-              </div>
+              </ScrollReveal>
             ))}
           </div>
-        </Reveal>
+        </ScrollReveal>
       </div>
     </section>
   )

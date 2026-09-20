@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import PageHero from '@/components/PageHero'
 import PartnerForm from '@/components/PartnerForm'
-import Reveal from '@/components/Reveal'
+import ScrollReveal from '@/components/ScrollReveal'
 import { images } from '@/data/images'
 
 const reasons = [
@@ -69,13 +69,12 @@ export default function PartnerPage() {
         label="WORK WITH US"
         title="Partner With Us"
         subtitle="Build a lasting business relationship with Zed OS Technologies."
-        backgroundImage={images.pageHeroBg}
       />
 
-      <section className="bg-black px-5 py-20 md:px-8 md:py-28">
+      <section className="bg-black px-5 pb-20 pt-10 md:px-8 md:pb-28 md:pt-14">
         <div className="mx-auto max-w-[1400px]">
           <div className="mb-14 grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-20">
-            <Reveal>
+            <ScrollReveal>
               <p className="text-xs font-medium uppercase tracking-[0.18em] text-white/55">Partnership, without friction</p>
               <h2 className="mt-4 text-4xl font-light tracking-[-0.04em] text-white sm:text-5xl md:text-6xl">Why Partner With Us?</h2>
               <p className="mt-5 max-w-xl text-base leading-relaxed text-white/70">
@@ -84,8 +83,8 @@ export default function PartnerPage() {
                 we offer a partnership model that creates mutual value, long-term reliability, and shared
                 growth.
               </p>
-            </Reveal>
-            <Reveal delay={120}>
+            </ScrollReveal>
+            <ScrollReveal delay={120}>
               <div className="relative h-64 overflow-hidden md:h-80">
                 <Image
                   src={images.partnerHandshake}
@@ -95,17 +94,17 @@ export default function PartnerPage() {
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </div>
-            </Reveal>
+            </ScrollReveal>
           </div>
 
           <div className="mx-auto grid max-w-4xl grid-cols-1 divide-y divide-white/15 border-y border-white/15 md:grid-cols-2 md:divide-x md:divide-y-0">
             {reasons.map((reason, index) => (
-              <Reveal key={reason.title} delay={index * 90}>
+              <ScrollReveal key={reason.title} delay={index * 90}>
                 <div className="h-full py-6 md:px-8 md:py-8 md:first:pl-0 md:last:pr-0">
                   <h3 className="text-lg font-medium tracking-[-0.02em] text-white">{reason.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-white/65">{reason.description}</p>
                 </div>
-              </Reveal>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -113,15 +112,15 @@ export default function PartnerPage() {
 
       <section className="bg-black px-5 py-20 md:px-8 md:py-28">
         <div className="mx-auto max-w-[1400px]">
-          <Reveal className="mb-10 text-center">
+          <ScrollReveal className="mb-10 text-center">
             <span className="text-xs font-medium uppercase tracking-[0.18em] text-white/55">
               Network &amp; Scope
             </span>
             <h2 className="mt-4 text-4xl font-light tracking-[-0.04em] text-white sm:text-5xl md:text-6xl">Who We Work With</h2>
-          </Reveal>
+          </ScrollReveal>
           <div className="mt-10 grid grid-cols-1 gap-x-12 gap-y-0 divide-y divide-white/15 md:grid-cols-2 md:divide-y-0">
             {partnerTypes.map((type, index) => (
-              <Reveal key={type.title} delay={index * 80}>
+              <ScrollReveal key={type.title} delay={index * 90}>
                 <div className="flex h-full gap-5 py-7 md:py-8">
                   <div className="shrink-0 pt-0.5">
                     {type.icon}
@@ -131,7 +130,7 @@ export default function PartnerPage() {
                     <p className="mt-2 text-sm leading-relaxed text-white/65">{type.description}</p>
                   </div>
                 </div>
-              </Reveal>
+              </ScrollReveal>
             ))}
           </div>
         </div>

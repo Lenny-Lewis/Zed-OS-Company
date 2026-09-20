@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import PageHero from '@/components/PageHero'
+import ScrollReveal from '@/components/ScrollReveal'
 import { images } from '@/data/images'
 
 const categories = [
@@ -55,24 +56,24 @@ export default function ProductsPage() {
         label="PRODUCT CATALOGUE"
         title="Our Products"
         subtitle="Quality goods sourced and delivered to your doorstep."
-        backgroundImage={images.pageHeroBg}
       />
 
-      <section className="bg-black px-5 pb-8 pt-16 text-center md:px-8 md:pb-12 md:pt-20">
-        <div className="mx-auto max-w-3xl">
+      <section className="bg-black px-5 pb-8 pt-10 text-center md:px-8 md:pb-12 md:pt-14">
+        <ScrollReveal className="mx-auto max-w-3xl">
           <p className="text-base leading-relaxed text-white/65 md:text-lg">
             At Zed OS Technologies Limited, we supply a wide range of quality products to businesses,
             institutions, NGOs, and government organizations across Kenya. All products are sourced
             from trusted suppliers and delivered with speed and reliability.
           </p>
-        </div>
+        </ScrollReveal>
       </section>
 
       <section className="bg-black px-5 py-12 md:px-8 md:py-16">
         <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
-          {categories.map((category) => (
-            <div
+          {categories.map((category, index) => (
+            <ScrollReveal
               key={category.title}
+              delay={index * 90}
               className="group flex h-full flex-col"
             >
               <div className="relative h-56 overflow-hidden bg-neutral-900">
@@ -93,13 +94,13 @@ export default function ProductsPage() {
                   <span>Inquire now</span><span className="transition-transform group-hover:translate-x-1">→</span>
                 </div>
               </div>
-            </div>
+            </ScrollReveal>
           ))}
         </div>
       </section>
 
       <section className="bg-black px-5 py-20 text-center md:px-8 md:py-28">
-        <div className="mx-auto max-w-3xl border-y border-white/15 py-14 text-white md:py-16">
+        <ScrollReveal className="mx-auto max-w-3xl border-y border-white/15 py-14 text-white md:py-16">
           <p className="text-xs font-medium uppercase tracking-[0.18em] text-white/55">Procurement, made simple</p>
           <h2 className="mt-4 text-4xl font-light tracking-[-0.04em] md:text-6xl">Need a Custom Quote?</h2>
           <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-white/65">
@@ -112,7 +113,7 @@ export default function ProductsPage() {
           >
             Request a Quote
           </Link>
-        </div>
+        </ScrollReveal>
       </section>
     </>
   )

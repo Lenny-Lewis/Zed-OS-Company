@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import Reveal from '@/components/Reveal'
+import ScrollReveal from '@/components/ScrollReveal'
 
 export const metadata = {
   title: 'Thank You | Zed OS Technologies Limited',
@@ -9,7 +9,7 @@ export const metadata = {
 export default function ThankYouPage() {
   return (
     <main className="flex min-h-[75vh] items-center justify-center bg-black px-5 py-20 md:px-8 md:py-28">
-      <Reveal className="w-full max-w-2xl border-y border-white/15 py-12 text-center md:py-16">
+      <ScrollReveal className="w-full max-w-2xl border-y border-white/15 py-12 text-center md:py-16">
         <span className="text-xs font-medium uppercase tracking-[0.18em] text-white/55">
           Message Received
         </span>
@@ -31,7 +31,7 @@ export default function ThankYouPage() {
             Send Another Message
           </Link>
         </div>
-      </Reveal>
+      </ScrollReveal>
     </main>
   )
 }

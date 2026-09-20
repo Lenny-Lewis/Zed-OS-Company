@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { images } from '@/data/images'
-import Reveal from '@/components/Reveal'
+import ScrollReveal from '@/components/ScrollReveal'
 
 const services = [
   {
@@ -66,7 +66,7 @@ export default function HomeServices() {
   return (
     <section className="bg-black px-5 py-20 md:px-8 md:py-28">
       <div className="max-w-[1400px] mx-auto">
-        <Reveal className="text-center">
+        <ScrollReveal className="text-center">
           <span className="text-xs font-medium uppercase tracking-[0.18em] text-white/55">
             What We Offer
           </span>
@@ -74,11 +74,11 @@ export default function HomeServices() {
           <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-white/65">
             End-to-end solutions tailored to supply, operations, and digital transformation needs.
           </p>
-        </Reveal>
+        </ScrollReveal>
 
         <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-10 md:grid-cols-2 xl:grid-cols-4">
           {services.map((service, index) => (
-            <Reveal key={service.title} delay={index * 90}>
+            <ScrollReveal key={service.title} delay={index * 90}>
               <div className="group flex h-full flex-col">
                 <div className="relative h-52 overflow-hidden bg-neutral-900">
                   <Image
@@ -99,11 +99,11 @@ export default function HomeServices() {
                   </div>
                 </div>
               </div>
-            </Reveal>
+            </ScrollReveal>
           ))}
         </div>
 
-        <Reveal delay={180} className="mt-12 text-center">
+        <ScrollReveal delay={180} className="mt-12 text-center">
           <Link
             href="/services"
             className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-medium text-black transition-colors hover:bg-white/85"
@@ -111,7 +111,7 @@ export default function HomeServices() {
             <span>View All Services</span>
             <span className="text-lg">→</span>
           </Link>
-        </Reveal>
+        </ScrollReveal>
       </div>
     </section>
   )

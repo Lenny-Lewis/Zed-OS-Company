@@ -1,30 +1,12 @@
-import Image from 'next/image'
-import Reveal from '@/components/Reveal'
-
-export default function PageHero({ label, title, subtitle, backgroundImage }) {
+export default function PageHero({ label, title, subtitle }) {
   return (
-    <section className="bg-black px-4 py-4 md:px-8 md:py-6">
-      <div className="liquid-glass max-w-[1400px] mx-auto relative overflow-hidden rounded-[2.5rem] px-6 py-20 text-center md:rounded-[3rem] md:py-28">
-        {backgroundImage && (
-          <>
-            <Image
-              src={backgroundImage}
-              alt=""
-              fill
-              className="object-cover opacity-30"
-              priority
-              sizes="100vw"
-            />
-            <div className="absolute inset-0 bg-black/55" />
-          </>
-        )}
-        <Reveal className="relative z-10 max-w-4xl mx-auto">
-          <span className="liquid-glass inline-block rounded-full px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-white/90">
-            {label}
-          </span>
-          <h1 className="mt-5 font-heading text-5xl italic leading-[0.9] tracking-[-3px] text-white sm:text-7xl">{title}</h1>
-          <p className="mx-auto mt-5 max-w-2xl font-body text-base font-light leading-relaxed text-white/80 sm:text-lg">{subtitle}</p>
-        </Reveal>
+    <section className="bg-black px-5 pb-6 pt-24 md:px-8 md:pb-8 md:pt-28">
+      <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-2.5 md:grid-cols-[minmax(0,1fr)_minmax(0,0.7fr)] md:items-end md:gap-12">
+        <div>
+          <p className="text-xs font-medium uppercase tracking-[0.18em] text-white/55">{label}</p>
+          <h1 className="mt-2.5 text-4xl font-light leading-[0.95] tracking-[-0.04em] text-white sm:text-5xl md:text-6xl">{title}</h1>
+        </div>
+        <p className="max-w-xl text-sm leading-relaxed text-white/65 md:justify-self-end md:text-base">{subtitle}</p>
       </div>
     </section>
   )
