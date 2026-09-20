@@ -19,7 +19,7 @@ export default function Logo({ className = '', showTagline = false, size = 'nav'
       >
         <Image
           src={images.logo}
-          alt="Zed OS Eagle Logo"
+          alt="Zed OS Technologies logo"
           fill
           className="object-cover"
           priority={size === 'nav'}
@@ -48,4 +48,3 @@ export default function Logo({ className = '', showTagline = false, size = 'nav'
     </Link>
   )
 }
-
