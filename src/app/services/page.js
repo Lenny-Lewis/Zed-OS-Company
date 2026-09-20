@@ -6,7 +6,6 @@ import { images } from '@/data/images'
 const services = [
   {
     name: 'General Supplies',
-    bg: 'bg-black',
     image: images.services.supplies,
     alt: 'General office and institutional supplies',
     description:
@@ -23,7 +22,6 @@ const services = [
   },
   {
     name: 'Vehicle Hire',
-    bg: 'bg-[#0A0F1D]',
     image: images.services.vehicle,
     alt: 'Vehicle hire fleet',
     description:
@@ -39,7 +37,6 @@ const services = [
   },
   {
     name: 'Conference Facilities',
-    bg: 'bg-black',
     image: images.services.conference,
     alt: 'Conference and meeting facilities',
     description:
@@ -55,7 +52,6 @@ const services = [
   },
   {
     name: 'Consultancy Services',
-    bg: 'bg-[#0A0F1D]',
     image: images.services.consultancy,
     alt: 'Business consultancy session',
     description:
@@ -71,7 +67,6 @@ const services = [
   },
   {
     name: 'Software Systems',
-    bg: 'bg-black',
     image: images.digital.systems,
     alt: 'Software systems development workspace',
     description:
@@ -87,7 +82,6 @@ const services = [
   },
   {
     name: 'Websites',
-    bg: 'bg-[#0A0F1D]',
     image: images.digital.websites,
     alt: 'Website development workspace',
     description:
@@ -103,7 +97,6 @@ const services = [
   },
   {
     name: 'Data Analytics',
-    bg: 'bg-black',
     image: images.digital.analytics,
     alt: 'Data analytics dashboard on a laptop',
     description:
@@ -119,7 +112,6 @@ const services = [
   },
   {
     name: 'AI & ML',
-    bg: 'bg-[#0A0F1D]',
     image: images.digital.aiMl,
     alt: 'Artificial intelligence concept artwork',
     description:
@@ -145,52 +137,52 @@ export default function ServicesPage() {
         backgroundImage={images.pageHeroBg}
       />
 
-      <section className="bg-black py-12 md:py-16 px-6 md:px-12 text-center">
-        <div className="max-w-4xl mx-auto">
-          <span className="liquid-glass inline-block rounded-full px-4 py-1.5 font-body text-xs font-medium uppercase tracking-widest text-white/90">
+      <section className="bg-black px-5 pb-8 pt-16 text-center md:px-8 md:pb-12 md:pt-20">
+        <div className="mx-auto max-w-4xl">
+          <span className="text-xs font-medium uppercase tracking-[0.18em] text-white/55">
             Digital Capability
           </span>
-          <h2 className="mt-5 font-heading text-5xl italic leading-[0.9] tracking-[-2px] text-white md:text-6xl">
+          <h2 className="mx-auto mt-4 max-w-4xl text-4xl font-light leading-[0.95] tracking-[-0.04em] text-white md:text-6xl">
             Software Systems, Websites, Data Analytics &amp; AI-driven Workflows
           </h2>
-          <p className="text-neutral-300 mt-4 leading-relaxed text-base font-normal max-w-2xl mx-auto">
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/65">
             Alongside our general supply and consultancy work, we empower organizations with high-performance
             digital platforms, internal system automation, and actionable data analytics.
           </p>
         </div>
       </section>
 
-      <section className="bg-black py-8 md:py-12 px-4 md:px-8 space-y-8">
-        <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+      <section className="bg-black px-5 py-12 md:px-8 md:py-16">
+        <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-x-12 gap-y-16 md:grid-cols-2">
           {services.map((service, index) => (
             <Reveal key={service.name} delay={index * 60}>
-              <div className="liquid-glass flex h-full flex-col justify-between rounded-[2.5rem] p-8 transition-transform duration-300 hover:-translate-y-1 md:p-12">
+              <article className="flex h-full flex-col justify-between">
                 <div>
-                  <div className="relative h-60 rounded-3xl overflow-hidden mb-8 bg-black border border-neutral-900">
+                  <div className="relative mb-6 h-56 overflow-hidden bg-neutral-900 md:h-64">
                     <Image
                       src={service.image}
                       alt={service.alt}
                       fill
-                      className="object-cover opacity-85"
+                      className="object-cover"
                       sizes="(max-width: 768px) 100vw, 50vw"
                     />
                   </div>
-                  <h2 className="font-heading text-4xl italic leading-none tracking-[-1px] text-white md:text-5xl">{service.name}</h2>
-                  <p className="text-neutral-300 mt-3 leading-relaxed text-sm font-normal">{service.description}</p>
+                  <h2 className="text-3xl font-light tracking-[-0.04em] text-white md:text-4xl">{service.name}</h2>
+                  <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/65">{service.description}</p>
                 </div>
 
-                <div className="mt-8 border-t border-white/10 pt-6">
-                  <h3 className="mb-4 text-xs font-medium uppercase tracking-wider text-white/60">What&apos;s Included</h3>
-                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div className="mt-7 border-t border-white/15 pt-5">
+                  <h3 className="mb-3 text-[11px] font-medium uppercase tracking-[0.16em] text-white/45">What&apos;s Included</h3>
+                  <ul className="grid grid-cols-1 gap-x-5 gap-y-2 sm:grid-cols-2">
                     {service.includes.map((item) => (
-                      <li key={item} className="text-neutral-300 flex items-center gap-2 text-xs font-normal">
-                        <span className="w-1.5 h-1.5 rounded-full bg-white shrink-0" />
+                      <li key={item} className="flex items-center gap-2 text-xs text-white/65">
+                        <span className="h-1 w-1 shrink-0 rounded-full bg-white/70" />
                         <span>{item}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
-              </div>
+              </article>
             </Reveal>
           ))}
         </div>

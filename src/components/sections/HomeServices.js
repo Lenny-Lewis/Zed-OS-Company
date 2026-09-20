@@ -64,39 +64,38 @@ const services = [
 
 export default function HomeServices() {
   return (
-    <section className="bg-black py-20 md:py-28 px-4 md:px-8">
+    <section className="bg-black px-5 py-20 md:px-8 md:py-28">
       <div className="max-w-[1400px] mx-auto">
         <Reveal className="text-center">
-          <span className="text-white text-xs font-bold uppercase tracking-widest bg-neutral-900 px-4 py-1.5 rounded-full inline-block border border-neutral-800">
+          <span className="text-xs font-medium uppercase tracking-[0.18em] text-white/55">
             What We Offer
           </span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white mt-4 tracking-tight">Our Services &amp; Solutions</h2>
-          <p className="text-neutral-300 mt-4 max-w-2xl mx-auto leading-relaxed text-base font-normal">
+          <h2 className="mt-4 text-4xl font-light tracking-[-0.04em] text-white sm:text-5xl md:text-6xl">Our Services &amp; Solutions</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-white/65">
             End-to-end solutions tailored to supply, operations, and digital transformation needs.
           </p>
         </Reveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mt-14">
+        <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-10 md:grid-cols-2 xl:grid-cols-4">
           {services.map((service, index) => (
             <Reveal key={service.title} delay={index * 90}>
-              <div className="bg-neutral-950 rounded-3xl overflow-hidden border border-neutral-900 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1.5 group flex flex-col h-full hover:border-neutral-700">
-                <div className="relative h-48 overflow-hidden bg-black">
+              <div className="group flex h-full flex-col">
+                <div className="relative h-52 overflow-hidden bg-neutral-900">
                   <Image
                     src={service.image}
                     alt={service.alt}
                     fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500 opacity-80"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                     sizes="(max-width: 1024px) 50vw, 25vw"
                   />
                 </div>
-                <div className="p-7 flex flex-col flex-grow justify-between">
+                <div className="flex flex-grow flex-col pt-5">
                   <div>
-                    <h3 className="text-white font-bold text-xl group-hover:text-[#FCA311] transition-colors">{service.title}</h3>
-                    <p className="text-neutral-300 text-sm mt-3 leading-relaxed font-normal">{service.description}</p>
+                    <h3 className="text-xl font-medium tracking-[-0.03em] text-white">{service.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-white/60">{service.description}</p>
                   </div>
-                  <div className="mt-6 pt-4 border-t border-neutral-900 flex items-center justify-between text-xs font-bold text-white">
-                    <span>Explore Solution</span>
-                    <span className="group-hover:translate-x-1 transition-transform">→</span>
+                  <div className="mt-5 flex items-center gap-2 text-xs font-medium text-white/70">
+                    <span>Explore solution</span><span className="transition-transform group-hover:translate-x-1">→</span>
                   </div>
                 </div>
               </div>
@@ -104,10 +103,10 @@ export default function HomeServices() {
           ))}
         </div>
 
-        <Reveal delay={180} className="text-center mt-14">
+        <Reveal delay={180} className="mt-12 text-center">
           <Link
             href="/services"
-            className="inline-flex items-center gap-2 bg-white hover:bg-neutral-200 text-black font-bold px-8 py-4 rounded-full text-sm tracking-wide transition-all shadow-md"
+            className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-medium text-black transition-colors hover:bg-white/85"
           >
             <span>View All Services</span>
             <span className="text-lg">→</span>

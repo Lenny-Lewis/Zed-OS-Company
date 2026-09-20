@@ -7,7 +7,7 @@ import PageHero from '@/components/PageHero'
 import { images } from '@/data/images'
 
 const inputClass =
-  'w-full rounded-full border border-white/15 bg-black/20 px-5 py-3.5 font-body text-sm font-light text-white placeholder-white/40 outline-none transition-colors focus:border-white/50'
+  'w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3.5 text-sm text-white placeholder-white/40 outline-none transition-colors focus:border-white/60'
 
 function PhoneIcon() {
   return (
@@ -93,58 +93,59 @@ export default function ContactPage() {
         backgroundImage={images.pageHeroBg}
       />
 
-      <div className="bg-black py-16 md:py-24 px-4 md:px-8">
-        <div className="liquid-glass max-w-[1400px] mx-auto grid grid-cols-1 gap-12 rounded-[2.5rem] p-8 md:grid-cols-2 md:p-14">
+      <section className="bg-black px-5 py-20 md:px-8 md:py-28">
+        <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-14 md:grid-cols-2 md:gap-20">
           <div>
-            <div className="relative h-56 rounded-3xl overflow-hidden mb-8 shadow-xs border border-neutral-800">
+            <div className="relative mb-8 h-56 overflow-hidden md:h-64">
               <Image
                 src={images.aboutOffice}
                 alt="Zed OS Technologies office"
                 fill
-                className="object-cover opacity-80"
+                className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>
-            <h2 className="font-heading text-5xl italic leading-none tracking-[-2px] text-white">Get In Touch</h2>
+            <p className="text-xs font-medium uppercase tracking-[0.18em] text-white/55">We&apos;re ready to listen</p>
+            <h2 className="mt-4 text-4xl font-light tracking-[-0.04em] text-white md:text-6xl">Get In Touch</h2>
 
-            <ul className="mt-8 space-y-5">
-              <li className="flex items-center gap-4">
-                <div className="liquid-glass flex h-11 w-11 shrink-0 items-center justify-center rounded-full">
+            <ul className="mt-8 divide-y divide-white/15 border-y border-white/15">
+              <li className="flex items-center gap-4 py-4">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20">
                   <PhoneIcon />
                 </div>
-                <span className="text-neutral-300 text-base font-medium">+254 758 296 887</span>
+                <span className="text-sm text-white/70 md:text-base">+254 758 296 887</span>
               </li>
-              <li className="flex items-center gap-4">
-                <div className="liquid-glass flex h-11 w-11 shrink-0 items-center justify-center rounded-full">
+              <li className="flex items-center gap-4 py-4">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20">
                   <EmailIcon />
                 </div>
-                <span className="text-neutral-300 text-base font-medium">Lennoxlewis.lenny@gmail.com</span>
+                <span className="break-all text-sm text-white/70 md:text-base">Lennoxlewis.lenny@gmail.com</span>
               </li>
-              <li className="flex items-center gap-4">
-                <div className="liquid-glass flex h-11 w-11 shrink-0 items-center justify-center rounded-full">
+              <li className="flex items-center gap-4 py-4">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20">
                   <LocationIcon />
                 </div>
-                <span className="text-neutral-300 text-base font-medium">P.O. Box 2371-40100, Kisumu Town West, Kenya</span>
+                <span className="text-sm text-white/70 md:text-base">P.O. Box 2371-40100, Kisumu Town West, Kenya</span>
               </li>
-              <li className="flex items-center gap-4">
-                <div className="liquid-glass flex h-11 w-11 shrink-0 items-center justify-center rounded-full">
+              <li className="flex items-center gap-4 py-4">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20">
                   <ClockIcon />
                 </div>
-                <span className="text-neutral-300 text-base font-medium">Monday – Friday, 8:00 AM – 6:00 PM EAT</span>
+                <span className="text-sm text-white/70 md:text-base">Monday – Friday, 8:00 AM – 6:00 PM EAT</span>
               </li>
             </ul>
           </div>
 
-          <div className="liquid-glass rounded-3xl p-8 md:p-10">
+          <div className="border-t border-white/15 pt-8 md:border-l md:border-t-0 md:pl-12 md:pt-0">
             {submitted ? (
               <div className="text-center py-12">
-                <div className="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center mx-auto shadow-md">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white text-black">
                   <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <h3 className="text-white font-extrabold text-2xl mt-6">Message Sent!</h3>
-                <p className="text-neutral-300 mt-3 font-normal">
+                <h3 className="mt-6 text-2xl font-medium text-white">Message Sent!</h3>
+                <p className="mt-3 text-white/65">
                   Thank you for reaching out. We&apos;ll get back to you as soon as possible.
                 </p>
               </div>
@@ -199,13 +200,13 @@ export default function ContactPage() {
                   value={form.message}
                   onChange={handleChange}
                   required
-                  className="w-full rounded-3xl border border-white/15 bg-black/20 p-5 font-body text-sm font-light text-white placeholder-white/40 outline-none transition-colors focus:border-white/50"
+                  className="w-full rounded-xl border border-white/15 bg-white/[0.04] p-4 text-sm text-white placeholder-white/40 outline-none transition-colors focus:border-white/60"
                 />
                 <input type="text" name="_gotcha" className="hidden" tabIndex={-1} autoComplete="off" aria-hidden="true" />
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="mt-2 w-full rounded-full bg-white py-4 font-body text-sm font-medium tracking-wide text-black transition-colors hover:bg-white/85 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="mt-2 w-full rounded-full bg-white py-3.5 text-sm font-medium text-black transition-colors hover:bg-white/85 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {isSubmitting ? 'Sending...' : 'Send Message'}
                 </button>
@@ -214,7 +215,7 @@ export default function ContactPage() {
             )}
           </div>
         </div>
-      </div>
+      </section>
     </>
   )
 }

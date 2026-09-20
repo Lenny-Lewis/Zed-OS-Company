@@ -1,8 +1,6 @@
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
-import WhatsAppButton from '@/components/WhatsAppButton'
+import SiteChrome from '@/components/SiteChrome'
 
 export const metadata = {
   title: 'Zed OS Technologies Limited',
@@ -45,12 +43,12 @@ const jsonLd = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap"
           rel="stylesheet"
         />
         <script
@@ -58,11 +56,8 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body>
-        <Navbar />
-        {children}
-        <Footer />
-        <WhatsAppButton />
+      <body suppressHydrationWarning>
+        <SiteChrome>{children}</SiteChrome>
         <Analytics />
       </body>
     </html>

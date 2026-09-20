@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 const inputClass =
-  'w-full bg-neutral-900 border border-neutral-800 rounded-full px-5 py-3.5 text-white placeholder-neutral-500 focus:outline-none focus:border-neutral-600 transition-all text-sm font-medium'
+  'w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3.5 text-sm text-white placeholder-white/40 outline-none transition-colors focus:border-white/60'
 
 export default function PartnerForm() {
   const router = useRouter()
@@ -57,16 +57,17 @@ export default function PartnerForm() {
   }
 
   return (
-    <section className="bg-black py-16 md:py-24 px-4 md:px-8">
-      <div className="max-w-[1400px] mx-auto bg-neutral-950 rounded-[2.5rem] p-8 md:p-14 shadow-2xl border border-neutral-900 max-w-3xl">
-        <h2 className="text-3xl sm:text-4xl font-extrabold text-white text-center tracking-tight">Start a Conversation</h2>
-        <p className="text-neutral-300 text-center mt-3 leading-relaxed text-base font-normal">
+    <section className="bg-black px-5 py-20 md:px-8 md:py-28">
+      <div className="mx-auto max-w-3xl border-y border-white/15 py-12 md:py-16">
+        <p className="text-center text-xs font-medium uppercase tracking-[0.18em] text-white/55">Partner with ZedOS</p>
+        <h2 className="mt-4 text-center text-4xl font-light tracking-[-0.04em] text-white sm:text-5xl">Start a Conversation</h2>
+        <p className="mt-3 text-center text-base leading-relaxed text-white/65">
           Fill in the form below and our team will reach out within 24 hours.
         </p>
 
         {submitted ? (
-          <div className="bg-neutral-900 rounded-3xl p-8 mt-10 text-center border border-neutral-800 shadow-sm">
-            <p className="text-white font-bold text-lg">
+          <div className="mt-10 border-t border-white/15 pt-8 text-center">
+            <p className="text-lg font-medium text-white">
               Thank you! We&apos;ll review your request and be in touch within 24 hours.
             </p>
           </div>
@@ -129,13 +130,13 @@ export default function PartnerForm() {
               value={form.message}
               onChange={handleChange}
               required
-              className="w-full bg-neutral-900 border border-neutral-800 rounded-3xl p-5 text-white placeholder-neutral-500 focus:outline-none focus:border-neutral-600 transition-all text-sm font-medium"
+              className="w-full rounded-xl border border-white/15 bg-white/[0.04] p-4 text-sm text-white placeholder-white/40 outline-none transition-colors focus:border-white/60"
             />
             <input type="text" name="_gotcha" className="hidden" tabIndex={-1} autoComplete="off" aria-hidden="true" />
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-white hover:bg-neutral-200 disabled:opacity-60 disabled:cursor-not-allowed text-black py-4 rounded-full font-bold text-sm tracking-wide transition-all shadow-md mt-2"
+              className="mt-2 w-full rounded-full bg-white py-3.5 text-sm font-medium text-black transition-colors hover:bg-white/85 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSubmitting ? 'Sending...' : 'Submit Partnership Request'}
             </button>

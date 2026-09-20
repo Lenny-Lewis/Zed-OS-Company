@@ -28,7 +28,7 @@ const partnerTypes = [
     title: 'Government Institutions',
     description: 'Tendering and supply partnerships with national and county government bodies.',
     icon: (
-      <svg className="w-10 h-10 text-[#FCA311]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
       </svg>
     ),
@@ -37,7 +37,7 @@ const partnerTypes = [
     title: 'NGOs & Development Organizations',
     description: 'Procurement support and logistics for NGOs operating across Kenya.',
     icon: (
-      <svg className="w-10 h-10 text-[#FCA311]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
       </svg>
     ),
@@ -46,7 +46,7 @@ const partnerTypes = [
     title: 'Private Sector Companies',
     description: 'Supply chain and consultancy partnerships with businesses of all sizes.',
     icon: (
-      <svg className="w-10 h-10 text-[#FCA311]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
       </svg>
     ),
@@ -55,7 +55,7 @@ const partnerTypes = [
     title: 'Individual Clients',
     description: 'Personalized supply and transport solutions for individuals and entrepreneurs.',
     icon: (
-      <svg className="w-10 h-10 text-[#FCA311]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
       </svg>
     ),
@@ -72,12 +72,13 @@ export default function PartnerPage() {
         backgroundImage={images.pageHeroBg}
       />
 
-      <section className="bg-black py-16 md:py-24 px-6 md:px-12">
-        <div className="max-w-[1400px] mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
+      <section className="bg-black px-5 py-20 md:px-8 md:py-28">
+        <div className="mx-auto max-w-[1400px]">
+          <div className="mb-14 grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-20">
             <Reveal>
-              <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">Why Partner With Us?</h2>
-              <p className="text-neutral-300 mt-4 leading-relaxed text-base font-normal">
+              <p className="text-xs font-medium uppercase tracking-[0.18em] text-white/55">Partnership, without friction</p>
+              <h2 className="mt-4 text-4xl font-light tracking-[-0.04em] text-white sm:text-5xl md:text-6xl">Why Partner With Us?</h2>
+              <p className="mt-5 max-w-xl text-base leading-relaxed text-white/70">
                 At Zed OS Technologies Limited, we believe in building relationships, not just
                 transactions. Whether you are a supplier, corporate client, NGO, or government institution,
                 we offer a partnership model that creates mutual value, long-term reliability, and shared
@@ -85,24 +86,24 @@ export default function PartnerPage() {
               </p>
             </Reveal>
             <Reveal delay={120}>
-              <div className="relative h-72 md:h-80 rounded-3xl overflow-hidden shadow-xl">
+              <div className="relative h-64 overflow-hidden md:h-80">
                 <Image
                   src={images.partnerHandshake}
                   alt="Business partnership handshake"
                   fill
-                  className="object-cover opacity-90"
+                  className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </div>
             </Reveal>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <div className="mx-auto grid max-w-4xl grid-cols-1 divide-y divide-white/15 border-y border-white/15 md:grid-cols-2 md:divide-x md:divide-y-0">
             {reasons.map((reason, index) => (
               <Reveal key={reason.title} delay={index * 90}>
-                <div className="bg-neutral-900 rounded-3xl p-6 md:p-8 border border-neutral-800 h-full shadow-xs">
-                  <h3 className="text-white font-extrabold text-lg">{reason.title}</h3>
-                  <p className="text-neutral-300 text-sm mt-2 leading-relaxed font-normal">{reason.description}</p>
+                <div className="h-full py-6 md:px-8 md:py-8 md:first:pl-0 md:last:pr-0">
+                  <h3 className="text-lg font-medium tracking-[-0.02em] text-white">{reason.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-white/65">{reason.description}</p>
                 </div>
               </Reveal>
             ))}
@@ -110,24 +111,24 @@ export default function PartnerPage() {
         </div>
       </section>
 
-      <section className="bg-black py-16 md:py-24 px-4 md:px-8">
-        <div className="max-w-[1400px] mx-auto">
-          <Reveal className="text-center mb-12">
-            <span className="text-white text-xs font-bold uppercase tracking-widest bg-neutral-900 px-4 py-1.5 rounded-full inline-block mb-3 border border-neutral-800">
+      <section className="bg-black px-5 py-20 md:px-8 md:py-28">
+        <div className="mx-auto max-w-[1400px]">
+          <Reveal className="mb-10 text-center">
+            <span className="text-xs font-medium uppercase tracking-[0.18em] text-white/55">
               Network &amp; Scope
             </span>
-            <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">Who We Work With</h2>
+            <h2 className="mt-4 text-4xl font-light tracking-[-0.04em] text-white sm:text-5xl md:text-6xl">Who We Work With</h2>
           </Reveal>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
+          <div className="mt-10 grid grid-cols-1 gap-x-12 gap-y-0 divide-y divide-white/15 md:grid-cols-2 md:divide-y-0">
             {partnerTypes.map((type, index) => (
               <Reveal key={type.title} delay={index * 80}>
-                <div className="bg-neutral-950 border border-neutral-900 rounded-3xl p-8 flex gap-6 h-full items-start shadow-xl hover:shadow-2xl transition-all hover:border-neutral-800">
-                  <div className="p-4 bg-neutral-900 rounded-2xl shrink-0 text-white border border-neutral-800">
+                <div className="flex h-full gap-5 py-7 md:py-8">
+                  <div className="shrink-0 pt-0.5">
                     {type.icon}
                   </div>
                   <div>
-                    <h3 className="text-white font-extrabold text-xl">{type.title}</h3>
-                    <p className="text-neutral-300 text-sm mt-2 leading-relaxed font-normal">{type.description}</p>
+                    <h3 className="text-xl font-medium tracking-[-0.03em] text-white">{type.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-white/65">{type.description}</p>
                   </div>
                 </div>
               </Reveal>
