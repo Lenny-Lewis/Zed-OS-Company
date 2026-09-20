@@ -33,7 +33,6 @@ function ZedMark() {
 export default function Navbar() {
   const pathname = usePathname()
   const [isOnDark, setIsOnDark] = useState(pathname !== '/')
-  const isInteriorPage = pathname !== '/'
 
   useEffect(() => {
     let frame
@@ -58,10 +57,10 @@ export default function Navbar() {
 
   return (
     <>
-      {isInteriorPage && <div aria-hidden="true" className="fixed inset-x-0 top-0 z-50 h-20 bg-black/90 backdrop-blur-md lg:h-24" />}
+      {isOnDark && <div aria-hidden="true" className="fixed inset-x-0 top-0 z-50 h-20 bg-black/90 backdrop-blur-md transition-opacity duration-300 lg:h-24" />}
       <Link href="/" aria-label="ZedOS Technologies home" className={`fixed left-4 top-4 z-[60] hidden items-center gap-2 text-sm font-semibold tracking-tight transition-colors duration-300 lg:flex md:left-8 md:top-6 ${isOnDark ? 'text-white' : 'text-black'}`}><ZedMark /><span>ZedOS Technologies</span></Link>
       <header className={`fixed left-1/2 top-4 z-[60] hidden -translate-x-1/2 transition-colors duration-300 lg:block md:top-6 ${isOnDark ? 'text-white' : 'text-black'}`}><Menu list={menus} /></header>
-      <MobileNav isOnDark={isOnDark} isInteriorPage={isInteriorPage} />
+      <MobileNav isOnDark={isOnDark} />
     </>
   )
 }

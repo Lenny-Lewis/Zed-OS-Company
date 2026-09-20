@@ -18,10 +18,9 @@ function Mark() {
 
 type MobileNavProps = {
   isOnDark?: boolean;
-  isInteriorPage?: boolean;
 };
 
-export default function MobileNav({ isOnDark = false, isInteriorPage = false }: MobileNavProps) {
+export default function MobileNav({ isOnDark = false }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
@@ -53,7 +52,7 @@ export default function MobileNav({ isOnDark = false, isInteriorPage = false }: 
 
   return (
     <>
-      <header className={`fixed inset-x-0 top-0 z-[60] flex items-center justify-between px-4 py-4 transition-colors duration-300 lg:hidden ${open ? "bg-black text-white" : isInteriorPage ? "bg-black/90 text-white backdrop-blur-md" : isOnDark ? "text-white" : "text-black"}`}>
+      <header className={`fixed inset-x-0 top-0 z-[60] flex items-center justify-between px-4 py-4 transition-colors duration-300 lg:hidden ${open ? "bg-black text-white" : isOnDark ? "bg-black/90 text-white backdrop-blur-md" : "text-black"}`}>
         <Link href="/" className="flex items-center gap-2 text-sm font-semibold tracking-tight" aria-label="ZedOS Technologies home"><Mark /><span>ZedOS Technologies</span></Link>
         <button ref={toggleRef} type="button" onClick={() => (open ? close() : setOpen(true))} aria-expanded={open} aria-label="Menu" className={`grid h-11 w-11 place-items-center rounded-full transition-colors duration-300 ${isOnDark ? "bg-white text-black" : "bg-black text-white"}`}>
           <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
