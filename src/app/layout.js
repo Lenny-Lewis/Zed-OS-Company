@@ -7,13 +7,14 @@ export const metadata = {
   description: 'General Supplies & Consultancy Services — Kisumu, Kenya',
   icons: {
     icon: [
-      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
-      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+      { url: '/eagle-light.ico', media: '(prefers-color-scheme: light)' },
+      { url: '/eagle-dark.ico', media: '(prefers-color-scheme: dark)' },
+      { url: '/eagle-light-16.png', sizes: '16x16', type: 'image/png', media: '(prefers-color-scheme: light)' },
+      { url: '/eagle-light-32.png', sizes: '32x32', type: 'image/png', media: '(prefers-color-scheme: light)' },
+      { url: '/eagle-dark-16.png', sizes: '16x16', type: 'image/png', media: '(prefers-color-scheme: dark)' },
+      { url: '/eagle-dark-32.png', sizes: '32x32', type: 'image/png', media: '(prefers-color-scheme: dark)' },
     ],
-    shortcut: '/favicon.ico',
-    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+    apple: [{ url: '/eagle-light-180.png', sizes: '180x180', type: 'image/png' }],
   },
   manifest: '/site.webmanifest',
 }
