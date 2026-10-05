@@ -1,6 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import SiteChrome from '@/components/SiteChrome'
+import StyledComponentsRegistry from '@/lib/StyledComponentsRegistry'
 
 export const metadata = {
   title: 'Zed OS Technologies Limited',
@@ -58,7 +59,9 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body suppressHydrationWarning>
-        <SiteChrome>{children}</SiteChrome>
+        <StyledComponentsRegistry>
+          <SiteChrome>{children}</SiteChrome>
+        </StyledComponentsRegistry>
         <Analytics />
       </body>
     </html>
