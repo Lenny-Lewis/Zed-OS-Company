@@ -5,26 +5,28 @@ import { usePathname } from 'next/navigation'
 import Loader from '@/components/ui/loader-5'
 
 const SESSION_KEY = 'zedos:intro-seen'
-const HOLD_MS = 1900
-const FADE_MS = 650
-const REDUCED_HOLD_MS = 400
+const HOLD_MS = 3300
+const FADE_MS = 700
+const REDUCED_HOLD_MS = 600
 
-type Phase = 'idle' | 'entering' | 'leaving'
+type Phase = 'visible' | 'leaving' | 'done'
 
 function Intro() {
-  const [phase, setPhase] = useState<Phase>('idle')
+  // Starts visible so the overlay is server-rendered: the first paint is already
+  // black, the page behind it never shows through.
+  const [phase, setPhase] = useState<Phase>('visible')
 
   useEffect(() => {
-    try {
-      if (window.sessionStorage.getItem(SESSION_KEY)) return
-    } catch {
-      // sessionStorage blocked (private mode) — play once per mount
+    // The inline script in the document head flags repeat visits before first
+    // paint, so the overlay is already hidden by CSS and just needs unmounting.
+    if (document.documentElement.hasAttribute('data-intro-seen')) {
+      const stop = setTimeout(() => setPhase('done'), 0)
+      return () => clearTimeout(stop)
     }
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const hold = reduceMotion ? REDUCED_HOLD_MS : HOLD_MS
 
-    const enter = requestAnimationFrame(() => setPhase('entering'))
     const leave = setTimeout(() => setPhase('leaving'), hold)
     // Flagged as seen only once the intro has played out, so a remount in the
     // same tick (React strict mode) still gets to show it.
@@ -34,11 +36,10 @@ function Intro() {
       } catch {
         // ignore storage failures
       }
-      setPhase('idle')
+      setPhase('done')
     }, hold + FADE_MS)
 
     return () => {
-      cancelAnimationFrame(enter)
       clearTimeout(leave)
       clearTimeout(done)
     }
@@ -46,7 +47,7 @@ function Intro() {
 
   // Hold the page still while the intro is on screen.
   useEffect(() => {
-    if (phase === 'idle') return
+    if (phase === 'done') return
 
     const { body } = document
     const previous = body.style.overflow
@@ -57,9 +58,7 @@ function Intro() {
     }
   }, [phase])
 
-  if (phase === 'idle') return null
-
-  const visible = phase === 'entering'
+  if (phase === 'done') return null
 
   return (
     <>
@@ -70,23 +69,11 @@ function Intro() {
       <div
         aria-hidden="true"
         data-intro
-        className={`fixed inset-0 z-[100] overflow-hidden bg-black ${
-          visible ? 'opacity-100 duration-300' : 'opacity-0 duration-700'
-        } transition-opacity ease-out motion-reduce:transition-none`}
+        className={`fixed inset-0 z-[100] overflow-hidden bg-black transition-opacity duration-700 ease-out motion-reduce:transition-none ${
+          phase === 'leaving' ? 'opacity-0' : 'opacity-100'
+        }`}
       >
         <Loader />
-
-        <div className="absolute inset-x-0 top-1/2 px-6">
-          <div
-            className={`translate-y-[122px] text-center transition-opacity duration-500 ${
-              visible ? 'opacity-100' : 'opacity-0'
-            } motion-reduce:transition-none`}
-          >
-            <span className="text-[11px] font-medium uppercase tracking-[0.35em] text-white/70">
-              ZedOS Technologies
-            </span>
-          </div>
-        </div>
       </div>
     </>
   )

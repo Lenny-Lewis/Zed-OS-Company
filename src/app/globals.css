@@ -10,6 +10,11 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Intro overlay: hidden before first paint when the intro already played. */
+html[data-intro-seen] [data-intro] {
+  display: none;
+}
+
 body {
   background: #000;
   color: #fff;
