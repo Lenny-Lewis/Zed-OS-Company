@@ -10,6 +10,7 @@ module.exports = {
       fontFamily: {
         heading: ["'Instrument Serif'", 'serif'],
         body: ["'Barlow'", 'sans-serif'],
+        poppins: ["'Poppins'", 'sans-serif'],
       },
       colors: {
         brand: {

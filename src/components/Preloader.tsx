@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
-import Loader from '@/components/ui/loader-5'
+import LoadingLines from '@/components/ui/loading-lines'
 
 const SESSION_KEY = 'zedos:intro-seen'
 const HOLD_MS = 3300
@@ -69,11 +69,11 @@ function Intro() {
       <div
         aria-hidden="true"
         data-intro
-        className={`fixed inset-0 z-[100] overflow-hidden bg-black transition-opacity duration-700 ease-out motion-reduce:transition-none ${
+        className={`fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-black transition-opacity duration-700 ease-out motion-reduce:transition-none ${
           phase === 'leaving' ? 'opacity-0' : 'opacity-100'
         }`}
       >
-        <Loader />
+        <LoadingLines />
       </div>
     </>
   )
