@@ -57,11 +57,11 @@ export default function RootLayout({ children }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        {/* Runs before first paint: marks repeat visits so the intro overlay is
-            never painted for them (hidden via CSS in globals.css). */}
+        {/* Record the first entry before hydration so even a refresh during the
+            intro skips it. Repeat entries are hidden before the first paint. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{sessionStorage.getItem('zedos:intro-seen')&&document.documentElement.setAttribute('data-intro-seen','')}catch(e){}`,
+            __html: `try{if(sessionStorage.getItem('zedos:intro-seen')){document.documentElement.setAttribute('data-intro-seen','')}else{sessionStorage.setItem('zedos:intro-seen','1')}}catch(e){}`,
           }}
         />
         {/* No JS (or a failed script) must not leave the site covered. */}

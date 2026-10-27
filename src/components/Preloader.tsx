@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { usePathname } from 'next/navigation'
 import LoadingLines from '@/components/ui/loading-lines'
 
 const SESSION_KEY = 'zedos:intro-seen'
@@ -24,18 +23,20 @@ function Intro() {
       return () => clearTimeout(stop)
     }
 
+    // Record entry immediately, including when the visitor refreshes before
+    // the animation finishes. The head script also does this before hydration.
+    try {
+      window.sessionStorage.setItem(SESSION_KEY, '1')
+    } catch {
+      // The document flag still prevents replays during in-app navigation.
+    }
+
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const hold = reduceMotion ? REDUCED_HOLD_MS : HOLD_MS
 
     const leave = setTimeout(() => setPhase('leaving'), hold)
-    // Flagged as seen only once the intro has played out, so a remount in the
-    // same tick (React strict mode) still gets to show it.
     const done = setTimeout(() => {
-      try {
-        window.sessionStorage.setItem(SESSION_KEY, '1')
-      } catch {
-        // ignore storage failures
-      }
+      document.documentElement.setAttribute('data-intro-seen', '')
       setPhase('done')
     }, hold + FADE_MS)
 
@@ -47,7 +48,7 @@ function Intro() {
 
   // Hold the page still while the intro is on screen.
   useEffect(() => {
-    if (phase === 'done') return
+    if (phase === 'done' || document.documentElement.hasAttribute('data-intro-seen')) return
 
     const { body } = document
     const previous = body.style.overflow
@@ -80,9 +81,7 @@ function Intro() {
 }
 
 export default function Preloader() {
-  const pathname = usePathname()
-
-  if (pathname !== '/') return null
-
+  // Stay mounted across routes: the intro belongs to the first site entry,
+  // rather than each time the homepage is mounted.
   return <Intro />
 }
