@@ -116,7 +116,7 @@ export type TearLink = { label: string; href?: string }
 export type IconLink = TearLink & { icon: IconName }
 export type FooterColumn = { title: string; links: TearLink[]; cta?: TearLink }
 export type PushpinTearFooterProps = {
-  brand?: string; name?: string; logo?: React.ReactNode; logoHref?: string
+  brand?: string; name?: string; logo?: React.ReactNode; logoHref?: string; signature?: React.ReactNode
   socials?: IconLink[]; email?: string
   newsletter?: { label: string; placeholder?: string } | null
   tagline?: string; status?: TearLink | null; mark?: string
@@ -189,7 +189,7 @@ const DEFAULT_COLUMNS: FooterColumn[] = [
 ]
 
 export default function PushpinTearFooter({
-  brand = "zed os.", name = "Zed OS Technologies", logo, logoHref = "/", socials = [],
+  brand = "zed os.", name = "Zed OS Technologies", logo, logoHref = "/", signature, socials = [],
   email = "Lennoxlewis.lenny@gmail.com", newsletter = null,
   tagline = "Supply Chain · Software · Systems", status = { label: "Let’s work together", href: "/contact" },
   mark = "Kisumu, Kenya", timeZone = "Africa/Nairobi", timeLabel = "EAT",
@@ -419,6 +419,7 @@ export default function PushpinTearFooter({
         {chat && <A href={chat.href ?? mailto} className="tpf-bub" label={chat.label}><span className="tpf-dots" aria-hidden="true"><i /><i /><i /></span><b>{chat.label}</b></A>}
       </div>
       <A href={logoHref} className="tpf-word" label={name}><span>{brand}</span></A>
+      {signature && <div className="tpf-signature tpf-p" style={H(2)}>{signature}</div>}
     </div>
     {sideLinks.slice(0, 2).map((l, i) => <A key={l.label} href={l.href} className={`tpf-z tpf-side tpf-ink tpf-p ${i ? "r" : "l"}`} label={l.label} style={{ ...H(1 + i), left: i ? "80%" : "20%" }}><span>{l.label}</span><Icon name={l.icon} /></A>)}
     <div className="tpf-z tpf-foot tpf-ink"><span className="tpf-p" style={H(3)}>{copyright}</span>{credit && <span className="tpf-credit tpf-p" style={H(4)}>{credit}</span>}<A href={handle.href} className="tpf-handle tpf-p" style={H(5)}>{handle.label}</A></div>

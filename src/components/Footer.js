@@ -8,6 +8,11 @@ export default function Footer() {
       name="Zed OS Technologies"
       logoHref="/"
       logo={<Image src="/eagle-dark-64.png" alt="Zed OS" width={64} height={64} className="tpf-logo-img" />}
+      signature={
+        <a href="https://lennoxlewis.co.ke" target="_blank" rel="noopener noreferrer" aria-label="Visit Lennox Lewis, website developer" title="Made by Lennox Lewis">
+          <Image src="/Signatures/signature_L_black.png" alt="Lennox Lewis signature" width={1278} height={784} />
+        </a>
+      }
       sheet="#000000"
       paper="#f3f3f1"
       paperInk="#111111"

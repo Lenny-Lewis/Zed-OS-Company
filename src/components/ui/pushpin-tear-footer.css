@@ -91,7 +91,11 @@
 .tpf-pin[data-pin=lift] .tpf-body { transform: translateY(-22%) rotate(-10deg); transition-duration: .3s; }
 .tpf-pin[data-pin=lift] .tpf-shadow { transform: rotate(16deg) translateX(-26%) scale(1.25); opacity: .55; }
 .tpf-pin[data-pin=stab] .tpf-body { animation: tpf-stab .42s cubic-bezier(.55,0,.8,.2) both; }
-.tpf-brand { left: 50%; top: 68%; width: max-content; max-width: 80%; transform: translateX(-50%); display: grid; justify-items: stretch; }
+.tpf-brand { left: 50%; top: 66%; width: max-content; max-width: 80%; transform: translateX(-50%); display: grid; justify-items: stretch; }
+.tpf-signature { display: flex; justify-content: center; margin-top: 4px; }
+.tpf-signature a { display: inline-flex; cursor: pointer; opacity: .8; transition: opacity .2s; }
+.tpf-signature a:hover, .tpf-signature a:focus-visible { opacity: 1; }
+.tpf-signature img { display: block; width: auto; height: clamp(38px,5cqmin,48px); max-width: 96px; object-fit: contain; }
 .tpf-brand-top { display: flex; align-items: center; justify-content: space-between; gap: 1em; padding: 0 .2em 0 .5em; }
 .tpf-eye { font-size: clamp(14px,2.6cqmin,24px); letter-spacing: -.02em; background: linear-gradient(90deg,var(--tpf-on-paper),color-mix(in srgb,var(--tpf-on-paper) 55%,var(--tpf-paper))); background-clip: text; -webkit-background-clip: text; color: transparent; }
 .tpf-bub { display: inline-flex; align-items: center; gap: .5em; height: 1.7em; padding: 0 .55em; border-radius: 99px; background: color-mix(in srgb,var(--tpf-on-paper) 11%,var(--tpf-paper)); font-size: max(11px,1.6cqmin); overflow: hidden; transition: padding .45s var(--ease); }
