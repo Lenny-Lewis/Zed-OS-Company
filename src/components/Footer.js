@@ -16,7 +16,7 @@ export default function Footer() {
       sheet="#000000"
       paper="#f3f3f1"
       paperInk="#111111"
-      email="Lennoxlewis.lenny@gmail.com"
+      email="lennoxlewis.lenny@gmail.com"
       newsletter={null}
       tagline="Supply Chain · Software · Systems"
       status={{ label: 'Let’s work together', href: '/contact' }}

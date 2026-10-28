@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 
 const smoothEase = [0.25, 0.1, 0.25, 1] as const;
 const CONTACT_LINKS = [
-  { icon: Mail, label: "Lennoxlewis.lenny@gmail.com", href: "mailto:Lennoxlewis.lenny@gmail.com" },
+  { icon: Mail, label: "lennoxlewis.lenny@gmail.com", href: "mailto:lennoxlewis.lenny@gmail.com" },
   { icon: Phone, label: "+254 758 296 887", href: "tel:+254758296887" },
 ];
 
