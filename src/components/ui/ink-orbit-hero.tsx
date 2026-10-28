@@ -65,7 +65,7 @@ export default function InkOrbitHero({
   proof = { before: "Loved by", value: "12,400+", after: "teams" },
   sculptureSeed = 7,
   onReforge,
-  sculptureLabel = "FORGE · 3D",
+  sculptureLabel = "",
   sculptureHint = "Drag to rotate · Click to reforge",
   minHeight = "min(620px, 100svh)",
   className = "",
@@ -595,7 +595,7 @@ function InkOrbitSculpture({
   density = 1,
   glass = true,
   hud = true,
-  label = "FORGE · 3D",
+  label = "",
   hint = "Drag to rotate · Click to reforge",
   interactive = true,
   maxDpr = 2,
@@ -1016,7 +1016,6 @@ function InkOrbitSculpture({
           </div>
           <div className="ios-hud ios-bottom" aria-hidden="true">
             <span>{interactive ? hint : ""}</span>
-            <span>{"seed " + String(seed).padStart(5, "0")}</span>
           </div>
         </>
       )}

@@ -29,7 +29,7 @@ export default function TechLandingHero() {
         secondaryCta="Watch Demo"
         demoSteps={demoSteps}
         proof={{ before: 'Trusted by', value: '50+', after: 'clients across East Africa' }}
-        sculptureLabel="ZED OS · 3D"
+        sculptureLabel=""
         sculptureHint="Drag to rotate · Click to reforge"
         sculptureSeed={7}
         minHeight="100svh"
