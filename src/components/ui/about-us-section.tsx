@@ -38,7 +38,6 @@ export default function AboutUsSection() {
 
   const y1 = useTransform(scrollYProgress, [0, 1], [0, -50])
   const y2 = useTransform(scrollYProgress, [0, 1], [0, 50])
-  const rotate1 = useTransform(scrollYProgress, [0, 1], [0, 20])
   const rotate2 = useTransform(scrollYProgress, [0, 1], [0, -20])
 
   useEffect(() => {
@@ -135,11 +134,6 @@ export default function AboutUsSection() {
       ref={sectionRef}
       className="w-full pt-32 pb-24 px-4 bg-black text-white overflow-hidden relative"
     >
-      {/* Monochromatic Black & White background gradients */}
-      <motion.div
-        className="absolute top-16 left-10 w-96 h-96 rounded-full bg-white/[0.03] blur-3xl pointer-events-none"
-        style={{ y: y1, rotate: rotate1 }}
-      />
       <motion.div
         className="absolute bottom-16 right-10 w-[28rem] h-[28rem] rounded-full bg-white/[0.02] blur-3xl pointer-events-none"
         style={{ y: y2, rotate: rotate2 }}
