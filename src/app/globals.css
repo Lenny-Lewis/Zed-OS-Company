@@ -145,6 +145,18 @@ body {
   transform: translateY(0);
 }
 
+/* Immersive scroll chapters (peel / freight) hide site chrome. */
+html[data-immersive] [data-site-chrome] {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transition: opacity 0.28s ease, visibility 0.28s ease;
+}
+
+[data-site-chrome] {
+  transition: opacity 0.28s ease, visibility 0.28s ease;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

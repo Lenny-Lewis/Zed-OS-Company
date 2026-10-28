@@ -36,10 +36,12 @@ export default function Navbar() {
 
   return (
     <>
-      <div aria-hidden="true" className="fixed inset-x-0 top-0 z-50 h-20 bg-black/90 backdrop-blur-md transition-opacity duration-300 lg:h-24" />
-      <Link href="/" aria-label="ZedOS Technologies home" className="fixed left-4 top-4 z-[60] hidden items-center gap-2 text-sm font-semibold tracking-tight text-white transition-colors duration-300 lg:flex md:left-8 md:top-6"><ZedMark /><span>ZedOS Technologies</span></Link>
-      <header className="fixed left-1/2 top-4 z-[60] hidden -translate-x-1/2 text-white transition-colors duration-300 lg:block md:top-6"><Menu list={menus} /></header>
-      <MobileNav isOnDark />
+      <div data-site-chrome aria-hidden="true" className="fixed inset-x-0 top-0 z-50 h-20 bg-black/90 backdrop-blur-md transition-opacity duration-300 lg:h-24" />
+      <Link data-site-chrome href="/" aria-label="ZedOS Technologies home" className="fixed left-4 top-4 z-[60] hidden items-center gap-2 font-sans text-sm font-semibold tracking-tight text-white transition-colors duration-300 lg:flex md:left-8 md:top-6"><ZedMark /><span>ZedOS Technologies</span></Link>
+      <header data-site-chrome className="fixed left-1/2 top-4 z-[60] hidden -translate-x-1/2 text-white transition-colors duration-300 lg:block md:top-6"><Menu list={menus} /></header>
+      <div data-site-chrome>
+        <MobileNav isOnDark />
+      </div>
     </>
   )
 }

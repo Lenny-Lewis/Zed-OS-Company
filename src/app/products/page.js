@@ -2,6 +2,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import PageHero from '@/components/PageHero'
 import ScrollReveal from '@/components/ScrollReveal'
+import FreightDeliveryHero from '@/components/sections/FreightDeliveryHero'
+import PeelColorSwap from '@/components/ui/peel-color-swap'
 import { images } from '@/data/images'
 
 const categories = [
@@ -58,9 +60,9 @@ export default function ProductsPage() {
         subtitle="Quality goods sourced and delivered to your doorstep."
       />
 
-      <section className="bg-black px-5 pb-8 pt-10 text-center md:px-8 md:pb-12 md:pt-14">
+      <section className="bg-[#000000] px-5 pb-8 pt-10 text-center md:px-8 md:pb-12 md:pt-14">
         <ScrollReveal className="mx-auto max-w-3xl">
-          <p className="text-base leading-relaxed text-white/65 md:text-lg">
+          <p className="font-sans text-base leading-relaxed text-white/65 md:text-lg">
             At Zed OS Technologies Limited, we supply a wide range of quality products to businesses,
             institutions, NGOs, and government organizations across Kenya. All products are sourced
             from trusted suppliers and delivered with speed and reliability.
@@ -68,7 +70,7 @@ export default function ProductsPage() {
         </ScrollReveal>
       </section>
 
-      <section className="bg-black px-5 py-12 md:px-8 md:py-16">
+      <section className="bg-[#000000] px-5 py-12 md:px-8 md:py-16">
         <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
           {categories.map((category, index) => (
             <ScrollReveal
@@ -76,7 +78,7 @@ export default function ProductsPage() {
               delay={index * 90}
               className="group flex h-full flex-col"
             >
-              <div className="relative h-56 overflow-hidden bg-neutral-900">
+              <div className="relative h-56 overflow-hidden bg-neutral-950">
                 <Image
                   src={category.image}
                   alt={category.alt}
@@ -87,11 +89,12 @@ export default function ProductsPage() {
               </div>
               <div className="flex flex-grow flex-col pt-5">
                 <div>
-                  <h3 className="text-2xl font-medium tracking-[-0.03em] text-white">{category.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-white/60">{category.description}</p>
+                  <h3 className="font-display text-2xl leading-tight text-white">{category.title}</h3>
+                  <p className="mt-2 font-sans text-sm leading-relaxed text-white/60">{category.description}</p>
                 </div>
-                <div className="mt-5 flex items-center gap-2 text-xs font-medium text-white/70">
-                  <span>Inquire now</span><span className="transition-transform group-hover:translate-x-1">→</span>
+                <div className="mt-5 flex items-center gap-2 font-sans text-xs font-medium text-white/70">
+                  <span>Inquire now</span>
+                  <span className="transition-transform group-hover:translate-x-1">→</span>
                 </div>
               </div>
             </ScrollReveal>
@@ -99,18 +102,31 @@ export default function ProductsPage() {
         </div>
       </section>
 
-      <section className="bg-black px-5 py-20 text-center md:px-8 md:py-28">
+      <PeelColorSwap
+        eyebrow="Fulfillment"
+        title={
+          <>
+            Sourced with care.
+            <br />
+            Delivered without drama.
+          </>
+        }
+        description="From warehouse floor to your doorstep, Zed OS handles procurement and last-mile delivery as one continuous motion — so your team stays focused on the work, not the chase."
+        meta={['Kisumu hub', 'East Africa routes', 'Same-week fulfillment']}
+        scrollLength={180}
+      />
+
+      <FreightDeliveryHero />
+
+      <section className="bg-[#000000] px-5 py-20 text-center md:px-8 md:py-28">
         <ScrollReveal className="mx-auto max-w-3xl border-y border-white/15 py-14 text-white md:py-16">
-          <p className="text-xs font-medium uppercase tracking-[0.18em] text-white/55">Procurement, made simple</p>
-          <h2 className="mt-4 text-4xl font-light tracking-[-0.04em] md:text-6xl">Need a Custom Quote?</h2>
-          <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-white/65">
+          <p className="font-eyebrow text-white/45">Procurement, made simple</p>
+          <h2 className="font-display mt-4 text-4xl md:text-6xl">Need a Custom Quote?</h2>
+          <p className="mx-auto mt-4 max-w-xl font-sans text-base leading-relaxed text-white/65">
             Can&apos;t find what you need? We source on demand. Get in touch and we&apos;ll handle the
             procurement for you.
           </p>
-          <Link
-            href="/contact"
-            className="mt-8 inline-block rounded-full bg-white px-7 py-3.5 text-sm font-medium text-black transition-colors hover:bg-white/85"
-          >
+          <Link href="/contact" className="btn-ink mt-8">
             Request a Quote
           </Link>
         </ScrollReveal>
