@@ -230,7 +230,7 @@
     90deg,
     #fff 0,
     #fff calc(var(--s) - 34%),
-    #2f63ff calc(var(--s) - 6%),
+    rgba(255, 255, 255, 0.6) calc(var(--s) - 6%),
     transparent calc(var(--s) + 26%)
   );
   background-size: 100% 100%;
@@ -250,7 +250,7 @@
     90deg,
     rgba(255, 255, 255, 0.72) 0,
     rgba(255, 255, 255, 0.72) calc(var(--s) - 34%),
-    #2f63ff calc(var(--s) - 6%),
+    rgba(255, 255, 255, 0.4) calc(var(--s) - 6%),
     transparent calc(var(--s) + 26%)
   );
   -webkit-background-clip: text;

@@ -44,8 +44,8 @@ function LayerContent({
         className={
           "pointer-events-none absolute inset-0 opacity-[0.28] " +
           (dark
-            ? "bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.1),transparent_40%),radial-gradient(circle_at_82%_72%,rgba(47,99,255,0.16),transparent_38%)]"
-            : "bg-[radial-gradient(circle_at_18%_18%,rgba(0,0,0,0.05),transparent_40%),radial-gradient(circle_at_82%_72%,rgba(47,99,255,0.1),transparent_38%)]")
+            ? "bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.08),transparent_40%),radial-gradient(circle_at_82%_72%,rgba(255,255,255,0.04),transparent_38%)]"
+            : "bg-[radial-gradient(circle_at_18%_18%,rgba(0,0,0,0.05),transparent_40%),radial-gradient(circle_at_82%_72%,rgba(0,0,0,0.03),transparent_38%)]")
         }
         aria-hidden="true"
       />

@@ -129,7 +129,7 @@ export function Component() {
       const fadeTargets = containerRef.current!.querySelectorAll("[data-menu-fade]");
 
       const menuButton = containerRef.current!.querySelector(".nav-close-btn");
-      const menuButtonTexts = menuButton?.querySelectorAll("p");
+      const menuButtonTexts = menuButton?.querySelectorAll(".p-large");
       const menuButtonIcon = menuButton?.querySelector(".menu-button-icon");
 
       const tl = gsap.timeline();
@@ -233,15 +233,15 @@ export function Component() {
               <div className="nav-row__right">
                 {/* Restored Menu Button */}
                 <button
-                  role="button"
+                  type="button"
                   aria-label={isMenuOpen ? "Close menu" : "Open menu"}
                   className="nav-close-btn"
                   onClick={toggleMenu}
                   style={{ pointerEvents: "auto" }}
                 >
                   <div className="menu-button-text">
-                    <p className="p-large">Menu</p>
-                    <p className="p-large">Close</p>
+                    <span className="p-large block">Menu</span>
+                    <span className="p-large block">Close</span>
                   </div>
                   <div className="icon-wrap">
                     <svg
@@ -366,31 +366,31 @@ export function Component() {
               <ul className="menu-list">
                 <li className="menu-list-item" data-shape="1">
                   <Link href="/about" onClick={closeMenu} className="nav-link w-inline-block">
-                    <p className="nav-link-text">About us</p>
+                    <span className="nav-link-text block">About us</span>
                     <div className="nav-link-hover-bg"></div>
                   </Link>
                 </li>
                 <li className="menu-list-item" data-shape="2">
                   <Link href="/products" onClick={closeMenu} className="nav-link w-inline-block">
-                    <p className="nav-link-text">Products</p>
+                    <span className="nav-link-text block">Products</span>
                     <div className="nav-link-hover-bg"></div>
                   </Link>
                 </li>
                 <li className="menu-list-item" data-shape="3">
                   <Link href="/services" onClick={closeMenu} className="nav-link w-inline-block">
-                    <p className="nav-link-text">Services</p>
+                    <span className="nav-link-text block">Services</span>
                     <div className="nav-link-hover-bg"></div>
                   </Link>
                 </li>
                 <li className="menu-list-item" data-shape="4">
                   <Link href="/partner" onClick={closeMenu} className="nav-link w-inline-block">
-                    <p className="nav-link-text" data-menu-fade>Partner</p>
+                    <span className="nav-link-text block" data-menu-fade>Partner</span>
                     <div className="nav-link-hover-bg"></div>
                   </Link>
                 </li>
                 <li className="menu-list-item" data-shape="5">
                   <Link href="/contact" onClick={closeMenu} className="nav-link w-inline-block">
-                    <p className="nav-link-text">Contact us</p>
+                    <span className="nav-link-text block">Contact us</span>
                     <div className="nav-link-hover-bg"></div>
                   </Link>
                 </li>

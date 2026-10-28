@@ -64,6 +64,12 @@ export default function RootLayout({ children }) {
             __html: `try{if(sessionStorage.getItem('zedos:intro-seen')){document.documentElement.setAttribute('data-intro-seen','')}else{sessionStorage.setItem('zedos:intro-seen','1')}}catch(e){}`,
           }}
         />
+        {/* Guard against browser extensions injecting attributes (e.g. bis_skin_checked) before React hydration */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{new MutationObserver(function(m){for(var i=0;i<m.length;i++){if(m[i].attributeName==='bis_skin_checked'){m[i].target.removeAttribute('bis_skin_checked');}}}).observe(document.documentElement,{subtree:true,attributes:true,attributeFilter:['bis_skin_checked']});}catch(e){}})();`,
+          }}
+        />
         {/* No JS (or a failed script) must not leave the site covered. */}
         <noscript>
           <style>{`[data-intro]{display:none!important}`}</style>

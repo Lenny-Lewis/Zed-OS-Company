@@ -9,7 +9,7 @@ export default function Navbar() {
   }, [])
 
   return (
-    <div data-site-chrome>
+    <div data-site-chrome suppressHydrationWarning>
       <SterlingGateKineticNavigation />
     </div>
   )
