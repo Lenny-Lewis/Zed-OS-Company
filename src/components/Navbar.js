@@ -1,7 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { usePathname } from 'next/navigation'
+import { useEffect } from 'react'
 import Link from 'next/link'
 import Menu from '@/components/ui/navbar'
 import MobileNav from '@/components/ui/mobile-nav'
@@ -31,36 +30,16 @@ function ZedMark() {
 }
 
 export default function Navbar() {
-  const pathname = usePathname()
-  const [isOnDark, setIsOnDark] = useState(pathname !== '/')
-
   useEffect(() => {
-    let frame
-
-    const updateTheme = () => {
-      const hero = document.querySelector('[data-home-hero]')
-      const nextIsOnDark = pathname !== '/' || Boolean(hero && hero.getBoundingClientRect().bottom <= 72)
-      setIsOnDark(nextIsOnDark)
-      document.documentElement.dataset.navTheme = nextIsOnDark ? 'dark' : 'light'
-    }
-
-    frame = requestAnimationFrame(updateTheme)
-    window.addEventListener('scroll', updateTheme, { passive: true })
-    window.addEventListener('resize', updateTheme)
-
-    return () => {
-      cancelAnimationFrame(frame)
-      window.removeEventListener('scroll', updateTheme)
-      window.removeEventListener('resize', updateTheme)
-    }
-  }, [pathname])
+    document.documentElement.dataset.navTheme = 'dark'
+  }, [])
 
   return (
     <>
-      {isOnDark && <div aria-hidden="true" className="fixed inset-x-0 top-0 z-50 h-20 bg-black/90 backdrop-blur-md transition-opacity duration-300 lg:h-24" />}
-      <Link href="/" aria-label="ZedOS Technologies home" className={`fixed left-4 top-4 z-[60] hidden items-center gap-2 text-sm font-semibold tracking-tight transition-colors duration-300 lg:flex md:left-8 md:top-6 ${isOnDark ? 'text-white' : 'text-black'}`}><ZedMark /><span>ZedOS Technologies</span></Link>
-      <header className={`fixed left-1/2 top-4 z-[60] hidden -translate-x-1/2 transition-colors duration-300 lg:block md:top-6 ${isOnDark ? 'text-white' : 'text-black'}`}><Menu list={menus} /></header>
-      <MobileNav isOnDark={isOnDark} />
+      <div aria-hidden="true" className="fixed inset-x-0 top-0 z-50 h-20 bg-black/90 backdrop-blur-md transition-opacity duration-300 lg:h-24" />
+      <Link href="/" aria-label="ZedOS Technologies home" className="fixed left-4 top-4 z-[60] hidden items-center gap-2 text-sm font-semibold tracking-tight text-white transition-colors duration-300 lg:flex md:left-8 md:top-6"><ZedMark /><span>ZedOS Technologies</span></Link>
+      <header className="fixed left-1/2 top-4 z-[60] hidden -translate-x-1/2 text-white transition-colors duration-300 lg:block md:top-6"><Menu list={menus} /></header>
+      <MobileNav isOnDark />
     </>
   )
 }

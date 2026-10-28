@@ -1,5 +1,11 @@
-import LoadingLines from "@/components/ui/loading-lines";
+"use client"
 
-export default function DemoOne() {
-  return <LoadingLines />;
+import InkOrbitHero from "@/components/ui/ink-orbit-hero"
+
+export default function Demo() {
+  return (
+    <div className="w-full">
+      <InkOrbitHero className="ih-fullbleed" theme="dark" minHeight="100svh" />
+    </div>
+  )
 }

@@ -1,7 +1,11 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
+import { useRef } from 'react'
 import { images } from '@/data/images'
-import ScrollReveal from '@/components/ScrollReveal'
+import ScrollReveal, { Stagger, StaggerItem } from '@/components/ScrollReveal'
 import CountUp from '@/components/CountUp'
 
 const stats = [
@@ -12,59 +16,82 @@ const stats = [
 ]
 
 export default function HomeAbout() {
-  return (
-    <section className="bg-black px-5 py-20 md:px-8 md:py-28">
-      <div className="mx-auto grid max-w-[1400px] grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-20">
-        <ScrollReveal>
-          <span className="text-xs font-medium uppercase tracking-[0.18em] text-white/55">
-            About Us
-          </span>
-          <h2 className="mt-4 text-4xl font-light tracking-[-0.04em] text-white sm:text-5xl md:text-6xl">
-            Built on Trust. <br className="hidden sm:block" />Driven by Excellence.
-          </h2>
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-white/70">
-            Zed OS Technologies Limited is a registered Kenyan company based in Kisumu Town West,
-            specializing in General Supplies, Software Systems, Websites, Data Analytics, AI,
-            Machine Learning, and Consultancy Services. We deliver reliable, efficient, and
-            professional solutions to individuals, private sector organizations, NGOs, and
-            government institutions.
-          </p>
-          <p className="mt-4 max-w-xl text-base leading-relaxed text-white/70">
-            Our operations are guided by integrity, innovation, and customer satisfaction — with
-            a commitment to quality service delivery, timely execution, and value for money.
-          </p>
-          <Link
-            href="/about"
-            className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition-colors hover:bg-white/85"
-          >
-            <span>Learn More</span>
-            <span className="text-lg">→</span>
-          </Link>
-        </ScrollReveal>
+  const imageRef = useRef(null)
+  const shouldReduceMotion = useReducedMotion()
+  const { scrollYProgress } = useScroll({
+    target: imageRef,
+    offset: ['start end', 'end start'],
+  })
+  const imageY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : ['-8%', '8%'])
+  const imageScale = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [1, 1] : [1.12, 1])
 
-        <ScrollReveal delay={120} className="space-y-7">
-          <div className="relative h-64 overflow-hidden md:h-80">
-            <Image
-              src={images.aboutOffice}
-              alt="Modern office workspace"
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
-          </div>
-          <div className="grid grid-cols-2 border-t border-white/15 sm:grid-cols-4">
-            {stats.map((stat, index) => (
-              <ScrollReveal
+  return (
+    <section className="bg-black px-5 py-24 md:px-8 md:py-32">
+      <div className="mx-auto grid max-w-[1400px] grid-cols-1 items-center gap-14 md:grid-cols-2 md:gap-20">
+        <div>
+          <ScrollReveal variant="blur">
+            <span className="font-eyebrow text-white/45">About Us</span>
+          </ScrollReveal>
+          <ScrollReveal variant="blur" delay={80}>
+            <h2 className="font-display mt-5 text-4xl leading-[1.05] text-white sm:text-5xl md:text-6xl">
+              Built on Trust.
+              <br className="hidden sm:block" />
+              <span className="text-white/55">Driven by Excellence.</span>
+            </h2>
+          </ScrollReveal>
+          <ScrollReveal delay={160}>
+            <p className="mt-7 max-w-xl text-[15px] leading-relaxed text-white/65">
+              Zed OS Technologies Limited is a registered Kenyan company based in Kisumu Town West,
+              specializing in General Supplies, Software Systems, Websites, Data Analytics, AI,
+              Machine Learning, and Consultancy Services. We deliver reliable, efficient, and
+              professional solutions to individuals, private sector organizations, NGOs, and
+              government institutions.
+            </p>
+          </ScrollReveal>
+          <ScrollReveal delay={220}>
+            <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-white/65">
+              Our operations are guided by integrity, innovation, and customer satisfaction — with
+              a commitment to quality service delivery, timely execution, and value for money.
+            </p>
+          </ScrollReveal>
+          <ScrollReveal delay={280}>
+            <Link href="/about" className="btn-ink mt-9">
+              <span>Learn More</span>
+              <span aria-hidden="true">→</span>
+            </Link>
+          </ScrollReveal>
+        </div>
+
+        <div className="space-y-7">
+          <ScrollReveal variant="clip" className="overflow-hidden">
+            <div ref={imageRef} className="relative h-64 overflow-hidden md:h-80">
+              <motion.div style={{ y: imageY, scale: imageScale }} className="absolute inset-[-12%]">
+                <Image
+                  src={images.aboutOffice}
+                  alt="Modern office workspace"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              </motion.div>
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 to-transparent" />
+            </div>
+          </ScrollReveal>
+
+          <Stagger className="grid grid-cols-2 border-t border-white/10 sm:grid-cols-4" delay={120} stagger={0.1}>
+            {stats.map((stat) => (
+              <StaggerItem
                 key={stat.label}
-                delay={180 + index * 90}
-                className="border-b border-r border-white/15 px-3 py-5 text-center last:border-r-0 sm:border-b-0"
+                className="border-b border-r border-white/10 px-3 py-6 text-center last:border-r-0 sm:border-b-0"
               >
-                <p className="text-2xl font-light tracking-[-0.04em] text-white md:text-3xl"><CountUp value={stat.value} suffix={stat.suffix} /></p>
-                <p className="mt-1 text-[10px] font-medium uppercase tracking-[0.12em] text-white/45">{stat.label}</p>
-              </ScrollReveal>
+                <p className="font-display text-3xl text-white md:text-4xl">
+                  <CountUp value={stat.value} suffix={stat.suffix} />
+                </p>
+                <p className="font-eyebrow mt-2 text-[10px] text-white/40">{stat.label}</p>
+              </StaggerItem>
             ))}
-          </div>
-        </ScrollReveal>
+          </Stagger>
+        </div>
       </div>
     </section>
   )

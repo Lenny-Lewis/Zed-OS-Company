@@ -1,7 +1,9 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import { images } from '@/data/images'
-import ScrollReveal from '@/components/ScrollReveal'
+import ScrollReveal, { Stagger, StaggerItem } from '@/components/ScrollReveal'
 
 const services = [
   {
@@ -64,52 +66,58 @@ const services = [
 
 export default function HomeServices() {
   return (
-    <section className="bg-black px-5 py-20 md:px-8 md:py-28">
-      <div className="max-w-[1400px] mx-auto">
-        <ScrollReveal className="text-center">
-          <span className="text-xs font-medium uppercase tracking-[0.18em] text-white/55">
-            What We Offer
-          </span>
-          <h2 className="mt-4 text-4xl font-light tracking-[-0.04em] text-white sm:text-5xl md:text-6xl">Our Services &amp; Solutions</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-white/65">
-            End-to-end solutions tailored to supply, operations, and digital transformation needs.
-          </p>
-        </ScrollReveal>
+    <section className="bg-black px-5 py-24 md:px-8 md:py-32">
+      <div className="mx-auto max-w-[1400px]">
+        <div className="mx-auto max-w-3xl text-center">
+          <ScrollReveal variant="blur">
+            <span className="font-eyebrow text-white/45">What We Offer</span>
+          </ScrollReveal>
+          <ScrollReveal variant="blur" delay={90}>
+            <h2 className="font-display mt-5 text-4xl leading-[1.05] text-white sm:text-5xl md:text-6xl">
+              Our Services &amp; Solutions
+            </h2>
+          </ScrollReveal>
+          <ScrollReveal delay={160}>
+            <p className="mx-auto mt-5 max-w-2xl text-[15px] leading-relaxed text-white/60">
+              End-to-end solutions tailored to supply, operations, and digital transformation needs.
+            </p>
+          </ScrollReveal>
+        </div>
 
-        <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-10 md:grid-cols-2 xl:grid-cols-4">
+        <Stagger className="mt-14 grid grid-cols-1 gap-x-6 gap-y-12 md:grid-cols-2 xl:grid-cols-4" delay={80} stagger={0.07}>
           {services.map((service, index) => (
-            <ScrollReveal key={service.title} delay={index * 90}>
-              <div className="group flex h-full flex-col">
-                <div className="relative h-52 overflow-hidden bg-neutral-900">
+            <StaggerItem key={service.title}>
+              <Link href="/services" className="group flex h-full flex-col">
+                <div className="relative h-52 overflow-hidden bg-neutral-950">
                   <Image
                     src={service.image}
                     alt={service.alt}
                     fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     sizes="(max-width: 1024px) 50vw, 25vw"
                   />
+                  <div className="pointer-events-none absolute inset-0 bg-black/15 transition-colors duration-500 group-hover:bg-black/0" />
+                  <span className="font-mono absolute left-3 top-3 text-[10px] tracking-[0.14em] text-white/70">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
                 </div>
                 <div className="flex flex-grow flex-col pt-5">
-                  <div>
-                    <h3 className="text-xl font-medium tracking-[-0.03em] text-white">{service.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-white/60">{service.description}</p>
-                  </div>
-                  <div className="mt-5 flex items-center gap-2 text-xs font-medium text-white/70">
-                    <span>Explore solution</span><span className="transition-transform group-hover:translate-x-1">→</span>
+                  <h3 className="font-display text-2xl leading-tight text-white">{service.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-white/55">{service.description}</p>
+                  <div className="mt-5 flex items-center gap-2 font-sans text-xs font-medium text-white/70">
+                    <span>Explore solution</span>
+                    <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
                   </div>
                 </div>
-              </div>
-            </ScrollReveal>
+              </Link>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
 
-        <ScrollReveal delay={180} className="mt-12 text-center">
-          <Link
-            href="/services"
-            className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-medium text-black transition-colors hover:bg-white/85"
-          >
+        <ScrollReveal delay={120} className="mt-16 text-center">
+          <Link href="/services" className="btn-ink">
             <span>View All Services</span>
-            <span className="text-lg">→</span>
+            <span aria-hidden="true">→</span>
           </Link>
         </ScrollReveal>
       </div>

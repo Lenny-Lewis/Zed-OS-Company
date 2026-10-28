@@ -4,7 +4,7 @@ const LoadingLines: React.FC = () => {
   const letters = "Loading".split("");
 
   return (
-    <div className="relative m-0 flex h-[120px] w-auto scale-150 select-none items-center justify-center font-poppins text-[1.6em] font-semibold text-white sm:scale-[2]">
+    <div className="relative m-0 flex h-[120px] w-auto scale-150 select-none items-center justify-center font-sans text-[1.6em] font-semibold tracking-tight text-white sm:scale-[2]">
       {/* Animated letters */}
       {letters.map((letter, idx) => (
         <span
