@@ -54,6 +54,22 @@ const categories = [
 export default function ProductsPage() {
   return (
     <>
+      <PeelColorSwap
+        eyebrow="Fulfillment"
+        title={
+          <>
+            Sourced with care.
+            <br />
+            Delivered without drama.
+          </>
+        }
+        description="From warehouse floor to your doorstep, Zed OS handles procurement and last-mile delivery as one continuous motion — so your team stays focused on the work, not the chase."
+        meta={['Kisumu hub', 'East Africa routes', 'Same-week fulfillment']}
+        scrollLength={180}
+      />
+
+      <FreightDeliveryHero />
+
       <PageHero
         label="PRODUCT CATALOGUE"
         title="Our Products"
@@ -101,22 +117,6 @@ export default function ProductsPage() {
           ))}
         </div>
       </section>
-
-      <PeelColorSwap
-        eyebrow="Fulfillment"
-        title={
-          <>
-            Sourced with care.
-            <br />
-            Delivered without drama.
-          </>
-        }
-        description="From warehouse floor to your doorstep, Zed OS handles procurement and last-mile delivery as one continuous motion — so your team stays focused on the work, not the chase."
-        meta={['Kisumu hub', 'East Africa routes', 'Same-week fulfillment']}
-        scrollLength={180}
-      />
-
-      <FreightDeliveryHero />
 
       <section className="bg-[#000000] px-5 py-20 text-center md:px-8 md:py-28">
         <ScrollReveal className="mx-auto max-w-3xl border-y border-white/15 py-14 text-white md:py-16">

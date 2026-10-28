@@ -1,7 +1,13 @@
 import Image from 'next/image'
-import PageHero from '@/components/PageHero'
 import ScrollReveal from '@/components/ScrollReveal'
+import AboutUsSection from '@/components/ui/about-us-section'
 import { images } from '@/data/images'
+
+export const metadata = {
+  title: 'About Us — Zed OS Technologies Limited',
+  description:
+    'Learn about Zed OS Technologies Limited — a Kisumu-based enterprise specializing in General Supplies, Vehicle Hire, Software Systems, Data Analytics, AI & ML, and Consultancy across Kenya and East Africa.',
+}
 
 const values = [
   {
@@ -23,55 +29,18 @@ const values = [
 
 export default function AboutPage() {
   return (
-    <>
-      <PageHero
-        label="WHO WE ARE"
-        title="About Zed OS Technologies"
-        subtitle="A Kisumu-based partner for reliable supply, smarter operations, and practical digital systems."
-      />
-
-      <section className="bg-black px-5 pb-20 pt-10 md:px-8 md:pb-28 md:pt-14">
-        <div className="mx-auto grid max-w-[1400px] grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-20">
-          <ScrollReveal>
-            <span className="text-xs font-medium uppercase tracking-[0.18em] text-white/55">
-              Overview
-            </span>
-            <h2 className="mt-4 text-4xl font-light leading-[0.95] tracking-[-0.04em] text-white sm:text-5xl md:text-6xl">
-              Delivering Excellence Across Kenya &amp; East Africa
-            </h2>
-            <p className="mt-5 max-w-xl text-base leading-relaxed text-white/70">
-              Zed OS Technologies Limited is a registered Kenyan company based in Kisumu Town West,
-              specializing in General Supplies and Consultancy Services. The company was established
-              to provide reliable, efficient, and professional solutions to individuals, private sector
-              organizations, NGOs, and government institutions.
-            </p>
-            <p className="mt-4 max-w-xl text-base leading-relaxed text-white/70">
-              We pride ourselves on integrity, innovation, and customer satisfaction. Our operations
-              are guided by a commitment to quality service delivery, timely execution, and value for
-              money.
-            </p>
-          </ScrollReveal>
-          <ScrollReveal delay={120}>
-            <div className="relative h-72 overflow-hidden md:h-96">
-              <Image
-                src={images.aboutTeam}
-                alt="Zed OS Technologies team collaborating"
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
-          </ScrollReveal>
-        </div>
-      </section>
+    <div className="bg-[#000000] text-white min-h-screen">
+      <AboutUsSection />
 
       <section className="bg-black px-5 py-20 md:px-8 md:py-28">
         <div className="max-w-[1400px] mx-auto">
           <ScrollReveal className="text-center">
-            <span className="text-xs font-medium uppercase tracking-[0.18em] text-white/55">
+            <span className="text-xs font-medium uppercase tracking-[0.18em] text-white/55 font-mono">
               Leadership
             </span>
-            <h2 className="mt-4 text-4xl font-light tracking-[-0.04em] text-white sm:text-5xl md:text-6xl">Meet the Director</h2>
+            <h2 className="mt-4 text-4xl font-light tracking-[-0.04em] text-white sm:text-5xl md:text-6xl font-display">
+              Meet the Director
+            </h2>
           </ScrollReveal>
 
           <ScrollReveal delay={120} className="mx-auto mt-12 max-w-5xl border-y border-white/15 py-8 md:py-12">
@@ -86,9 +55,13 @@ export default function AboutPage() {
                 />
               </div>
               <div>
-                <h3 className="text-3xl font-light tracking-[-0.04em] text-white md:text-4xl">Lennox Lewis Odhiambo</h3>
-                <p className="mt-2 text-xs font-medium uppercase tracking-[0.16em] text-white/50">Founder &amp; Director</p>
-                <p className="mt-5 max-w-xl text-sm leading-relaxed text-white/70">
+                <h3 className="text-3xl font-light tracking-[-0.04em] text-white md:text-4xl font-sans">
+                  Lennox Lewis Odhiambo
+                </h3>
+                <p className="mt-2 text-xs font-medium uppercase tracking-[0.16em] text-white/50 font-mono">
+                  Founder &amp; Director
+                </p>
+                <p className="mt-5 max-w-xl text-sm leading-relaxed text-white/70 font-sans">
                   Lennox Lewis Odhiambo is a highly motivated and visionary Director, full stack developer, and certified ML engineer with a background in supply chain management and business consultation. Under his leadership, Zed OS Technologies delivers reliable, high-quality products and digital solutions with a commitment to excellence and innovation.
                 </p>
               </div>
@@ -100,24 +73,26 @@ export default function AboutPage() {
       <section className="bg-black px-5 py-20 md:px-8 md:py-28">
         <div className="max-w-[1400px] mx-auto">
           <ScrollReveal className="text-center">
-            <span className="text-xs font-medium uppercase tracking-[0.18em] text-white/55">
+            <span className="text-xs font-medium uppercase tracking-[0.18em] text-white/55 font-mono">
               What Drives Us
             </span>
-            <h2 className="mt-4 text-4xl font-light tracking-[-0.04em] text-white sm:text-5xl md:text-6xl">Our Core Values</h2>
+            <h2 className="mt-4 text-4xl font-light tracking-[-0.04em] text-white sm:text-5xl md:text-6xl font-display">
+              Our Core Values
+            </h2>
           </ScrollReveal>
 
           <div className="mt-12 grid grid-cols-1 divide-y divide-white/15 md:grid-cols-3 md:divide-x md:divide-y-0">
             {values.map((value, index) => (
               <ScrollReveal key={value.title} delay={index * 90}>
                 <div className="h-full py-8 md:px-8 md:py-0 md:first:pl-0 md:last:pr-0">
-                  <h3 className="text-3xl font-light tracking-[-0.04em] text-white">{value.title}</h3>
-                  <p className="mt-4 text-sm leading-relaxed text-white/65">{value.description}</p>
+                  <h3 className="text-3xl font-light tracking-[-0.04em] text-white font-sans">{value.title}</h3>
+                  <p className="mt-4 text-sm leading-relaxed text-white/65 font-sans">{value.description}</p>
                 </div>
               </ScrollReveal>
             ))}
           </div>
         </div>
       </section>
-    </>
+    </div>
   )
 }

@@ -37,7 +37,7 @@ function LayerContent({
     <div
       className={
         "relative flex h-full w-full flex-col justify-between overflow-hidden px-5 py-24 font-sans md:px-10 md:py-28 " +
-        (dark ? "bg-[#000000] text-white" : "bg-[#f3f3f1] text-[#111111]")
+        (dark ? "bg-[#000000] text-white" : "bg-[#ffffff] text-[#111111]")
       }
     >
       <div
