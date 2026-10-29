@@ -26,13 +26,15 @@ export function Component() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
+  const tlRef = useRef<gsap.core.Timeline | null>(null);
+  const isFirstRender = useRef(true);
 
   // Close menu on route change
   useEffect(() => {
     setIsMenuOpen(false);
   }, [pathname]);
 
-  // Initial Setup & Hover Effects
+  // Initial Setup, Hover Effects, and Master Navigation Timeline
   useEffect(() => {
     if (!containerRef.current) return;
 
@@ -105,22 +107,8 @@ export function Component() {
           item.removeEventListener("mouseleave", onLeave);
         };
       });
-    }, containerRef);
 
-    return () => {
-      ctx.revert();
-      if (containerRef.current) {
-        const items = containerRef.current.querySelectorAll(".menu-list-item[data-shape]");
-        items.forEach((item: any) => item._cleanup && item._cleanup());
-      }
-    };
-  }, []);
-
-  // Menu Open/Close Animation Effect
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    const ctx = gsap.context(() => {
+      // 3. Kinetic Navigation Master Timeline (Handles bidirectional Play & Reverse)
       const navWrap = containerRef.current!.querySelector(".nav-overlay-wrapper");
       const menu = containerRef.current!.querySelector(".menu-content");
       const overlay = containerRef.current!.querySelector(".overlay");
@@ -132,78 +120,110 @@ export function Component() {
       const menuButtonTexts = menuButton?.querySelectorAll(".p-large");
       const menuButtonIcon = menuButton?.querySelector(".menu-button-icon");
 
-      const tl = gsap.timeline();
-
-      if (isMenuOpen) {
-        // OPEN
-        if (navWrap) {
-          navWrap.setAttribute("data-nav", "open");
-          tl.set(navWrap, { display: "block" });
-        }
-
-        if (menu) {
-          tl.set(menu, { xPercent: 0 }, "<");
-        }
-
-        // Animate Button Text Swapping if it exists
-        if (menuButtonTexts && menuButtonTexts.length > 0) {
-          tl.fromTo(menuButtonTexts, { yPercent: 0 }, { yPercent: -100, stagger: 0.2 });
-        }
-
-        if (menuButtonIcon) {
-          tl.fromTo(menuButtonIcon, { rotate: 0 }, { rotate: 315 }, "<");
-        }
-
-        if (overlay) {
-          tl.fromTo(overlay, { autoAlpha: 0 }, { autoAlpha: 1 }, "<");
-        }
-
-        if (bgPanels && bgPanels.length > 0) {
-          tl.fromTo(bgPanels, { xPercent: 101 }, { xPercent: 0, stagger: 0.12, duration: 0.575 }, "<");
-        }
-
-        if (menuLinks && menuLinks.length > 0) {
-          tl.fromTo(menuLinks, { yPercent: 140, rotate: 10 }, { yPercent: 0, rotate: 0, stagger: 0.05 }, "<+=0.35");
-        }
-
-        if (fadeTargets && fadeTargets.length > 0) {
-          tl.fromTo(
-            fadeTargets,
-            { autoAlpha: 0, yPercent: 50 },
-            { autoAlpha: 1, yPercent: 0, stagger: 0.04, clearProps: "all" },
-            "<+=0.2"
-          );
-        }
-      } else {
-        // CLOSE
-        if (navWrap) {
-          navWrap.setAttribute("data-nav", "closed");
-        }
-
-        if (overlay) {
-          tl.to(overlay, { autoAlpha: 0 });
-        }
-
-        if (menu) {
-          tl.to(menu, { xPercent: 120 }, "<");
-        }
-
-        // Animate Button Text and Icon Back
-        if (menuButtonTexts && menuButtonTexts.length > 0) {
-          tl.to(menuButtonTexts, { yPercent: 0 }, "<");
-        }
-
-        if (menuButtonIcon) {
-          tl.to(menuButtonIcon, { rotate: 0 }, "<");
-        }
-
-        if (navWrap) {
-          tl.set(navWrap, { display: "none" });
-        }
+      // Initial element state
+      if (navWrap) {
+        gsap.set(navWrap, { display: "none" });
       }
+      if (menu) {
+        gsap.set(menu, { xPercent: 0 });
+      }
+
+      const tl = gsap.timeline({
+        paused: true,
+        onStart: () => {
+          if (navWrap) {
+            navWrap.setAttribute("data-nav", "open");
+            gsap.set(navWrap, { display: "block" });
+          }
+        },
+        onReverseComplete: () => {
+          if (navWrap) {
+            navWrap.setAttribute("data-nav", "closed");
+            gsap.set(navWrap, { display: "none" });
+          }
+          if (shapesContainer) {
+            shapesContainer.querySelectorAll(".bg-shape").forEach((s) => s.classList.remove("active"));
+          }
+        },
+      });
+
+      // Overlay backdrop fade
+      if (overlay) {
+        tl.fromTo(overlay, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.45, ease: "power2.out" }, 0);
+      }
+
+      // Button Text Swapping ("Menu" -> "Close") & Icon Rotation (+) -> (x)
+      if (menuButtonTexts && menuButtonTexts.length > 0) {
+        tl.fromTo(
+          menuButtonTexts,
+          { yPercent: 0 },
+          { yPercent: -100, stagger: 0.12, duration: 0.35, ease: "power2.out" },
+          0
+        );
+      }
+      if (menuButtonIcon) {
+        tl.fromTo(menuButtonIcon, { rotate: 0 }, { rotate: 315, duration: 0.45, ease: "power2.out" }, 0);
+      }
+
+      // Staggered sliding background panels (Layer 1 -> Layer 2 -> Layer 3)
+      if (bgPanels && bgPanels.length > 0) {
+        tl.fromTo(bgPanels, { xPercent: 101 }, { xPercent: 0, stagger: 0.1, duration: 0.55, ease: "main" }, 0.05);
+      }
+
+      // Menu Links cascade in with rotation
+      if (menuLinks && menuLinks.length > 0) {
+        tl.fromTo(
+          menuLinks,
+          { yPercent: 140, rotate: 10 },
+          { yPercent: 0, rotate: 0, stagger: 0.05, duration: 0.45, ease: "power3.out" },
+          0.28
+        );
+      }
+
+      // Fade Targets
+      if (fadeTargets && fadeTargets.length > 0) {
+        tl.fromTo(
+          fadeTargets,
+          { autoAlpha: 0, yPercent: 40 },
+          { autoAlpha: 1, yPercent: 0, stagger: 0.04, duration: 0.35, ease: "power2.out" },
+          0.38
+        );
+      }
+
+      tlRef.current = tl;
     }, containerRef);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      if (tlRef.current) {
+        tlRef.current.kill();
+      }
+      if (containerRef.current) {
+        const items = containerRef.current.querySelectorAll(".menu-list-item[data-shape]");
+        items.forEach((item: any) => item._cleanup && item._cleanup());
+      }
+    };
+  }, []);
+
+  // Menu Open/Close trigger effect
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    if (!tlRef.current) return;
+
+    if (isMenuOpen) {
+      const navWrap = containerRef.current?.querySelector(".nav-overlay-wrapper");
+      if (navWrap) {
+        navWrap.setAttribute("data-nav", "open");
+        gsap.set(navWrap, { display: "block" });
+      }
+      tlRef.current.timeScale(1).play();
+    } else {
+      tlRef.current.timeScale(1.2).reverse();
+    }
   }, [isMenuOpen]);
 
   // keydown Escape handling

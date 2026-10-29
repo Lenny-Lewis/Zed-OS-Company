@@ -1,10 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import LoadingLines from '@/components/ui/loading-lines'
+import { GlassReveal21st } from '@/components/ui/liquid-glass-logo-reveal'
 
 const SESSION_KEY = 'zedos:intro-seen'
-const HOLD_MS = 3300
+const HOLD_MS = 3500
 const FADE_MS = 700
 const REDUCED_HOLD_MS = 600
 
@@ -70,11 +70,16 @@ function Intro() {
       <div
         aria-hidden="true"
         data-intro
-        className={`fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-black transition-opacity duration-700 ease-out motion-reduce:transition-none ${
-          phase === 'leaving' ? 'opacity-0' : 'opacity-100'
+        className={`fixed inset-0 z-[999] flex items-center justify-center overflow-hidden bg-black transition-opacity duration-700 ease-out motion-reduce:transition-none ${
+          phase === 'leaving' ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'
         }`}
       >
-        <LoadingLines />
+        <GlassReveal21st
+          className="h-full w-full"
+          look="dark"
+          background="#000000"
+          loop={false}
+        />
       </div>
     </>
   )

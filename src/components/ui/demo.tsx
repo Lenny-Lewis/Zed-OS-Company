@@ -1,11 +1,9 @@
 "use client"
 
-import InkOrbitHero from "@/components/ui/ink-orbit-hero"
+import { GlassReveal21st } from "@/components/ui/liquid-glass-logo-reveal"
 
-export default function Demo() {
-  return (
-    <div className="w-full">
-      <InkOrbitHero className="ih-fullbleed" theme="dark" minHeight="100svh" />
-    </div>
-  )
+export function GlassReveal21stDemo() {
+  return <GlassReveal21st className="h-svh min-h-[420px] w-full" />
 }
+
+export default GlassReveal21stDemo
