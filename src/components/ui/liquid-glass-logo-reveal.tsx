@@ -185,14 +185,14 @@ function fitToTexture(source: CanvasImageSource, sw: number, sh: number) {
 }
 
 // Signed distance field from alpha (TinySDF method): + outside, − inside, in texture units.
-function buildSdf(canvas: HTMLCanvasElement) {
-  const n = TEX * TEX
-  const alpha = canvas.getContext("2d", { willReadFrequently: true })!.getImageData(0, 0, TEX, TEX).data
+// Self-contained (no outer references) so the very same code also runs inside a Web Worker.
+function sdfFromAlpha(alpha: Uint8Array, N: number): Float32Array {
+  const n = N * N
   const INF = 1e20
   const outer = new Float64Array(n)
   const inner = new Float64Array(n)
   for (let i = 0; i < n; i++) {
-    const a = alpha[i * 4 + 3] / 255
+    const a = alpha[i] / 255
     if (a >= 1) { outer[i] = 0; inner[i] = INF }
     else if (a <= 0) { outer[i] = INF; inner[i] = 0 }
     else {
@@ -201,44 +201,85 @@ function buildSdf(canvas: HTMLCanvasElement) {
       inner[i] = dd < 0 ? dd * dd : 0
     }
   }
-  const f = new Float64Array(TEX)
-  const z = new Float64Array(TEX + 1)
-  const v = new Uint16Array(TEX)
-  edt(outer, f, v, z, INF)
-  edt(inner, f, v, z, INF)
+  const f = new Float64Array(N)
+  const z = new Float64Array(N + 1)
+  const v = new Uint16Array(N)
+  const edt1d = (grid: Float64Array, offset: number, stride: number) => {
+    v[0] = 0
+    z[0] = -INF
+    z[1] = INF
+    f[0] = grid[offset]
+    for (let q = 1, k = 0, s = 0; q < N; q++) {
+      f[q] = grid[offset + q * stride]
+      const q2 = q * q
+      do {
+        const r = v[k]
+        s = (f[q] - f[r] + q2 - r * r) / (q - r) / 2
+      } while (s <= z[k] && --k > -1)
+      k++
+      v[k] = q
+      z[k] = s
+      z[k + 1] = INF
+    }
+    for (let q = 0, k = 0; q < N; q++) {
+      while (z[k + 1] < q) k++
+      const r = v[k]
+      const qr = q - r
+      grid[offset + q * stride] = f[r] + qr * qr
+    }
+  }
+  const edt = (grid: Float64Array) => {
+    for (let x = 0; x < N; x++) edt1d(grid, x, N)
+    for (let y = 0; y < N; y++) edt1d(grid, y * N, 1)
+  }
+  edt(outer)
+  edt(inner)
   const sdf = new Float32Array(n)
-  for (let i = 0; i < n; i++) sdf[i] = (Math.sqrt(outer[i]) - Math.sqrt(inner[i])) / TEX
+  for (let i = 0; i < n; i++) sdf[i] = (Math.sqrt(outer[i]) - Math.sqrt(inner[i])) / N
   return sdf
 }
 
-function edt(grid: Float64Array, f: Float64Array, v: Uint16Array, z: Float64Array, INF: number) {
-  for (let x = 0; x < TEX; x++) edt1d(grid, x, TEX, f, v, z, INF)
-  for (let y = 0; y < TEX; y++) edt1d(grid, y * TEX, 1, f, v, z, INF)
+function alphaOf(canvas: HTMLCanvasElement) {
+  const rgba = canvas.getContext("2d", { willReadFrequently: true })!.getImageData(0, 0, TEX, TEX).data
+  const alpha = new Uint8Array(TEX * TEX)
+  for (let i = 0; i < alpha.length; i++) alpha[i] = rgba[i * 4 + 3]
+  return alpha
 }
 
-function edt1d(grid: Float64Array, offset: number, stride: number, f: Float64Array, v: Uint16Array, z: Float64Array, INF: number) {
-  v[0] = 0
-  z[0] = -INF
-  z[1] = INF
-  f[0] = grid[offset]
-  for (let q = 1, k = 0, s = 0; q < TEX; q++) {
-    f[q] = grid[offset + q * stride]
-    const q2 = q * q
-    do {
-      const r = v[k]
-      s = (f[q] - f[r] + q2 - r * r) / (q - r) / 2
-    } while (s <= z[k] && --k > -1)
-    k++
-    v[k] = q
-    z[k] = s
-    z[k + 1] = INF
-  }
-  for (let q = 0, k = 0; q < TEX; q++) {
-    while (z[k + 1] < q) k++
-    const r = v[k]
-    const qr = q - r
-    grid[offset + q * stride] = f[r] + qr * qr
-  }
+// The SDF is ~1M pixels of work (hundreds of ms on a phone). Off the main thread it can't stall
+// hydration or the first frames of the reveal. Falls back to the main thread if workers are blocked.
+let sdfWorkerUrl: string | null = null
+function buildSdf(canvas: HTMLCanvasElement): Promise<Float32Array> {
+  const alpha = alphaOf(canvas)
+  const local = () => sdfFromAlpha(alpha, TEX)
+  if (typeof Worker === "undefined" || typeof Blob === "undefined") return Promise.resolve(local())
+  return new Promise<Float32Array>((resolve) => {
+    let worker: Worker
+    try {
+      sdfWorkerUrl ??= URL.createObjectURL(
+        new Blob(
+          [`var sdfFromAlpha=(${sdfFromAlpha.toString()});onmessage=function(e){var s=sdfFromAlpha(e.data.alpha,e.data.size);postMessage(s,[s.buffer])}`],
+          { type: "text/javascript" },
+        ),
+      )
+      worker = new Worker(sdfWorkerUrl)
+    } catch {
+      resolve(local())
+      return
+    }
+    const done = (sdf: Float32Array) => {
+      worker.terminate()
+      resolve(sdf)
+    }
+    worker.onmessage = (e: MessageEvent<Float32Array>) => done(e.data)
+    worker.onerror = (e) => {
+      e.preventDefault()
+      done(local())
+    }
+    // Copy, so the main-thread fallback still has the alpha if the worker fails.
+    const copy = alpha.slice()
+    worker.postMessage({ alpha: copy, size: TEX }, [copy.buffer])
+  })
 }
 
 // One SDF per logo for the whole page: building it takes ~100 ms, remounts and twins reuse it.
@@ -247,14 +288,20 @@ const logoCache = new Map<string, Promise<LogoData>>()
 function loadLogo(logo: string) {
   let job = logoCache.get(logo)
   if (!job) {
-    job = loadImage(logoUrl(logo)).then((img) => {
+    job = loadImage(logoUrl(logo)).then(async (img) => {
       const canvas = fitToTexture(img, img.naturalWidth || TEX, img.naturalHeight || TEX)
-      return { canvas, sdf: buildSdf(canvas) }
+      return { canvas, sdf: await buildSdf(canvas) }
     })
     logoCache.set(logo, job)
     job.catch(() => logoCache.delete(logo))
   }
   return job
+}
+
+/** Start decoding a logo and building its SDF ahead of mounting (e.g. at module load). */
+export function preloadLogo(logo: string) {
+  if (typeof window === "undefined") return
+  loadLogo(logo).catch(() => {})
 }
 
 /* ------------------------------------------------------------------ *
@@ -555,40 +602,57 @@ void main() {
 type Frame = ReturnType<typeof frameAt>
 
 function createRenderer(canvas: HTMLCanvasElement) {
-  const gl = canvas.getContext("webgl2", { antialias: false, premultipliedAlpha: false })
+  const gl = canvas.getContext("webgl2", { antialias: false, premultipliedAlpha: false, powerPreference: "high-performance" })
   if (!gl) return null
+  // With KHR_parallel_shader_compile the driver compiles in the background and we poll for it
+  // each frame, instead of freezing the main thread (often 100 ms+ on phones) for this shader.
+  const parallel = gl.getExtension("KHR_parallel_shader_compile") as { COMPLETION_STATUS_KHR: number } | null
+  const shaders: WebGLShader[] = []
   const compile = (type: number, src: string) => {
     const sh = gl.createShader(type)!
     gl.shaderSource(sh, src)
     gl.compileShader(sh)
-    if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(sh) || "shader")
+    shaders.push(sh)
     return sh
   }
   const prog = gl.createProgram()!
   gl.attachShader(prog, compile(gl.VERTEX_SHADER, VERT))
   gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FRAG))
   gl.linkProgram(prog)
-  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog) || "program")
-  gl.useProgram(prog)
-
-  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW)
-  const loc = gl.getAttribLocation(prog, "aPos")
-  gl.enableVertexAttribArray(loc)
-  gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0)
 
   const U: Record<string, WebGLUniformLocation | null> = {}
-  const count = gl.getProgramParameter(prog, gl.ACTIVE_UNIFORMS) as number
-  for (let i = 0; i < count; i++) {
-    const info = gl.getActiveUniform(prog, i)!
-    U[info.name] = gl.getUniformLocation(prog, info.name)
-  }
-
   const sdfTex = gl.createTexture()
   const colTex = gl.createTexture()
-  gl.uniform1i(U.uSdf, 0)
-  gl.uniform1i(U.uCol, 1)
+  let linked = false
   let hasLogo = false
+  let pendingLogo: LogoData | null = null
+
+  // True once the program is usable. Throws if it failed to build.
+  function ready() {
+    if (linked) return true
+    if (parallel && !gl!.getProgramParameter(prog, parallel.COMPLETION_STATUS_KHR)) return false
+    if (!gl!.getProgramParameter(prog, gl!.LINK_STATUS)) {
+      const log = shaders.map((sh) => gl!.getShaderInfoLog(sh)).filter(Boolean).join("\n")
+      throw new Error(log || gl!.getProgramInfoLog(prog) || "program")
+    }
+    gl!.useProgram(prog)
+    gl!.bindBuffer(gl!.ARRAY_BUFFER, gl!.createBuffer())
+    gl!.bufferData(gl!.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl!.STATIC_DRAW)
+    const loc = gl!.getAttribLocation(prog, "aPos")
+    gl!.enableVertexAttribArray(loc)
+    gl!.vertexAttribPointer(loc, 2, gl!.FLOAT, false, 0, 0)
+    const count = gl!.getProgramParameter(prog, gl!.ACTIVE_UNIFORMS) as number
+    for (let i = 0; i < count; i++) {
+      const info = gl!.getActiveUniform(prog, i)!
+      U[info.name] = gl!.getUniformLocation(prog, info.name)
+    }
+    gl!.uniform1i(U.uSdf, 0)
+    gl!.uniform1i(U.uCol, 1)
+    linked = true
+    if (pendingLogo) upload(pendingLogo)
+    pendingLogo = null
+    return true
+  }
 
   const params = (filter: number) => {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filter)
@@ -598,6 +662,11 @@ function createRenderer(canvas: HTMLCanvasElement) {
   }
 
   function setLogo(logo: LogoData) {
+    if (linked) upload(logo)
+    else pendingLogo = logo
+  }
+
+  function upload(logo: LogoData) {
     gl!.activeTexture(gl!.TEXTURE0)
     gl!.bindTexture(gl!.TEXTURE_2D, sdfTex)
     gl!.pixelStorei(gl!.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false)
@@ -615,7 +684,7 @@ function createRenderer(canvas: HTMLCanvasElement) {
   }
 
   function render(fr: Frame, w: number, h: number, tilePx: number) {
-    if (!hasLogo) return
+    if (!linked || !hasLogo) return false
     gl!.viewport(0, 0, w, h)
     gl!.uniform2f(U.uCenter, w / 2, h / 2)
     gl!.uniform1f(U.uTile, tilePx)
@@ -630,13 +699,14 @@ function createRenderer(canvas: HTMLCanvasElement) {
     gl!.uniform3fv(U.uLogoCol, fr.uLogoCol)
     gl!.uniform2fv(U.uLogoOff, fr.uLogoOff)
     gl!.drawArrays(gl!.TRIANGLES, 0, 3)
+    return true
   }
 
   function dispose() {
     gl!.getExtension("WEBGL_lose_context")?.loseContext()
   }
 
-  return { setLogo, render, dispose }
+  return { ready, setLogo, render, dispose }
 }
 
 /* ------------------------------------------------------------------ *
@@ -811,6 +881,8 @@ export interface GlassIconRevealProps extends Omit<React.HTMLAttributes<HTMLDivE
   tuning?: Partial<GlassTuning>
   /** Accessible name of the logo */
   label?: string
+  /** Called once a non-looping reveal has drawn its last frame (also if WebGL or the logo fails) */
+  onComplete?: () => void
 }
 
 export function GlassIconReveal({
@@ -832,6 +904,7 @@ export function GlassIconReveal({
   time,
   tuning,
   label = "Logo",
+  onComplete,
   className,
   style,
   onClick,
@@ -851,13 +924,18 @@ export function GlassIconReveal({
     return { ...LOOKS[look], ...set, ...(JSON.parse(tuningKey) as Partial<GlassTuning>) }
   }, [look, background, logoColor, plateColor, iconPlate, keepPlate, originalColors, tileSize, logoScale, finalScale, hold, offsetKey, tuningKey])
 
-  const live = React.useRef({ settings, loop, speed, time })
-  live.current = { settings, loop, speed, time }
+  const live = React.useRef<Live>({ settings, loop, speed, time, onComplete })
+  React.useLayoutEffect(() => {
+    live.current = { settings, loop, speed, time, onComplete }
+  })
 
   React.useEffect(() => {
     const wrap = wrapRef.current
     if (!wrap) return
-    const engine = startEngine(wrap, live)
+    const engine = startEngine(wrap, live, () => {
+      engineRef.current = null
+      setFallback(true)
+    })
     if (!engine) {
       setFallback(true)
       return
@@ -880,7 +958,10 @@ export function GlassIconReveal({
         if (cancelled) return
         engineRef.current?.setLogo(data)
       },
-      (err) => console.error(err),
+      (err) => {
+        console.error(err)
+        if (!cancelled) live.current.onComplete?.()
+      },
     )
     return () => {
       cancelled = true
@@ -888,6 +969,11 @@ export function GlassIconReveal({
   }, [logo])
 
   const fallbackUrl = React.useMemo(() => (fallback ? logoUrl(logo) : ""), [fallback, logo])
+
+  // Without WebGL there is nothing to wait for: the static mark is already the final frame.
+  React.useEffect(() => {
+    if (fallback) live.current.onComplete?.()
+  }, [fallback])
 
   return (
     <div
@@ -927,15 +1013,18 @@ export function GlassIconReveal({
   )
 }
 
+type Live = { settings: Settings; loop: boolean; speed: number; time?: number; onComplete?: () => void }
+
+// Everything the glass draws (halo, ripple, shadow) has faded to the backdrop well within this many
+// tile sizes, so the canvas only has to cover that square; the wrapper paints the rest of the box.
+const CROP = 3
+
 // Owns the canvas: a fresh one per mount (a lost context can never be revived on the same element),
 // drawn only while on screen and only when something changed.
-function startEngine(
-  wrap: HTMLDivElement,
-  live: React.RefObject<{ settings: Settings; loop: boolean; speed: number; time?: number }>,
-) {
+function startEngine(wrap: HTMLDivElement, live: React.RefObject<Live>, onFail: () => void) {
   const canvas = document.createElement("canvas")
   canvas.setAttribute("aria-hidden", "true")
-  canvas.style.cssText = "position:absolute;inset:0;width:100%;height:100%;display:block"
+  canvas.style.cssText = "position:absolute;left:50%;top:50%;display:block;transform:translate(-50%,-50%)"
   wrap.appendChild(canvas)
 
   let renderer: ReturnType<typeof createRenderer> = null
@@ -958,21 +1047,63 @@ function startEngine(
   let dirty = true
   let visible = false
   let lost = false
+  let failed = false
   let raf = 0
   let last = 0
+  let completed = false
+
+  // Adaptive resolution: if the GPU can't keep up at full density the canvas renders a little
+  // coarser (the glass is soft, so the step is hard to see) rather than dropping frames.
+  const SCALES = [1, 0.85, 0.72]
+  let level = 0
+  let sampleMs = 0
+  let samples = 0
+  let warmup = 6 // the first frames include texture uploads, not steady-state cost
+
+  const fail = (err: unknown) => {
+    console.error(err)
+    failed = true
+    if (raf) cancelAnimationFrame(raf)
+    raf = 0
+    canvas.remove()
+    onFail()
+  }
+
+  const complete = () => {
+    if (completed) return
+    completed = true
+    live.current.onComplete?.()
+  }
 
   function tick(now: number) {
     raf = 0
-    const dt = Math.min(0.1, (now - last) / 1000)
+    const realMs = now - last
+    const dt = Math.min(0.1, realMs / 1000)
     last = now
+    if (failed || !renderer) return
+
+    let ready = false
+    try {
+      ready = renderer.ready()
+    } catch (err) {
+      fail(err)
+      return
+    }
+    // Nothing moves until the shader and logo are both in: the reveal always starts at t = 0.
+    if (!ready || !logo) {
+      if (visible && !lost && !ready) raf = requestAnimationFrame(tick)
+      return
+    }
+
     const { settings: P, loop, speed, time: fixed } = live.current
     const end = endOf(P)
+    let finished = false
     if (fixed !== undefined) {
       // Past the end, the frozen time runs on through the loop pause and the blur-out.
       playing = false
       time = fixed
       outro = clamp01((fixed - end - Math.max(0.05, P.hold)) / OUTRO)
-    } else if (playing && logo) {
+    } else if (playing) {
       if (pauseLeft > 0) {
         // Loop pause: hold the finished logo (nothing to redraw), then blur it away so the next
         // reveal starts empty.
@@ -990,30 +1121,49 @@ function startEngine(
         if (time >= end) {
           time = end
           if (loop) pauseLeft = Math.max(0.05, P.hold) + OUTRO
-          else playing = false
+          else {
+            playing = false
+            finished = true
+          }
         }
         dirty = true
+
+        if (warmup > 0) warmup--
+        else if (level < SCALES.length - 1) {
+          sampleMs += Math.min(realMs, 100)
+          if (++samples === 20) {
+            // Below ~26 fps; a 30 fps cap (low-power mode) on its own doesn't trigger it.
+            if (sampleMs / samples > 38) level++
+            sampleMs = 0
+            samples = 0
+          }
+        }
       }
     }
-    if (dirty && logo && renderer && !lost) {
+    if (dirty && !lost) {
+      const cw = wrap.clientWidth
+      const ch = wrap.clientHeight
+      const tile = Math.min(P.tileSize, Math.min(cw, ch) / 1.75)
+      const vw = Math.min(cw, Math.ceil(tile * CROP))
+      const vh = Math.min(ch, Math.ceil(tile * CROP))
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
-      const cw = canvas.clientWidth
-      const ch = canvas.clientHeight
-      const w = Math.max(1, Math.round(cw * dpr))
-      const h = Math.max(1, Math.round(ch * dpr))
+      const scale = Math.max(Math.min(dpr, 1), dpr * SCALES[level])
+      const w = Math.max(1, Math.round(vw * scale))
+      const h = Math.max(1, Math.round(vh * scale))
       if (canvas.width !== w || canvas.height !== h) {
         canvas.width = w
         canvas.height = h
       }
-      const tile = Math.min(P.tileSize, Math.min(cw, ch) / 1.75)
-      renderer.render(frameAt(Math.min(time, end), P, outro), w, h, tile * dpr)
-      dirty = false
+      canvas.style.width = vw + "px"
+      canvas.style.height = vh + "px"
+      if (renderer.render(frameAt(Math.min(time, end), P, outro), w, h, tile * (w / Math.max(1, vw)))) dirty = false
     }
-    if (visible && playing && logo && !lost) raf = requestAnimationFrame(tick)
+    if ((finished || (reduceMotion && fixed === undefined)) && !dirty) complete()
+    if (visible && (playing || dirty) && !lost) raf = requestAnimationFrame(tick)
   }
 
   function kick() {
-    if (raf || !visible || lost) return
+    if (raf || !visible || lost || failed) return
     last = performance.now()
     raf = requestAnimationFrame(tick)
   }
@@ -1061,6 +1211,7 @@ function startEngine(
         pauseLeft = 0
         outro = 0
       }
+      completed = false
       dirty = true
       kick()
     },
@@ -1069,6 +1220,7 @@ function startEngine(
       playing = true
       pauseLeft = 0
       outro = 0
+      completed = false
       dirty = true
       kick()
     },
@@ -1094,6 +1246,9 @@ function startEngine(
 const MARK_21ST = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="247.7 247.8 330.4 330.4"><path fill-rule="evenodd" d="M543.595 247.8C562.596 247.8 578 263.209 578 282.217V492.158C578 494.06 576.46 495.6 574.559 495.6H471.345C469.445 495.6 467.906 497.141 467.906 499.042V574.758C467.906 576.66 466.364 578.2 464.464 578.2H282.12C263.118 578.2 247.714 562.791 247.714 543.783V499.499C247.714 497.081 248.988 494.84 251.061 493.597L374.676 419.4C377.484 417.714 376.542 413.562 373.535 413.054L372.915 413H251.156C249.254 413 247.714 411.46 247.714 409.558V333.842C247.714 331.941 249.254 330.4 251.156 330.4H381.893C383.792 330.4 385.334 328.86 385.334 326.958V251.242C385.334 249.341 386.874 247.8 388.773 247.8H543.595ZM388.773 330.4C386.874 330.4 385.334 331.941 385.334 333.842V492.158C385.334 494.06 386.874 495.6 388.773 495.6H464.464C466.364 495.6 467.906 494.06 467.906 492.158V333.842C467.906 331.941 466.364 330.4 464.464 330.4H388.773Z"/></svg>`
 
 export type GlassReveal21stProps = Omit<GlassIconRevealProps, "logo">
+
+/** Warm the mark's texture and SDF before the component mounts */
+export const preloadGlassReveal21st = () => preloadLogo(MARK_21ST)
 
 /** Every prop is optional and overrides the baked-in look; `tuning` merges into it */
 export function GlassReveal21st({ tuning, ...props }: GlassReveal21stProps) {

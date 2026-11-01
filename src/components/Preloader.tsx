@@ -1,27 +1,62 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { GlassReveal21st } from '@/components/ui/liquid-glass-logo-reveal'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { GlassReveal21st, preloadGlassReveal21st } from '@/components/ui/liquid-glass-logo-reveal'
 
 const SESSION_KEY = 'zedos:intro-seen'
-const HOLD_MS = 3500
+const ACTIVE_ATTR = 'data-intro-active'
+const SEEN_ATTR = 'data-intro-seen'
+/** Beat on the finished logo before the overlay fades */
+const SETTLE_MS = 350
 const FADE_MS = 700
-const REDUCED_HOLD_MS = 600
+/** Shortest time the overlay stays up (reduced motion, no WebGL) */
+const MIN_MS = 600
+/** After the animation ends, wait at most this long for the page to finish loading */
+const LOAD_GRACE_MS = 2500
+/** Hard ceiling: the site is never held back longer than this, whatever goes wrong */
+const MAX_MS = 12000
 
 type Phase = 'visible' | 'leaving' | 'done'
+
+// Start decoding the mark and building its distance field as soon as this bundle runs, in
+// parallel with hydration, so the reveal can begin the moment it mounts.
+if (typeof window !== 'undefined' && !document.documentElement.hasAttribute(SEEN_ATTR)) {
+  preloadGlassReveal21st()
+}
+
+/** Resolves once the window has loaded and web fonts are ready, so the site is revealed complete. */
+function pageReady() {
+  const loaded =
+    document.readyState === 'complete'
+      ? Promise.resolve()
+      : new Promise<void>((resolve) => window.addEventListener('load', () => resolve(), { once: true }))
+  const fonts = document.fonts?.ready.then(() => undefined) ?? Promise.resolve()
+  return Promise.all([loaded, fonts.catch(() => undefined)])
+}
+
+const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms))
 
 function Intro() {
   // Starts visible so the overlay is server-rendered: the first paint is already
   // black, the page behind it never shows through.
   const [phase, setPhase] = useState<Phase>('visible')
+  const [animDone, setAnimDone] = useState(false)
+  const skipped = useRef(false)
 
+  const onComplete = useCallback(() => setAnimDone(true), [])
+
+  // Repeat visits: the head script already hid the overlay before first paint.
   useEffect(() => {
-    // The inline script in the document head flags repeat visits before first
-    // paint, so the overlay is already hidden by CSS and just needs unmounting.
-    if (document.documentElement.hasAttribute('data-intro-seen')) {
-      const stop = setTimeout(() => setPhase('done'), 0)
-      return () => clearTimeout(stop)
-    }
+    if (!document.documentElement.hasAttribute(SEEN_ATTR)) return
+    skipped.current = true
+    const stop = setTimeout(() => setPhase('done'), 0)
+    return () => clearTimeout(stop)
+  }, [])
+
+  // First visit: keep the overlay until the reveal has fully played AND the page is ready.
+  useEffect(() => {
+    const root = document.documentElement
+    if (root.hasAttribute(SEEN_ATTR)) return
 
     // Record entry immediately, including when the visitor refreshes before
     // the animation finishes. The head script also does this before hydration.
@@ -30,25 +65,49 @@ function Intro() {
     } catch {
       // The document flag still prevents replays during in-app navigation.
     }
+    root.setAttribute(ACTIVE_ATTR, '')
 
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const hold = reduceMotion ? REDUCED_HOLD_MS : HOLD_MS
-
-    const leave = setTimeout(() => setPhase('leaving'), hold)
-    const done = setTimeout(() => {
-      document.documentElement.setAttribute('data-intro-seen', '')
-      setPhase('done')
-    }, hold + FADE_MS)
+    let cancelled = false
+    const ceiling = setTimeout(() => {
+      if (!cancelled) setPhase((p) => (p === 'visible' ? 'leaving' : p))
+    }, MAX_MS)
 
     return () => {
-      clearTimeout(leave)
-      clearTimeout(done)
+      cancelled = true
+      clearTimeout(ceiling)
     }
   }, [])
 
+  useEffect(() => {
+    if (!animDone || skipped.current) return
+    let cancelled = false
+    const started = performance.now()
+
+    Promise.race([pageReady(), wait(LOAD_GRACE_MS)])
+      .then(() => wait(Math.max(SETTLE_MS, MIN_MS - (performance.now() - started))))
+      .then(() => {
+        if (!cancelled) setPhase((p) => (p === 'visible' ? 'leaving' : p))
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [animDone])
+
+  // Leaving: let the page wake up under the fade, then unmount the overlay.
+  useEffect(() => {
+    if (phase !== 'leaving') return
+    document.documentElement.removeAttribute(ACTIVE_ATTR)
+    const done = setTimeout(() => {
+      document.documentElement.setAttribute(SEEN_ATTR, '')
+      setPhase('done')
+    }, FADE_MS)
+    return () => clearTimeout(done)
+  }, [phase])
+
   // Hold the page still while the intro is on screen.
   useEffect(() => {
-    if (phase === 'done' || document.documentElement.hasAttribute('data-intro-seen')) return
+    if (phase === 'done' || document.documentElement.hasAttribute(SEEN_ATTR)) return
 
     const { body } = document
     const previous = body.style.overflow
@@ -79,6 +138,7 @@ function Intro() {
           look="dark"
           background="#000000"
           loop={false}
+          onComplete={onComplete}
         />
       </div>
     </>

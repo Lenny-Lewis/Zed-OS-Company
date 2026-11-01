@@ -744,6 +744,9 @@ function InkOrbitSculpture({
       s.lastT = now
       const B = s.to
       if (!s.visible || !B || B.grain.length !== grainN * 3) return
+      // While the site intro covers the page, draw a single frame and then stay idle, so the
+      // intro gets the whole frame budget and the sculpture's entrance plays once it is revealed.
+      if (document.documentElement.hasAttribute("data-intro-active") && !s.dirty) return
       // motion: idle spin eases back in after a flick; pitch springs home
       if (!s.drag) {
         const target = s.reduced ? 0 : s.spin

@@ -60,13 +60,14 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         {/* Record the first entry before hydration so even a refresh during the
-            intro skips it. Repeat entries are hidden before the first paint.
+            intro skips it. Repeat entries are hidden before the first paint; first
+            entries get data-intro-active so heavy page animations idle under the intro.
             Also guard against browser extensions injecting attributes before React hydration. */}
         <script
           id="zedos-preinit"
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
-            __html: `try{if(sessionStorage.getItem('zedos:intro-seen')){document.documentElement.setAttribute('data-intro-seen','')}else{sessionStorage.setItem('zedos:intro-seen','1')}}catch(e){};(function(){try{new MutationObserver(function(m){for(var i=0;i<m.length;i++){var a=m[i].attributeName;if(a&&(a==='bis_skin_checked'||a.indexOf('bis_')===0)){m[i].target.removeAttribute(a);}}}).observe(document.documentElement,{subtree:true,attributes:true});}catch(e){}})();`,
+            __html: `try{if(sessionStorage.getItem('zedos:intro-seen')){document.documentElement.setAttribute('data-intro-seen','')}else{document.documentElement.setAttribute('data-intro-active','');sessionStorage.setItem('zedos:intro-seen','1')}}catch(e){};(function(){try{new MutationObserver(function(m){for(var i=0;i<m.length;i++){var a=m[i].attributeName;if(a&&(a==='bis_skin_checked'||a.indexOf('bis_')===0)){m[i].target.removeAttribute(a);}}}).observe(document.documentElement,{subtree:true,attributes:true});}catch(e){}})();`,
           }}
         />
         {/* No JS (or a failed script) must not leave the site covered. */}
