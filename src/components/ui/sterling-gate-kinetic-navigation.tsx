@@ -194,6 +194,7 @@ export function Component() {
     }, containerRef);
 
     return () => {
+      document.documentElement.removeAttribute("data-menu-open");
       ctx.revert();
       if (tlRef.current) {
         tlRef.current.kill();
@@ -213,6 +214,11 @@ export function Component() {
     }
 
     if (!tlRef.current) return;
+
+    // Lets heavy canvases behind the blurred overlay idle while the menu is open: re-blurring a
+    // full-screen backdrop over a live animation every frame is what made opening the menu stutter.
+    if (isMenuOpen) document.documentElement.setAttribute("data-menu-open", "");
+    else document.documentElement.removeAttribute("data-menu-open");
 
     if (isMenuOpen) {
       const navWrap = containerRef.current?.querySelector(".nav-overlay-wrapper");

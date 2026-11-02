@@ -1,7 +1,6 @@
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import SiteChrome from '@/components/SiteChrome'
-import StyledComponentsRegistry from '@/lib/StyledComponentsRegistry'
 
 export const metadata = {
   title: 'Zed OS Technologies Limited',
@@ -76,9 +75,9 @@ export default function RootLayout({ children }) {
         </noscript>
       </head>
       <body suppressHydrationWarning>
-        <StyledComponentsRegistry>
-          <SiteChrome>{children}</SiteChrome>
-        </StyledComponentsRegistry>
+        {/* StyledComponentsRegistry removed: nothing rendered uses styled-components, and the
+            registry put its runtime in every page's bundle. Re-add it (src/lib) if loader-5 is used. */}
+        <SiteChrome>{children}</SiteChrome>
         <Analytics />
       </body>
     </html>

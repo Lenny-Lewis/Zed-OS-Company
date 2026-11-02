@@ -531,7 +531,8 @@ function buildCloud(seed: number, coreN: number, grainN: number, spikeN: number)
   return { core, grain, spikes }
 }
 
-// yaw about Y, then pitch about X; returns screen x, y, depth and scale
+// yaw about Y, then pitch about X; returns screen x, y, depth and scale.
+// Used for the 32 spike endpoints only; the per-grain loops inline this to avoid allocating.
 function project(x: number, y: number, z: number, yaw: number, pitch: number, f: number): [number, number, number, number] {
   const cy = Math.cos(yaw)
   const sy = Math.sin(yaw)
@@ -711,8 +712,20 @@ function InkOrbitSculpture({
     let W = 0
     let H = 0
     let dpr = 1
+    // Adaptive quality: each level caps the pixel ratio and thins the grain. Phones start one
+    // level down; any device steps down further if a frame's draw keeps costing too much.
+    const QUALITY = [
+      { dpr: 2, stride: 1 },
+      { dpr: 1.5, stride: 1 },
+      { dpr: 1.25, stride: 2 },
+      { dpr: 1, stride: 3 },
+    ]
+    let level = Math.min(window.innerWidth, window.innerHeight) < 600 || (navigator.hardwareConcurrency || 8) <= 4 ? 1 : 0
+    let costMs = 0
+    let costN = 0
+    let warm = 20 // first frames include JIT warm-up, not steady-state cost
     const resize = () => {
-      dpr = clamp(window.devicePixelRatio || 1, 1, Math.max(1, maxDpr))
+      dpr = clamp(window.devicePixelRatio || 1, 1, Math.max(1, Math.min(maxDpr, QUALITY[level].dpr)))
       W = Math.max(1, Math.round(canvas.clientWidth * dpr))
       H = Math.max(1, Math.round(canvas.clientHeight * dpr))
       canvas.width = W
@@ -746,7 +759,9 @@ function InkOrbitSculpture({
       if (!s.visible || !B || B.grain.length !== grainN * 3) return
       // While the site intro covers the page, draw a single frame and then stay idle, so the
       // intro gets the whole frame budget and the sculpture's entrance plays once it is revealed.
-      if (document.documentElement.hasAttribute("data-intro-active") && !s.dirty) return
+      // Same while the nav menu's blurred overlay is open over it.
+      const root = document.documentElement
+      if ((root.hasAttribute("data-intro-active") || root.hasAttribute("data-menu-open")) && !s.dirty) return
       // motion: idle spin eases back in after a flick; pitch springs home
       if (!s.drag) {
         const target = s.reduced ? 0 : s.spin
@@ -766,6 +781,8 @@ function InkOrbitSculpture({
         Math.abs(s.tLeanYaw - s.leanYaw) > 0.001 || Math.abs(s.tLeanPitch - s.leanPitch) > 0.001
       if (!moving && !s.dirty) return
       s.dirty = false
+      const t0 = performance.now()
+      const stride = QUALITY[level].stride
 
       const yaw = s.yaw + s.leanYaw
       const pitch = s.pitch + s.leanPitch
@@ -785,6 +802,13 @@ function InkOrbitSculpture({
       const m = easeInOutCubic(s.morphT)
       const A = s.from && s.from.grain.length === B.grain.length ? s.from : null
       const mixP = (arrB: Float32Array, arrA: Float32Array | undefined, i: number) => (arrA && m < 1 ? arrA[i] + (arrB[i] - arrA[i]) * m : arrB[i])
+      // Projection constants, hoisted so the per-point loops allocate nothing.
+      const cyaw = Math.cos(yaw)
+      const syaw = Math.sin(yaw)
+      const cpit = Math.cos(pitch)
+      const spit = Math.sin(pitch)
+      const morphing = !!A && m < 1
+      const binK = NB / 2.5
 
       // crosshair behind everything
       const reach = scale * 1.38
@@ -817,22 +841,47 @@ function InkOrbitSculpture({
         ctx.stroke()
       }
 
-      // project
+      // project (inlined `project`: the tuple-returning version allocated ~19k arrays a frame)
+      const Bc = B.core
+      const Ac = morphing ? A!.core : Bc
       for (let i = 0; i < CORE_N; i++) {
-        const [x, y, z, sc] = project(mixP(B.core, A?.core, i * 4), mixP(B.core, A?.core, i * 4 + 1), mixP(B.core, A?.core, i * 4 + 2), yaw, pitch, f)
-        px[i] = cx + x * scale
-        py[i] = cy + y * scale
-        pr[i] = mixP(B.core, A?.core, i * 4 + 3) * scale * sc * 0.78
-        bin[i] = clamp(Math.floor(((z + 1.25) / 2.5) * NB), 0, NB - 1)
+        const o = i * 4
+        const x = morphing ? Ac[o] + (Bc[o] - Ac[o]) * m : Bc[o]
+        const y = morphing ? Ac[o + 1] + (Bc[o + 1] - Ac[o + 1]) * m : Bc[o + 1]
+        const z = morphing ? Ac[o + 2] + (Bc[o + 2] - Ac[o + 2]) * m : Bc[o + 2]
+        const w = morphing ? Ac[o + 3] + (Bc[o + 3] - Ac[o + 3]) * m : Bc[o + 3]
+        const x1 = x * cyaw + z * syaw
+        const z1 = -x * syaw + z * cyaw
+        const y2 = y * cpit - z1 * spit
+        const z2 = y * spit + z1 * cpit
+        const sc = f / (f - z2)
+        px[i] = cx + x1 * sc * scale
+        py[i] = cy + y2 * sc * scale
+        pr[i] = w * scale * sc * 0.78
+        const bb = ((z2 + 1.25) * binK) | 0
+        bin[i] = bb < 0 ? 0 : bb > NB - 1 ? NB - 1 : bb
       }
-      for (let g = 0; g < grainN; g++) {
+      const Bg = B.grain
+      const Ag = morphing ? A!.grain : Bg
+      for (let g = 0; g < grainN; g += stride) {
         const i = CORE_N + g
-        const [x, y, z] = project(mixP(B.grain, A?.grain, g * 3), mixP(B.grain, A?.grain, g * 3 + 1), mixP(B.grain, A?.grain, g * 3 + 2), yaw, pitch, f)
-        px[i] = cx + x * scale
-        py[i] = cy + y * scale
-        bin[i] = clamp(Math.floor(((z + 1.25) / 2.5) * NB), 0, NB - 1)
+        const o = g * 3
+        const x = morphing ? Ag[o] + (Bg[o] - Ag[o]) * m : Bg[o]
+        const y = morphing ? Ag[o + 1] + (Bg[o + 1] - Ag[o + 1]) * m : Bg[o + 1]
+        const z = morphing ? Ag[o + 2] + (Bg[o + 2] - Ag[o + 2]) * m : Bg[o + 2]
+        const x1 = x * cyaw + z * syaw
+        const z1 = -x * syaw + z * cyaw
+        const y2 = y * cpit - z1 * spit
+        const z2 = y * spit + z1 * cpit
+        const sc = f / (f - z2)
+        px[i] = cx + x1 * sc * scale
+        py[i] = cy + y2 * sc * scale
+        const bb = ((z2 + 1.25) * binK) | 0
+        bin[i] = bb < 0 ? 0 : bb > NB - 1 ? NB - 1 : bb
       }
-      const gs = Math.max(1, 1.15 * dpr)
+      // thinned grain draws a touch larger so the texture keeps its weight
+      const gs = Math.max(1, 1.15 * dpr * (stride > 1 ? 1.25 : 1))
+      const end = CORE_N + grainN
       const pass = (b: number) => {
         const fade = 0.62 * (1 - b / (NB - 1))
         ctx.fillStyle = mixHex(inkC, bg, fade)
@@ -844,7 +893,7 @@ function InkOrbitSculpture({
         }
         ctx.fill()
         ctx.fillStyle = mixHex(inkC, bg, Math.min(0.85, fade + 0.12))
-        for (let i = CORE_N; i < CORE_N + grainN; i++) if (bin[i] === b) ctx.fillRect(px[i], py[i], gs, gs)
+        for (let i = CORE_N; i < end; i += stride) if (bin[i] === b) ctx.fillRect(px[i], py[i], gs, gs)
       }
       const spikes = (front: boolean) => {
         ctx.lineWidth = Math.max(0.75, 0.8 * dpr)
@@ -920,6 +969,22 @@ function InkOrbitSculpture({
 
       for (let b = Math.floor(NB / 2) + 1; b < NB; b++) pass(b)
       spikes(true)
+
+      // Average the draw cost over 30 frames; above ~9 ms (over half a 60 fps frame) drop a level.
+      if (warm > 0) {
+        warm--
+      } else if (level < QUALITY.length - 1) {
+        costMs += performance.now() - t0
+        costN++
+        if (costN === 30) {
+          if (costMs / costN > 9) {
+            level++
+            resize()
+          }
+          costMs = 0
+          costN = 0
+        }
+      }
     }
     raf = requestAnimationFrame(draw)
     return () => {

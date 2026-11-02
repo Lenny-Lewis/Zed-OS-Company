@@ -3,6 +3,7 @@
 import type React from "react"
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import {
   Package,
   Car,
@@ -27,8 +28,10 @@ export default function AboutUsSection() {
   const [isVisible, setIsVisible] = useState(false)
   const sectionRef = useRef<HTMLDivElement>(null)
   const statsRef = useRef<HTMLDivElement>(null)
-  const isInView = useInView(sectionRef, { once: false, amount: 0.1 })
-  const isStatsInView = useInView(statsRef, { once: false, amount: 0.3 })
+  // once: true — re-running every entrance (and resetting the counters) each time these scrolled
+  // in and out of view was repeated animation work for no visible gain.
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 })
+  const isStatsInView = useInView(statsRef, { once: true, amount: 0.3 })
 
   // Parallax effect for decorative elements
   const { scrollYProgress } = useScroll({
@@ -134,34 +137,31 @@ export default function AboutUsSection() {
       ref={sectionRef}
       className="w-full pt-32 pb-24 px-4 bg-black text-white overflow-hidden relative"
     >
+      {/* Soft glow as a radial gradient: the old 64px filter blur on a 28rem element that moved
+          and rotated with scroll was re-rasterised on scroll frames. Same look, no filter. */}
       <motion.div
-        className="absolute bottom-16 right-10 w-[28rem] h-[28rem] rounded-full bg-white/[0.02] blur-3xl pointer-events-none"
-        style={{ y: y2, rotate: rotate2 }}
-      />
-      <motion.div
-        className="absolute top-1/2 left-1/4 w-2 h-2 rounded-full bg-white/25 pointer-events-none"
-        animate={{
-          y: [0, -12, 0],
-          opacity: [0.3, 0.8, 0.3],
-        }}
-        transition={{
-          duration: 3,
-          repeat: Number.POSITIVE_INFINITY,
-          ease: "easeInOut",
+        className="absolute bottom-16 right-10 w-[28rem] h-[28rem] rounded-full pointer-events-none"
+        style={{
+          y: y2,
+          rotate: rotate2,
+          background: "radial-gradient(closest-side, rgba(255,255,255,0.02), rgba(255,255,255,0.012) 55%, transparent)",
         }}
       />
-      <motion.div
-        className="absolute bottom-1/3 right-1/4 w-2.5 h-2.5 rounded-full bg-white/20 pointer-events-none"
-        animate={{
-          y: [0, 16, 0],
-          opacity: [0.3, 0.8, 0.3],
-        }}
-        transition={{
-          duration: 4,
-          repeat: Number.POSITIVE_INFINITY,
-          ease: "easeInOut",
-          delay: 1,
-        }}
+      {/* Infinite floaters run as CSS animations on the compositor instead of per-frame JS */}
+      <style>{`
+        @keyframes about-float { 0%,100% { transform: translateY(0); opacity: .3 } 50% { transform: translateY(var(--float-y)); opacity: .8 } }
+        @keyframes about-float-strong { 0%,100% { transform: translateY(0); opacity: .4 } 50% { transform: translateY(var(--float-y)); opacity: .9 } }
+        .about-float { animation: about-float var(--float-d) ease-in-out var(--float-delay, 0s) infinite }
+        .about-float-strong { animation: about-float-strong var(--float-d) ease-in-out var(--float-delay, 0s) infinite }
+        @media (prefers-reduced-motion: reduce) { .about-float, .about-float-strong { animation: none } }
+      `}</style>
+      <div
+        className="about-float absolute top-1/2 left-1/4 w-2 h-2 rounded-full bg-white/25 pointer-events-none"
+        style={{ "--float-y": "-12px", "--float-d": "3s" } as React.CSSProperties}
+      />
+      <div
+        className="about-float absolute bottom-1/3 right-1/4 w-2.5 h-2.5 rounded-full bg-white/20 pointer-events-none"
+        style={{ "--float-y": "16px", "--float-d": "4s", "--float-delay": "1s" } as React.CSSProperties}
       />
 
       <motion.div
@@ -227,10 +227,12 @@ export default function AboutUsSection() {
                 transition={{ duration: 0.8, delay: 0.3 }}
                 whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
               >
-                <img
+                <Image
                   src="/images/about-office.jpg"
                   alt="Zed OS Technologies Headquarters"
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 320px"
+                  className="object-cover"
                 />
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent flex flex-col justify-end items-center p-5 text-center"
@@ -274,32 +276,19 @@ export default function AboutUsSection() {
                 style={{ y: y2 }}
               />
 
-              {/* Subtle pulsing dots */}
-              <motion.div
-                className="absolute -top-5 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-white/40"
-                animate={{
-                  y: [0, -6, 0],
-                  opacity: [0.4, 0.9, 0.4],
-                }}
-                transition={{
-                  duration: 2.5,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                }}
-              />
-              <motion.div
-                className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-white/30"
-                animate={{
-                  y: [0, 6, 0],
-                  opacity: [0.4, 0.9, 0.4],
-                }}
-                transition={{
-                  duration: 2.5,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                  delay: 0.5,
-                }}
-              />
+              {/* Subtle pulsing dots (outer div centres, inner div floats, so the transforms don't clash) */}
+              <div className="absolute -top-5 left-1/2 -translate-x-1/2">
+                <div
+                  className="about-float-strong w-2 h-2 rounded-full bg-white/40"
+                  style={{ "--float-y": "-6px", "--float-d": "2.5s" } as React.CSSProperties}
+                />
+              </div>
+              <div className="absolute -bottom-6 left-1/2 -translate-x-1/2">
+                <div
+                  className="about-float-strong w-1.5 h-1.5 rounded-full bg-white/30"
+                  style={{ "--float-y": "6px", "--float-d": "2.5s", "--float-delay": "0.5s" } as React.CSSProperties}
+                />
+              </div>
             </motion.div>
           </div>
 
@@ -438,7 +427,7 @@ interface StatCounterProps {
 
 function StatCounter({ icon, value, label, suffix, delay }: StatCounterProps) {
   const countRef = useRef(null)
-  const isInView = useInView(countRef, { once: false })
+  const isInView = useInView(countRef, { once: true })
   const [hasAnimated, setHasAnimated] = useState(false)
 
   const springValue = useSpring(0, {
@@ -460,7 +449,7 @@ function StatCounter({ icon, value, label, suffix, delay }: StatCounterProps) {
 
   return (
     <motion.div
-      className="bg-neutral-950 border border-white/10 backdrop-blur-sm p-6 rounded-xl flex flex-col items-center text-center group hover:border-white/20 transition-colors duration-300"
+      className="bg-neutral-950 border border-white/10 p-6 rounded-xl flex flex-col items-center text-center group hover:border-white/20 transition-colors duration-300"
       variants={{
         hidden: { opacity: 0, y: 20 },
         visible: {

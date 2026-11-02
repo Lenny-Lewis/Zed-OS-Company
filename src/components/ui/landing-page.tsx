@@ -40,9 +40,9 @@ const defaultGlobeConfig = {
 const parsePercent = (str: string): number => parseFloat(str.replace('%', ''));
 
 export function ScrollGlobe({ sections, globeConfig = defaultGlobeConfig, className }: ScrollGlobeProps) {
+  // Only the active section is state: it changes a handful of times per page, so scrolling no
+  // longer re-renders the whole page every frame.
   const [activeSection, setActiveSection] = useState(0);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [globeTransform, setGlobeTransform] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
   const animationFrameId = useRef<number | undefined>(undefined);
@@ -58,12 +58,6 @@ export function ScrollGlobe({ sections, globeConfig = defaultGlobeConfig, classN
 
   // Simple, direct scroll tracking
   const updateScrollPosition = useCallback(() => {
-    const scrollTop = window.pageYOffset;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = docHeight > 0 ? Math.min(Math.max(scrollTop / docHeight, 0), 1) : 0;
-    
-    setScrollProgress(progress);
-
     // Simple section detection
     const viewportCenter = window.innerHeight / 2;
     let newActiveSection = 0;
@@ -82,15 +76,8 @@ export function ScrollGlobe({ sections, globeConfig = defaultGlobeConfig, classN
       }
     });
 
-    // Direct position update
-    const currentPos = calculatedPositions[newActiveSection] || calculatedPositions[0];
-    if (currentPos) {
-      const transform = `translate3d(${currentPos.left}vw, ${currentPos.top}vh, 0) translate3d(-50%, -50%, 0) scale3d(${currentPos.scale}, ${currentPos.scale}, 1)`;
-      setGlobeTransform(transform);
-    }
-
-    setActiveSection(newActiveSection);
-  }, [calculatedPositions]);
+    setActiveSection(newActiveSection); // no-op render when unchanged
+  }, []);
 
   // Throttled scroll handler with RAF
   useEffect(() => {
@@ -117,14 +104,10 @@ export function ScrollGlobe({ sections, globeConfig = defaultGlobeConfig, classN
     };
   }, [updateScrollPosition]);
 
-  // Initial globe position
-  useEffect(() => {
-    const initialPos = calculatedPositions[0];
-    if (initialPos) {
-      const initialTransform = `translate3d(${initialPos.left}vw, ${initialPos.top}vh, 0) translate3d(-50%, -50%, 0) scale3d(${initialPos.scale}, ${initialPos.scale}, 1)`;
-      setGlobeTransform(initialTransform);
-    }
-  }, [calculatedPositions]);
+  const currentPos = calculatedPositions[activeSection] || calculatedPositions[0];
+  const globeTransform = currentPos
+    ? `translate3d(${currentPos.left}vw, ${currentPos.top}vh, 0) translate3d(-50%, -50%, 0) scale3d(${currentPos.scale}, ${currentPos.scale}, 1)`
+    : "";
 
   return (
     <div 
@@ -165,10 +148,11 @@ export function ScrollGlobe({ sections, globeConfig = defaultGlobeConfig, classN
 
       {/* 3D Rotating Globe tracked across viewport */}
       <div
-        className="fixed top-0 left-0 z-10 pointer-events-none will-change-transform transition-all duration-[1400ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
+        className="fixed top-0 left-0 z-10 pointer-events-none will-change-transform transition-[transform,opacity] duration-[1400ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
         style={{
           transform: globeTransform,
-          filter: `opacity(${activeSection === 3 ? 0.45 : 0.95})`,
+          // plain opacity is composited; filter: opacity() was repainted every transition frame
+          opacity: activeSection === 3 ? 0.45 : 0.95,
         }}
       >
         <div className="scale-75 sm:scale-95 lg:scale-110">
@@ -191,10 +175,7 @@ export function ScrollGlobe({ sections, globeConfig = defaultGlobeConfig, classN
             section.align !== 'center' && section.align !== 'right' && "items-start text-left"
           )}
         >
-          <div className={cn(
-            "w-full max-w-sm sm:max-w-lg md:max-w-2xl lg:max-w-4xl xl:max-w-5xl will-change-transform transition-all duration-700",
-            "opacity-100 translate-y-0"
-          )}>
+          <div className="w-full max-w-sm sm:max-w-lg md:max-w-2xl lg:max-w-4xl xl:max-w-5xl">
             <h2 className={cn(
               "mb-6 sm:mb-8 leading-[1.04] tracking-[-0.03em] text-white",
               index === 0 
@@ -237,7 +218,9 @@ export function ScrollGlobe({ sections, globeConfig = defaultGlobeConfig, classN
                   <div 
                     key={feature.title}
                     className={cn(
-                      "group p-4 sm:p-5 lg:p-6 rounded-lg sm:rounded-xl border border-white/10 bg-neutral-950/70 backdrop-blur-md hover:bg-neutral-900/90 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/5",
+                      // No backdrop-blur: these cards sit over the moving fixed globe, so a blur
+                      // had to be recomputed every scroll frame. A denser fill reads the same.
+                      "group p-4 sm:p-5 lg:p-6 rounded-lg sm:rounded-xl border border-white/10 bg-neutral-950/85 hover:bg-neutral-900/90 transition-[background-color,border-color,box-shadow,transform] duration-300 hover:shadow-lg hover:shadow-blue-500/5",
                       "hover:border-white/30 hover:-translate-y-0.5"
                     )}
                     style={{ animationDelay: `${featureIndex * 0.1}s` }}
@@ -268,7 +251,7 @@ export function ScrollGlobe({ sections, globeConfig = defaultGlobeConfig, classN
                     "focus:outline-none focus:ring-2 focus:ring-white/20 w-full sm:w-auto",
                     action.variant === 'primary' 
                       ? "bg-white text-black hover:bg-white/90 shadow-lg shadow-white/10" 
-                      : "border border-white/25 bg-neutral-950/60 backdrop-blur-sm hover:bg-neutral-900 hover:border-white/50 text-white"
+                      : "border border-white/25 bg-neutral-950/80 hover:bg-neutral-900 hover:border-white/50 text-white"
                   );
 
                   if (action.href) {

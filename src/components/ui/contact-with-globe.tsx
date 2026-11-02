@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
 import { ArrowRight, Clock, Mail, MapPin, Phone } from "lucide-react";
 import * as SeparatorPrimitive from "@radix-ui/react-separator";
-import * as d3 from "d3";
+// Named imports so only d3-geo ships, not the whole d3 bundle.
+import { geoGraticule10, geoOrthographic, geoPath, type GeoPermissibleObjects } from "d3";
 import { feature } from "topojson-client";
 import type { GeometryCollection, Topology } from "topojson-specification";
 import { Button } from "@/components/ui/button";
@@ -36,47 +37,58 @@ function GlobeWireframe({ className, autoRotate = true, autoRotateSpeed = 0.45, 
     const element = svgRef.current;
     if (!container || !element) return;
     const controller = new AbortController();
-    const svg = d3.select(element);
-    const projection = d3.geoOrthographic().rotate([-34.75, 0]).precision(0.5);
-    const path = d3.geoPath(projection);
-    const graticule = svg.append("path").datum(d3.geoGraticule10())
-      .attr("fill", "none").attr("stroke", "currentColor")
-      .attr("stroke-width", 0.5).attr("opacity", 0.12);
-    const countries = svg.append("g").attr("fill", "none")
-      .attr("stroke", "currentColor").attr("stroke-width", strokeWidth);
-    const sphere = svg.append("path").datum({ type: "Sphere" } as d3.GeoPermissibleObjects)
-      .attr("fill", "none").attr("stroke", "currentColor")
-      .attr("stroke-width", 1.5).attr("opacity", 0.8);
-    let countryPaths = countries.selectAll<SVGPathElement, d3.GeoPermissibleObjects>("path");
+    // precision 1 (was 0.5) halves the adaptive resampling work; the difference isn't visible at this size
+    const projection = geoOrthographic().rotate([-34.75, 0]).precision(1);
+    const path = geoPath(projection);
+    const NS = "http://www.w3.org/2000/svg";
+    const make = (tag: string, attrs: Record<string, string | number>) => {
+      const node = document.createElementNS(NS, tag);
+      for (const k in attrs) node.setAttribute(k, String(attrs[k]));
+      element.appendChild(node);
+      return node;
+    };
+    const graticuleData = geoGraticule10();
+    const sphereData = { type: "Sphere" } as GeoPermissibleObjects;
+    const graticule = make("path", { fill: "none", stroke: "currentColor", "stroke-width": 0.5, opacity: 0.12 });
+    const countries = make("path", { fill: "none", stroke: "currentColor", "stroke-width": strokeWidth });
+    const sphere = make("path", { fill: "none", stroke: "currentColor", "stroke-width": 1.5, opacity: 0.8 });
+    // All countries go in one path: one DOM write per frame instead of ~180.
+    let world: GeoPermissibleObjects | null = null;
     let visible = false;
     let dragging = false;
     let lastPointer = [0, 0];
     let frame = 0;
     let previousTime = 0;
+    let sinceDraw = 0;
 
     const render = () => {
-      graticule.attr("d", path);
-      countryPaths.attr("d", path);
-      sphere.attr("d", path);
+      graticule.setAttribute("d", path(graticuleData) ?? "");
+      if (world) countries.setAttribute("d", path(world) ?? "");
     };
     const resize = () => {
       const size = container.clientWidth || 300;
-      svg.attr("viewBox", `0 0 ${size} ${size}`);
+      element.setAttribute("viewBox", `0 0 ${size} ${size}`);
       projection.scale(size * 0.45).translate([size / 2, size / 2]);
+      // An orthographic sphere outline is the same circle at any rotation: draw it on resize only.
+      sphere.setAttribute("d", path(sphereData) ?? "");
       render();
     };
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(container);
     resize();
     const tick = (time: number) => {
+      frame = requestAnimationFrame(tick);
       const delta = previousTime ? Math.min(time - previousTime, 50) : 0;
       previousTime = time;
-      if (!dragging) {
-        const [longitude, latitude] = projection.rotate();
-        projection.rotate([(longitude + autoRotateSpeed * delta / (1000 / 60)) % 360, latitude]);
-        render();
-      }
-      frame = requestAnimationFrame(tick);
+      if (dragging) return;
+      const [longitude, latitude] = projection.rotate();
+      projection.rotate([(longitude + autoRotateSpeed * delta / (1000 / 60)) % 360, latitude]);
+      // The idle spin is under half a degree per frame: re-projecting at ~30 fps looks the same
+      // and halves the geometry work.
+      sinceDraw += delta;
+      if (sinceDraw < 30) return;
+      sinceDraw = 0;
+      render();
     };
     const updateAnimation = () => {
       cancelAnimationFrame(frame);
@@ -117,9 +129,9 @@ function GlobeWireframe({ className, autoRotate = true, autoRotateSpeed = 0.45, 
       try {
         const response = await fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json", { signal: controller.signal });
         if (!response.ok) throw new Error("Could not load globe map");
-        const world = await response.json() as Topology<{ countries: GeometryCollection }>;
+        const topo = await response.json() as Topology<{ countries: GeometryCollection }>;
         if (controller.signal.aborted) return;
-        countryPaths = countryPaths.data<d3.GeoPermissibleObjects>(feature(world, world.objects.countries).features).join("path");
+        world = feature(topo, topo.objects.countries) as GeoPermissibleObjects;
         render();
       } catch {
         // Keep the sphere and graticule visible if the atlas is unavailable.
@@ -137,7 +149,7 @@ function GlobeWireframe({ className, autoRotate = true, autoRotateSpeed = 0.45, 
       element.removeEventListener("pointerup", pointerUp);
       element.removeEventListener("pointercancel", pointerUp);
       element.removeEventListener("lostpointercapture", pointerUp);
-      svg.selectAll("*").remove();
+      element.replaceChildren();
     };
   }, [autoRotate, autoRotateSpeed, reducedMotion, strokeWidth]);
 

@@ -226,6 +226,8 @@ export default function PushpinTearFooter({
     let mode: "wait" | "intro" | "morph" | "rest" = previous ? (still ? "rest" : "morph") : "wait"
     let W = 0, H = 0, raf = 0, t0 = performance.now(), dur = 1100, currentSeed = tearSeed
     let px = -1e4, py = -1e4, busy = false, started = !!previous
+    let drawnYs: number[] | null = null, drawnW = 0, drawnH = 0
+    let rect: DOMRect | null = null
     const lift = new Array<number>(FLAPS).fill(0)
     const timers: number[] = []
     const later = (fn: () => void, delay: number) => { timers.push(window.setTimeout(fn, delay)) }
@@ -235,7 +237,7 @@ export default function PushpinTearFooter({
       if (!W || !H) return
       let active = false
       const open = new Array<number>(FLAPS).fill(1), old = new Array<number>(FLAPS).fill(0)
-      if (mode === "wait") { ys = tear.ys.map(() => START); open.fill(0) }
+      if (mode === "wait") { if (ys.length !== tear.ys.length || ys[0] !== START) ys = tear.ys.map(() => START); open.fill(0) }
       else if (mode === "intro") {
         const p = Math.min(1, (now - t0) / dur)
         ys = introYs(tear, p)
@@ -256,8 +258,14 @@ export default function PushpinTearFooter({
         if (Math.abs(target - lift[k]) > 0.003) active = true
         open[k] *= 1 + 0.32 * lift[k]
       })
-      sheetRef.current?.setAttribute("d", sheetD(ys, W, H, tear.rim))
-      rimRef.current?.setAttribute("d", sheetD(ys, W, H))
+      // The sheet sits under an SVG drop-shadow filter that spans the whole footer: rewriting its
+      // path re-rasterises that filter. Only do it when the edge actually moved, not on every
+      // hover frame (where only the small flaps change).
+      if (ys !== drawnYs || W !== drawnW || H !== drawnH) {
+        drawnYs = ys; drawnW = W; drawnH = H
+        sheetRef.current?.setAttribute("d", sheetD(ys, W, H, tear.rim))
+        rimRef.current?.setAttribute("d", sheetD(ys, W, H))
+      }
       const flap = (k: number, f: Flap | undefined, o: number) => {
         const path = flapRefs.current[k], gradient = gradRefs.current[k]
         if (!path || !gradient) return
@@ -274,6 +282,7 @@ export default function PushpinTearFooter({
     }
     function kick() { if (!raf) raf = requestAnimationFrame(draw) }
     function resize() {
+      rect = null
       W = el!.clientWidth; H = el!.clientHeight
       svg!.setAttribute("width", String(W)); svg!.setAttribute("height", String(H)); svg!.setAttribute("viewBox", `0 0 ${W} ${H}`)
       kick()
@@ -297,13 +306,15 @@ export default function PushpinTearFooter({
     if (previous) { el.classList.add("s1", "s2", "s3"); kick() }
     function pointerMove(e: PointerEvent) {
       if (still || e.pointerType === "touch") return
-      const rect = el!.getBoundingClientRect()
+      rect ??= el!.getBoundingClientRect() // cached until the next scroll or resize
       px = e.clientX - rect.left; py = e.clientY - rect.top
       pin!.style.setProperty("--tilt", `${Math.max(-9, Math.min(9, (px / rect.width - 0.5) * 18))}deg`)
       kick()
     }
     function pointerLeave() { px = py = -1e4; pin!.style.setProperty("--tilt", "0deg"); kick() }
+    const dropRect = () => { rect = null }
     el.addEventListener("pointermove", pointerMove); el.addEventListener("pointerleave", pointerLeave)
+    window.addEventListener("scroll", dropRect, { passive: true })
     repinRef.current = () => {
       if (busy || mode !== "rest") return
       const next = currentSeed + 1
@@ -318,6 +329,7 @@ export default function PushpinTearFooter({
       ro.disconnect(); observer.disconnect(); cancelAnimationFrame(raf)
       timers.forEach(clearTimeout)
       el.removeEventListener("pointermove", pointerMove); el.removeEventListener("pointerleave", pointerLeave)
+      window.removeEventListener("scroll", dropRect)
       repinRef.current = null
     }
   }, [seed, still, onRepin])

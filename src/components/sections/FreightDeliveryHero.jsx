@@ -145,8 +145,7 @@ export default function FreightDeliveryHero() {
     const recorder = new URLSearchParams(window.location.search).get('rec') === '1'
 
     const syncImmersive = (scrollY) => {
-      const max = Math.max(0, track.offsetHeight - window.innerHeight)
-      const active = scrollY > 0 && scrollY < max
+      const active = scrollY > 0 && scrollY < trackMax
       if (active && !immersiveOn) {
         immersiveOn = true
         setImmersive(true)
@@ -186,29 +185,40 @@ export default function FreightDeliveryHero() {
       }
     }
 
+    // Layout is measured once per resize, never inside the frame loop: reading layout after
+    // writing transforms each frame forced several synchronous reflows per frame.
+    let vw = window.innerWidth
+    let vh = window.innerHeight
+    let trackTop = 0
+    let trackMax = 0
+    let stripWidth = 0
+    let lettersWidth = 0
+    let stripX = 0
+    let lastPh = ''
+    let lastSpeed = ''
+    let lastStrip = ''
+    let lastLetters = ''
+    let lastApplied = -1
+    let onScreen = false
+    const cards = cardRefs.current.filter(Boolean).map((card) => ({
+      els: [card, card.querySelector('[data-card-title]'), card.querySelector('[data-card-body]')].filter(Boolean),
+      base: 0, // card's left edge when the strip sits at translateX(0)
+      last: '',
+    }))
+
     const updateCards = () => {
-      const vw = window.innerWidth
-      cardRefs.current.forEach((card) => {
-        if (!card) return
-        const left = card.getBoundingClientRect().left
-        const s = clamp((0.98 - left / vw) / 0.3, -0.4, 1.6) * 100
-        card.style.setProperty('--s', `${s}%`)
-        const title = card.querySelector('[data-card-title]')
-        const body = card.querySelector('[data-card-body]')
-        if (title) title.style.setProperty('--s', `${s}%`)
-        if (body) body.style.setProperty('--s', `${s}%`)
-      })
+      for (const card of cards) {
+        const left = card.base + stripX
+        const s = `${clamp((0.98 - left / vw) / 0.3, -0.4, 1.6) * 100}%`
+        if (s === card.last) continue
+        card.last = s
+        for (const el of card.els) el.style.setProperty('--s', s)
+      }
     }
 
-    const localScroll = () => {
-      const start = track.offsetTop
-      const max = Math.max(0, track.offsetHeight - window.innerHeight)
-      return clamp(window.scrollY - start, 0, max)
-    }
+    const localScroll = () => clamp(window.scrollY - trackTop, 0, trackMax)
 
     const apply = (scrollY, force = false) => {
-      const vh = window.innerHeight
-      const vw = window.innerWidth
       const q = clamp(scrollY / (A * vh))
       const duration = video.duration && Number.isFinite(video.duration) ? video.duration : 4.04
       const target = q * (duration - 1 / 48)
@@ -217,19 +227,34 @@ export default function FreightDeliveryHero() {
       else curTime += (target - curTime) * 0.2
       seekTo(curTime)
 
-      track.style.setProperty('--ph', q >= 0.94 ? '1' : '0')
+      // Nothing else depends on time: skip the DOM entirely while the scroll position is unchanged.
+      if (!force && scrollY === lastApplied) return
+      lastApplied = scrollY
+
+      const ph = q >= 0.94 ? '1' : '0'
+      if (ph !== lastPh) {
+        lastPh = ph
+        track.style.setProperty('--ph', ph)
+      }
 
       const r = clamp((scrollY - A * vh) / (B * vh))
-      const stripWidth = strip.scrollWidth
-      const lettersWidth = letters.scrollWidth
-      strip.style.transform = `translate3d(${vw - r * (stripWidth + 0.45 * vw)}px,0,0)`
-      letters.style.transform = `translate3d(${vw - r * (lettersWidth + vw)}px,0,0)`
+      stripX = vw - r * (stripWidth + 0.45 * vw)
+      const stripT = `translate3d(${stripX}px,0,0)`
+      const lettersT = `translate3d(${vw - r * (lettersWidth + vw)}px,0,0)`
+      if (stripT !== lastStrip) {
+        lastStrip = stripT
+        strip.style.transform = stripT
+      }
+      if (lettersT !== lastLetters) {
+        lastLetters = lettersT
+        letters.style.transform = lettersT
+      }
       updateCards()
     }
 
     const measure = () => {
-      const vh = window.innerHeight
-      const vw = window.innerWidth
+      vw = window.innerWidth
+      vh = window.innerHeight
       const phone = isPhoneLayout()
 
       if (phone) {
@@ -256,19 +281,31 @@ export default function FreightDeliveryHero() {
       const edge = rect.top - sceneRect.top + rect.height * FINAL_BAND
       track.style.setProperty('--edge-px', `${edge}px`)
 
-      const stripWidth = strip.scrollWidth
+      stripWidth = strip.scrollWidth
+      lettersWidth = letters.scrollWidth
       B = ((stripWidth + 0.45 * vw) / vw) * 1.1
       track.style.height = `${(1 + A + B) * vh}px`
+      trackTop = track.getBoundingClientRect().top + window.scrollY
+      trackMax = Math.max(0, track.offsetHeight - vh)
+
+      // Each card's on-screen left minus the strip translate currently applied (stripX), so at
+      // runtime left = base + stripX without touching layout.
+      for (const card of cards) {
+        card.base = card.els[0].getBoundingClientRect().left - stripX
+        card.last = ''
+      }
+      lastPh = lastStrip = lastLetters = ''
       apply(localScroll(), true)
     }
 
     const tick = (now) => {
+      raf = 0
+      if (!onScreen && !recorder) return
       raf = requestAnimationFrame(tick)
 
       if (recorder && recProgress != null) {
-        const start = track.offsetTop
-        const total = (1 + A + B) * window.innerHeight
-        window.scrollTo(0, start + recProgress * total)
+        const total = (1 + A + B) * vh
+        window.scrollTo(0, trackTop + recProgress * total)
       }
 
       const scrollY = localScroll()
@@ -279,10 +316,11 @@ export default function FreightDeliveryHero() {
       lastY = scrollY
       lastT = now
 
-      if (recorder && window.__recScriptSpeed != null) {
-        speedEl.textContent = `${String(Math.round(window.__recScriptSpeed)).padStart(2, '0')} KM/H`
-      } else {
-        speedEl.textContent = `${String(Math.round(smoothSpeed)).padStart(2, '0')} KM/H`
+      const speed = recorder && window.__recScriptSpeed != null ? window.__recScriptSpeed : smoothSpeed
+      const speedText = `${String(Math.round(speed)).padStart(2, '0')} KM/H`
+      if (speedText !== lastSpeed) {
+        lastSpeed = speedText
+        speedEl.textContent = speedText
       }
 
       syncImmersive(scrollY)
@@ -314,11 +352,46 @@ export default function FreightDeliveryHero() {
     window.addEventListener('resize', measure)
 
     measure()
-    raf = requestAnimationFrame(tick)
+
+    // The frame loop only runs while the section is on (or about to come on) screen.
+    const start = () => {
+      if (raf) return
+      lastY = localScroll()
+      lastT = performance.now()
+      raf = requestAnimationFrame(tick)
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        onScreen = entry.isIntersecting
+        if (onScreen) {
+          measure() // content above may have shifted while we were away
+          start()
+        } else {
+          // Leaving: settle on the final state for this scroll position, then go idle.
+          const y = localScroll()
+          syncImmersive(y)
+          apply(y, true)
+        }
+      },
+      { rootMargin: '200px 0px' },
+    )
+    io.observe(track)
+    if (recorder) start()
+    // Widths are cached, so re-measure when the strip or headline change size (e.g. web fonts landing).
+    let roPending = 0
+    const ro = new ResizeObserver(() => {
+      if (roPending) return
+      roPending = requestAnimationFrame(() => {
+        roPending = 0
+        measure()
+      })
+    })
+    ro.observe(strip)
+    ro.observe(letters)
 
     window.__recTime = (vid, t) => {
-      const start = track.offsetTop
-      const total = (1 + A + B) * window.innerHeight
+      const start = trackTop
+      const total = (1 + A + B) * vh
       const progress = clamp(t)
       recProgress = progress
       window.scrollTo(0, start + progress * total)
@@ -343,6 +416,9 @@ export default function FreightDeliveryHero() {
     }
 
     return () => {
+      io.disconnect()
+      ro.disconnect()
+      cancelAnimationFrame(roPending)
       cancelAnimationFrame(raf)
       cancelAnimationFrame(recRaf)
       if (immersiveOn) setImmersive(false)
