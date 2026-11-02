@@ -1,7 +1,7 @@
 export const images = {
   logo: '/images/ZedOS_New Logo.jpg',
   devLogo: '/images/DevLogo.jpeg',
-  director: '/images/Director.png',
+  director: '/images/Director Lewis.png',
   hero: '/images/heroimage.png',
   pageHeroBg: '/images/page-hero-bg.jpg',
   aboutOffice: '/images/about-office.jpg',

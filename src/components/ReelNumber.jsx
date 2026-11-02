@@ -69,10 +69,18 @@ export default function ReelNumber({ value, suffix, label, className = '', suffi
   const [replayed, setReplayed] = useState(false) // true while a click-replay is running
   const [replay, setReplay] = useState(0)
   const active = inView && !replayed
-  const digits = String(value)
-    .split('')
-    .filter((c) => /\d/.test(c))
-    .map(Number)
+
+  // Every digit spins, in the suffix too (the 7 of "24/7"); symbols like / + % stay still.
+  // Reel indices run on across value and suffix, so the stagger flows left to right.
+  let reelIndex = 0
+  const renderChars = (text) =>
+    String(text)
+      .split('')
+      .map((c, i) => {
+        if (!/\d/.test(c)) return <span key={`s${i}`}>{c}</span>
+        const index = reelIndex++
+        return <Reel key={`${index}-${c}-${replay}`} digit={Number(c)} index={index} replay={replay} active={active} />
+      })
 
   useEffect(() => () => window.clearTimeout(timer.current), [])
 
@@ -101,14 +109,12 @@ export default function ReelNumber({ value, suffix, label, className = '', suffi
       aria-label={`${value}${suffix ?? ''} ${label ?? ''}. Replay number animation`.trim()}
       className={`inline-flex cursor-pointer appearance-none items-center border-0 bg-transparent p-0 text-left focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/60 ${className}`}
     >
-      <span aria-hidden="true" className="inline-flex leading-none tabular-nums">
-        {digits.map((d, i) => (
-          <Reel key={`${i}-${d}-${replay}`} digit={d} index={i} replay={replay} active={active} />
-        ))}
+      <span aria-hidden="true" className="inline-flex items-center leading-none tabular-nums">
+        {renderChars(value)}
       </span>
       {suffix != null && (
-        <span aria-hidden="true" className={`leading-none ${suffixClassName}`}>
-          {suffix}
+        <span aria-hidden="true" className={`inline-flex items-center leading-none tabular-nums ${suffixClassName}`}>
+          {renderChars(suffix)}
         </span>
       )}
     </button>

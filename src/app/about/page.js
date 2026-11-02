@@ -44,14 +44,16 @@ export default function AboutPage() {
           </ScrollReveal>
 
           <ScrollReveal delay={120} className="mx-auto mt-12 max-w-5xl border-y border-white/15 py-8 md:py-12">
-            <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-[300px_minmax(0,1fr)] md:gap-12">
-              <div className="relative h-72 w-full overflow-hidden sm:h-80 md:h-[380px]">
+            {/* Landscape portrait: the image column is wider than the text and the frame keeps the
+                photo's own 1484×1060 proportions, so it shows whole at every width. */}
+            <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] md:gap-12">
+              <div className="relative aspect-[1484/1060] w-full overflow-hidden rounded-sm bg-neutral-950">
                 <Image
                   src={images.director}
-                  alt="Lennox Lewis Odhiambo, Founder and Director"
+                  alt="Lennox Lewis Odhiambo, Founder and Director, seated on a green sofa in a black suit"
                   fill
-                  className="object-contain"
-                  sizes="(max-width: 768px) 100vw, 300px"
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1100px) 55vw, 560px"
                 />
               </div>
               <div>

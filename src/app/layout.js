@@ -44,7 +44,11 @@ const jsonLd = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    // data-scroll-behavior="smooth": globals.css makes html scroll smoothly, and since Next 16 the
+    // router no longer turns that off when you change page. Without this, opening /products from a
+    // scrolled page animated the scroll up from the bottom (the truck section) to the top, so the
+    // second section showed first. With it, Next jumps straight to the top on navigation.
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
       <head suppressHydrationWarning>
         {/* The intro loader forms this eagle: fetch it with the HTML. crossOrigin matches the
             loader's own request, so the browser reuses this download instead of fetching twice. */}
