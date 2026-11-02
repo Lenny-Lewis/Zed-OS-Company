@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { GlassReveal21st, preloadGlassReveal21st } from '@/components/ui/liquid-glass-logo-reveal'
+import { GlassRevealEagle, preloadGlassRevealEagle } from '@/components/ui/liquid-glass-logo-reveal'
 
 const SESSION_KEY = 'zedos:intro-seen'
 const ACTIVE_ATTR = 'data-intro-active'
@@ -21,7 +21,7 @@ type Phase = 'visible' | 'leaving' | 'done'
 // Start decoding the mark and building its distance field as soon as this bundle runs, in
 // parallel with hydration, so the reveal can begin the moment it mounts.
 if (typeof window !== 'undefined' && !document.documentElement.hasAttribute(SEEN_ATTR)) {
-  preloadGlassReveal21st()
+  preloadGlassRevealEagle()
 }
 
 /** Resolves once the window has loaded and web fonts are ready, so the site is revealed complete. */
@@ -133,7 +133,7 @@ function Intro() {
           phase === 'leaving' ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'
         }`}
       >
-        <GlassReveal21st
+        <GlassRevealEagle
           className="h-full w-full"
           look="dark"
           background="#000000"

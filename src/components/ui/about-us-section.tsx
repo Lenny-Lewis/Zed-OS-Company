@@ -22,7 +22,8 @@ import {
   Zap,
   TrendingUp,
 } from "lucide-react"
-import { motion, useScroll, useTransform, useInView, useSpring, type Variants } from "framer-motion"
+import { motion, useScroll, useTransform, useInView, type Variants } from "framer-motion"
+import ReelNumber from "@/components/ReelNumber"
 
 export default function AboutUsSection() {
   const [isVisible, setIsVisible] = useState(false)
@@ -426,27 +427,6 @@ interface StatCounterProps {
 }
 
 function StatCounter({ icon, value, label, suffix, delay }: StatCounterProps) {
-  const countRef = useRef(null)
-  const isInView = useInView(countRef, { once: true })
-  const [hasAnimated, setHasAnimated] = useState(false)
-
-  const springValue = useSpring(0, {
-    stiffness: 50,
-    damping: 10,
-  })
-
-  useEffect(() => {
-    if (isInView && !hasAnimated) {
-      springValue.set(value)
-      setHasAnimated(true)
-    } else if (!isInView && hasAnimated) {
-      springValue.set(0)
-      setHasAnimated(false)
-    }
-  }, [isInView, value, springValue, hasAnimated])
-
-  const displayValue = useTransform(springValue, (latest) => Math.floor(latest))
-
   return (
     <motion.div
       className="bg-neutral-950 border border-white/10 p-6 rounded-xl flex flex-col items-center text-center group hover:border-white/20 transition-colors duration-300"
@@ -466,10 +446,9 @@ function StatCounter({ icon, value, label, suffix, delay }: StatCounterProps) {
       >
         {icon}
       </motion.div>
-      <motion.div ref={countRef} className="text-3xl sm:text-4xl font-light text-white flex items-center tracking-tight font-sans">
-        <motion.span>{displayValue}</motion.span>
-        <span>{suffix}</span>
-      </motion.div>
+      <div className="text-3xl sm:text-4xl font-light text-white flex items-center tracking-tight font-sans">
+        <ReelNumber value={value} suffix={suffix} label={label} />
+      </div>
       <p className="text-white/50 text-[11px] font-mono uppercase tracking-widest mt-2">{label}</p>
       <motion.div className="w-8 h-px bg-white/20 mt-3 group-hover:w-14 group-hover:bg-white/60 transition-all duration-300" />
     </motion.div>

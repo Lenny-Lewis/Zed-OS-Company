@@ -46,6 +46,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head suppressHydrationWarning>
+        {/* The intro loader forms this eagle: fetch it with the HTML. crossOrigin matches the
+            loader's own request, so the browser reuses this download instead of fetching twice. */}
+        <link rel="preload" as="image" href="/eagle-dark-512.png" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link

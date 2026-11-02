@@ -6,7 +6,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion
 import { useRef } from 'react'
 import { images } from '@/data/images'
 import ScrollReveal, { Stagger, StaggerItem } from '@/components/ScrollReveal'
-import CountUp from '@/components/CountUp'
+import ReelNumber from '@/components/ReelNumber'
 
 const stats = [
   { value: 24, suffix: '/7', label: 'Customer Support' },
@@ -85,7 +85,7 @@ export default function HomeAbout() {
                 className="border-b border-r border-white/10 px-3 py-6 text-center last:border-r-0 sm:border-b-0"
               >
                 <p className="font-display text-3xl text-white md:text-4xl">
-                  <CountUp value={stat.value} suffix={stat.suffix} />
+                  <ReelNumber value={stat.value} suffix={stat.suffix} label={stat.label} />
                 </p>
                 <p className="font-eyebrow mt-2 text-[10px] text-white/40">{stat.label}</p>
               </StaggerItem>
