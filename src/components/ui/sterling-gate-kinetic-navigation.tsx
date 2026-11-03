@@ -28,6 +28,15 @@ export function Component() {
   const pathname = usePathname();
   const tlRef = useRef<gsap.core.Timeline | null>(null);
   const isFirstRender = useRef(true);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // The header's glass fades in once content scrolls beneath it (transparent over the top of the page).
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Close menu on route change
   useEffect(() => {
@@ -249,7 +258,7 @@ export function Component() {
   return (
     <div ref={containerRef}>
       <div className="site-header-wrapper">
-        <header className="header">
+        <header className="header" data-scrolled={isScrolled ? "" : undefined}>
           <div className="container is--full">
             <nav className="nav-row">
               <Link href="/" aria-label="ZedOS Technologies home" className="nav-logo-row w-inline-block">
