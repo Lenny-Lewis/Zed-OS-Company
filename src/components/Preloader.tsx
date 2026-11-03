@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { GlassRevealEagle, preloadGlassRevealEagle } from '@/components/ui/liquid-glass-logo-reveal'
+import { GlassReveal21st, preloadGlassReveal21st } from '@/components/ui/liquid-glass-logo-reveal'
 
 const SESSION_KEY = 'zedos:intro-seen'
 const ACTIVE_ATTR = 'data-intro-active'
@@ -16,12 +16,15 @@ const LOAD_GRACE_MS = 2500
 /** Hard ceiling: the site is never held back longer than this, whatever goes wrong */
 const MAX_MS = 12000
 
+/** The hero sculpture's ink in its dark theme (see THEMES in ink-orbit-hero.tsx) */
+const HERO_INK = '#ececec'
+
 type Phase = 'visible' | 'leaving' | 'done'
 
 // Start decoding the mark and building its distance field as soon as this bundle runs, in
 // parallel with hydration, so the reveal can begin the moment it mounts.
 if (typeof window !== 'undefined' && !document.documentElement.hasAttribute(SEEN_ATTR)) {
-  preloadGlassRevealEagle()
+  preloadGlassReveal21st()
 }
 
 /** Resolves once the window has loaded and web fonts are ready, so the site is revealed complete. */
@@ -133,10 +136,12 @@ function Intro() {
           phase === 'leaving' ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'
         }`}
       >
-        <GlassRevealEagle
+        <GlassReveal21st
           className="h-full w-full"
           look="dark"
           background="#000000"
+          // Same ink as the hero's 3D sculpture (InkOrbitHero, dark theme)
+          logoColor={HERO_INK}
           loop={false}
           onComplete={onComplete}
         />

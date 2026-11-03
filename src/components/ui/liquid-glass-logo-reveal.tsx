@@ -1283,4 +1283,33 @@ export function GlassRevealEagle({ tuning, ...props }: GlassRevealEagleProps) {
   )
 }
 
+/* ------------------------------------------------------------------ *
+ * GlassReveal21st: the 21st.dev mark
+ * ------------------------------------------------------------------ */
+const MARK_21ST = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="247.7 247.8 330.4 330.4"><path fill-rule="evenodd" d="M543.595 247.8C562.596 247.8 578 263.209 578 282.217V492.158C578 494.06 576.46 495.6 574.559 495.6H471.345C469.445 495.6 467.906 497.141 467.906 499.042V574.758C467.906 576.66 466.364 578.2 464.464 578.2H282.12C263.118 578.2 247.714 562.791 247.714 543.783V499.499C247.714 497.081 248.988 494.84 251.061 493.597L374.676 419.4C377.484 417.714 376.542 413.562 373.535 413.054L372.915 413H251.156C249.254 413 247.714 411.46 247.714 409.558V333.842C247.714 331.941 249.254 330.4 251.156 330.4H381.893C383.792 330.4 385.334 328.86 385.334 326.958V251.242C385.334 249.341 386.874 247.8 388.773 247.8H543.595ZM388.773 330.4C386.874 330.4 385.334 331.941 385.334 333.842V492.158C385.334 494.06 386.874 495.6 388.773 495.6H464.464C466.364 495.6 467.906 494.06 467.906 492.158V333.842C467.906 331.941 466.364 330.4 464.464 330.4H388.773Z"/></svg>`
+
+export type GlassReveal21stProps = Omit<GlassIconRevealProps, "logo">
+
+/** Warm the mark's texture and SDF before the component mounts */
+export const preloadGlassReveal21st = () => preloadLogo(MARK_21ST)
+
+/** Every prop is optional and overrides the baked-in look; `tuning` merges into it */
+export function GlassReveal21st({ tuning, ...props }: GlassReveal21stProps) {
+  return (
+    <GlassIconReveal
+      logo={MARK_21ST}
+      label="21st.dev"
+      look="light"
+      logoColor="#0045ff"
+      logoScale={0.6}
+      finalScale={0.8}
+      {...props}
+      tuning={{
+        startZoom: 2.3,
+        ...tuning,
+      }}
+    />
+  )
+}
+
 export default GlassRevealEagle
