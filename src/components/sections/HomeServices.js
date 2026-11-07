@@ -1,125 +1,247 @@
 'use client'
 
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { images } from '@/data/images'
-import ScrollReveal, { Stagger, StaggerItem } from '@/components/ScrollReveal'
+import { useScramble } from '@/lib/use-scramble'
+import styles from './HomeServices.module.css'
+
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger)
+}
+
+const ACCENT = '#fd551d'
+/** Space kept clear of the fixed header when a thumbnail scrolls to its service. */
+const HEADER_SPACE = 96
+
+const HEADING_LINES = ['Our', 'services.']
 
 const services = [
-  {
-    title: 'General Supplies',
-    image: images.services.supplies,
-    alt: 'Office and general supplies',
-    description:
-      'Comprehensive supply solutions for offices, institutions, and organizations of all sizes.',
-  },
-  {
-    title: 'Vehicle Hire',
-    image: images.services.vehicle,
-    alt: 'Professional vehicle fleet',
-    description:
-      'Reliable, well-maintained vehicles for corporate transfers, field operations, and events.',
-  },
-  {
-    title: 'Conference Facilities',
-    image: images.services.conference,
-    alt: 'Conference and meeting room',
-    description:
-      'Fully equipped spaces for meetings, workshops, training sessions, and corporate events.',
-  },
-  {
-    title: 'Consultancy Services',
-    image: images.services.consultancy,
-    alt: 'Business consultancy meeting',
-    description:
-      'Expert guidance in supply chain management, business operations, and procurement strategy.',
-  },
-  {
-    title: 'Software Systems',
-    image: images.digital.systems,
-    alt: 'Software development dashboard and multi-screen workspace',
-    description:
-      'Custom business systems, workflow tools, and internal platforms built to streamline operations.',
-  },
-  {
-    title: 'Websites',
-    image: images.digital.websites,
-    alt: 'Developer working on a website in a code editor',
-    description:
-      'Modern, responsive websites designed to present your brand, services, and operations clearly.',
-  },
-  {
-    title: 'Data Analytics',
-    image: images.digital.analytics,
-    alt: 'Data analytics and reporting visual on a laptop screen',
-    description:
-      'Dashboards, reports, and insights that help teams make faster, better-informed decisions.',
-  },
-  {
-    title: 'AI & ML',
-    image: images.digital.aiMl,
-    alt: 'Artificial intelligence concept image',
-    description:
-      'AI-assisted workflows and machine learning solutions for automation, analysis, and productivity.',
-  },
+  { title: 'General Supplies', tags: ['Procurement', 'Offices & Institutions'], image: images.servicesWide.supplies },
+  { title: 'Vehicle Hire', tags: ['Fleet', 'Corporate & Field'], image: images.services.vehicle },
+  { title: 'Software Systems', tags: ['Custom Build', 'Operations'], image: images.servicesWide.software },
+  { title: 'AI & ML', tags: ['Automation', 'Analysis'], image: images.digital.aiMl },
 ]
 
-export default function HomeServices() {
+function ViewAll({ className = '' }) {
+  const arrow = (
+    <svg viewBox="0 0 12 12" fill="none" aria-hidden="true">
+      <path d="M1 6h10M6.5 1.5 11 6l-4.5 4.5" stroke="currentColor" strokeWidth="1.6" />
+    </svg>
+  )
   return (
-    <section className="bg-black px-5 py-24 md:px-8 md:py-32">
-      <div className="mx-auto max-w-[1400px]">
-        <div className="mx-auto max-w-3xl text-center">
-          <ScrollReveal variant="blur">
-            <span className="font-eyebrow text-white/45">What We Offer</span>
-          </ScrollReveal>
-          <ScrollReveal variant="blur" delay={90}>
-            <h2 className="font-display mt-5 text-4xl leading-[1.05] text-white sm:text-5xl md:text-6xl">
-              Our Services &amp; Solutions
-            </h2>
-          </ScrollReveal>
-          <ScrollReveal delay={160}>
-            <p className="mx-auto mt-5 max-w-2xl text-[15px] leading-relaxed text-white/60">
-              End-to-end solutions tailored to supply, operations, and digital transformation needs.
-            </p>
-          </ScrollReveal>
+    <Link href="/services" className={`${styles.cta} ${className}`}>
+      <span className={`${styles.ctaIcon} ${styles.ctaIconIn}`}>{arrow}</span>
+      <span className={styles.ctaLabel}>View all services</span>
+      <span className={`${styles.ctaIcon} ${styles.ctaIconOut}`}>{arrow}</span>
+    </Link>
+  )
+}
+
+function ServiceItem({ service, itemRef }) {
+  const { ref: titleRef, run } = useScramble(service.title, ACCENT)
+  const captionRef = useRef(null)
+
+  // The title scrambles in the first time its caption comes fully on screen.
+  useEffect(() => {
+    const caption = captionRef.current
+    if (!caption) return
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return
+        io.disconnect()
+        run()
+      },
+      { threshold: 1 },
+    )
+    io.observe(caption)
+    return () => io.disconnect()
+  }, [run])
+
+  return (
+    <article ref={itemRef} className={styles.item}>
+      <Link href="/services" className={styles.frame} aria-label={`${service.title}: view our services`}>
+        <span className={styles.parallax} data-parallax>
+          <span className={styles.zoom}>
+            <Image
+              src={service.image}
+              alt=""
+              fill
+              className={styles.photo}
+              sizes="(min-width: 1400px) 1200px, (min-width: 1024px) 85vw, 120vw"
+            />
+          </span>
+        </span>
+      </Link>
+      <div ref={captionRef} className={styles.caption}>
+        <h3 className={styles.title} aria-label={service.title}>
+          {/* Reserves the width, so nothing shifts while the characters change. */}
+          <span className={styles.titleGhost} aria-hidden="true">
+            {service.title}
+          </span>
+          <span ref={titleRef} className={styles.titleLive} aria-hidden="true">
+            {service.title}
+          </span>
+        </h3>
+        <p className={styles.tags}>
+          <span>[{service.tags[0]}]</span>
+          <span aria-hidden="true">&mdash;</span>
+          <span>[{service.tags[1]}]</span>
+        </p>
+      </div>
+    </article>
+  )
+}
+
+export default function HomeServices() {
+  const rootRef = useRef(null)
+  const headingRef = useRef(null)
+  const itemRefs = useRef([])
+  const [active, setActive] = useState(0)
+
+  // The active service is whichever one crosses the middle of the screen.
+  useEffect(() => {
+    const items = itemRefs.current.filter(Boolean)
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) setActive(items.indexOf(entry.target))
+        }
+      },
+      { rootMargin: '-50% 0px -50% 0px' },
+    )
+    items.forEach((item) => io.observe(item))
+    return () => io.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const root = rootRef.current
+    const heading = headingRef.current
+    if (!root || !heading) return
+
+    const mm = gsap.matchMedia(root)
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      // Each photo is larger than its frame and slides through it as the frame crosses the screen.
+      root.querySelectorAll('[data-parallax]').forEach((layer) => {
+        gsap.fromTo(
+          layer,
+          { yPercent: -15, scale: 1.3 },
+          {
+            yPercent: 15,
+            scale: 1.3,
+            ease: 'none',
+            scrollTrigger: { trigger: layer.parentElement, start: 'top bottom', end: 'bottom top', scrub: 0.6 },
+          },
+        )
+      })
+
+      // Two blocks wipe across each heading line. The text switches on while they cover it.
+      const timeline = gsap.timeline({
+        scrollTrigger: { trigger: heading, start: 'top 85%', once: true },
+      })
+      heading.querySelectorAll('[data-line]').forEach((line, index) => {
+        const text = line.querySelector('[data-line-text]')
+        const accent = line.querySelector('[data-wipe="accent"]')
+        const cover = line.querySelector('[data-wipe="cover"]')
+        const at = index * 0.12
+        const grow = { scaleX: 1, duration: 0.38, ease: 'power3.inOut' }
+        gsap.set(text, { opacity: 0 })
+        gsap.set([accent, cover], { scaleX: 0, transformOrigin: 'left center' })
+        timeline
+          .to(accent, grow, at)
+          .to(cover, grow, at + 0.1)
+          .set(text, { opacity: 1 }, at + 0.48)
+          .set(accent, { opacity: 0 }, at + 0.48)
+          .set(cover, { transformOrigin: 'right center' }, at + 0.48)
+          .to(cover, { scaleX: 0, duration: 0.38, ease: 'power3.inOut' }, at + 0.48)
+      })
+    })
+
+    // Sections above this one change height as they load, which moves these scroll positions.
+    let lastHeight = document.body.offsetHeight
+    let timer = 0
+    const ro = new ResizeObserver(() => {
+      if (document.body.offsetHeight === lastHeight) return
+      lastHeight = document.body.offsetHeight
+      window.clearTimeout(timer)
+      timer = window.setTimeout(() => ScrollTrigger.refresh(), 200)
+    })
+    ro.observe(document.body)
+
+    return () => {
+      window.clearTimeout(timer)
+      ro.disconnect()
+      mm.revert()
+    }
+  }, [])
+
+  const showService = (index) => {
+    const item = itemRefs.current[index]
+    if (!item) return
+    const { top, height } = item.getBoundingClientRect()
+    // Centred when the screen has room, so the item lands on the middle line and becomes active.
+    const space = Math.max(HEADER_SPACE, (window.innerHeight - height) / 2)
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    window.scrollTo({ top: window.scrollY + top - space, behavior: reduced ? 'auto' : 'smooth' })
+  }
+
+  return (
+    <section ref={rootRef} className={styles.section} aria-labelledby="home-services-heading">
+      <div className={styles.layout}>
+        <div className={styles.column}>
+          <div className={styles.rail}>
+            <div>
+              <h2 ref={headingRef} id="home-services-heading" className={`font-display ${styles.heading}`}>
+                {HEADING_LINES.map((line) => (
+                  <span key={line} className={styles.line} data-line>
+                    <span data-line-text>{line}</span>
+                    <span className={`${styles.wipe} ${styles.wipeAccent}`} data-wipe="accent" aria-hidden="true" />
+                    <span className={`${styles.wipe} ${styles.wipeCover}`} data-wipe="cover" aria-hidden="true" />
+                  </span>
+                ))}
+              </h2>
+              <p className={styles.intro}>
+                End-to-end solutions tailored to supply, operations, and digital transformation needs.
+              </p>
+            </div>
+
+            <nav className={styles.thumbs} aria-label="Featured services">
+              {services.map((service, index) => (
+                <button
+                  key={service.title}
+                  type="button"
+                  className={`${styles.thumb} ${index === active ? styles.thumbActive : ''}`}
+                  aria-label={`Show ${service.title}`}
+                  aria-current={index === active ? 'true' : undefined}
+                  onClick={() => showService(index)}
+                >
+                  <span className={styles.thumbImage}>
+                    <Image src={service.image} alt="" fill className={styles.photo} sizes="128px" />
+                  </span>
+                  {index === active && <span className={styles.marker} aria-hidden="true" />}
+                </button>
+              ))}
+            </nav>
+
+            <ViewAll className={styles.ctaWide} />
+          </div>
         </div>
 
-        <Stagger className="mt-14 grid grid-cols-1 gap-x-6 gap-y-12 md:grid-cols-2 xl:grid-cols-4" delay={80} stagger={0.07}>
+        <div className={styles.list}>
           {services.map((service, index) => (
-            <StaggerItem key={service.title}>
-              <Link href="/services" className="group flex h-full flex-col">
-                <div className="relative h-52 overflow-hidden bg-neutral-950">
-                  <Image
-                    src={service.image}
-                    alt={service.alt}
-                    fill
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    sizes="(max-width: 1024px) 50vw, 25vw"
-                  />
-                  <div className="pointer-events-none absolute inset-0 bg-black/15 transition-colors duration-500 group-hover:bg-black/0" />
-                  <span className="font-mono absolute left-3 top-3 text-[10px] tracking-[0.14em] text-white/70">
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
-                </div>
-                <div className="flex flex-grow flex-col pt-5">
-                  <h3 className="font-display text-2xl leading-tight text-white">{service.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-white/55">{service.description}</p>
-                  <div className="mt-5 flex items-center gap-2 font-sans text-xs font-medium text-white/70">
-                    <span>Explore solution</span>
-                    <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
-                  </div>
-                </div>
-              </Link>
-            </StaggerItem>
+            <ServiceItem
+              key={service.title}
+              service={service}
+              itemRef={(el) => {
+                itemRefs.current[index] = el
+              }}
+            />
           ))}
-        </Stagger>
-
-        <ScrollReveal delay={120} className="mt-16 text-center">
-          <Link href="/services" className="btn-ink">
-            <span>View All Services</span>
-            <span aria-hidden="true">→</span>
-          </Link>
-        </ScrollReveal>
+          <ViewAll className={styles.ctaNarrow} />
+        </div>
       </div>
     </section>
   )

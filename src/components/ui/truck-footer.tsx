@@ -3,6 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { Truck3D } from "@/components/ui/truck-3d"
+import { useScramble } from "@/lib/use-scramble"
 import "./truck-footer.css"
 
 /*
@@ -10,46 +11,6 @@ import "./truck-footer.css"
  * 3D delivery truck driving along the top of the letters. Its background is the page's own black,
  * so there's no edge where the footer starts.
  */
-
-/* ------------------------------------------------------------------ *
- * Scrambled text
- * ------------------------------------------------------------------ */
-const NOISE = "ABCDEFGHJKLMNOPQRSTUVWXYZ0123456789{}[]/<>#%&*+="
-
-/** Text that runs through random characters left to right; unsettled ones can take an accent colour. */
-function useScramble(text: string, accent?: string) {
-  const ref = React.useRef<HTMLSpanElement>(null)
-  const raf = React.useRef(0)
-
-  const run = React.useCallback(() => {
-    const el = ref.current
-    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
-    cancelAnimationFrame(raf.current)
-    const start = performance.now()
-    const chars = Array.from(text)
-    const step = (now: number) => {
-      const settled = Math.floor(((now - start) / 520) * chars.length)
-      if (settled >= chars.length) {
-        el.textContent = text
-        return
-      }
-      el.replaceChildren(
-        document.createTextNode(chars.slice(0, settled).join("")),
-        ...chars.slice(settled).map((ch) => {
-          const span = document.createElement("span")
-          span.textContent = ch.trim() ? NOISE[Math.floor(Math.random() * NOISE.length)] : ch
-          if (accent) span.style.color = accent
-          return span
-        }),
-      )
-      raf.current = requestAnimationFrame(step)
-    }
-    raf.current = requestAnimationFrame(step)
-  }, [text, accent])
-
-  React.useEffect(() => () => cancelAnimationFrame(raf.current), [])
-  return { ref, run }
-}
 
 export type FooterLink = { label: string; href: string }
 
@@ -252,6 +213,18 @@ export default function TruckFooter({
                 </p>
                 <p>{tagline}</p>
                 {signature && <div className="azf-signature">{signature}</div>}
+                {/* Required by the truck model's license: public/models/truck/License.txt */}
+                <p className="azf-credit">
+                  Truck model:{" "}
+                  <a href="https://sketchfab.com/3d-models/truck-eda924f23ba04cd5b1e5160abf2320fa" target="_blank" rel="noreferrer">
+                    &ldquo;Truck&rdquo; by ROY
+                  </a>
+                  ,{" "}
+                  <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">
+                    CC BY 4.0
+                  </a>
+                  , modified
+                </p>
               </div>
             </div>
 

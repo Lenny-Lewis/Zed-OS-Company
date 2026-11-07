@@ -24,11 +24,6 @@ const jsonLd = {
   '@type': 'Organization',
   'name': 'Zed OS Technologies Limited',
   'url': 'https://zedostechnologies.co.ke',
-  'founder': {
-    '@type': 'Person',
-    'name': 'Lennox Lewis Odhiambo',
-    'jobTitle': 'CEO & Founder',
-  },
   'address': {
     '@type': 'PostalAddress',
     'addressLocality': 'Kisumu',

@@ -3,71 +3,34 @@
 import * as React from "react"
 
 /*
- * A 3D delivery truck driving along a road, drawn on a transparent canvas. The model is Kenney's
- * Car Kit "delivery" (CC0, public/models/truck/License.txt), repainted here so the source file stays
- * as downloaded. three.js only loads once the truck is about to come on screen, and the canvas only
- * draws while it's visible.
+ * A 3D delivery truck driving along a road, drawn on a transparent canvas. The model is "Truck" by
+ * ROY (CC BY 4.0, public/models/truck/License.txt; the footer carries the required credit), painted
+ * white here with the Zed logo on the box. three.js only loads once the truck is about to come on screen, and the canvas only draws
+ * while it's visible.
  */
 
-const MODEL = "/models/truck/delivery.glb"
-const PAINT = [
-  [253, 85, 29], // the site's orange
-  [233, 228, 218], // the footer's bone
-]
+const MODEL = "/models/truck/truck.glb"
+const PAINT = 0xf4f4f2
+/** The black version of the mark, on a transparent background */
+const LOGO = "/orbit-light-512.png"
 /** World units visible from the bottom to the top of the canvas */
 const VIEW_HEIGHT = 2.1
 const LAP_SECONDS = 13
 const PAUSE_SECONDS = 1.4
 /** Turns the nose toward the viewer, enough to see it's 3D without losing the lettering */
-const YAW = 0.42
+const YAW = 0.3
 const TILT = 0.2
-const TRUCK_LENGTH = 3.25
-const WHEEL_RADIUS = 0.3
-const GROUND_MARGIN = 0.26
-
-/** The model's texture is a small palette: repaint its green with `rgb`, keeping the shading. */
-function repaint(source: CanvasImageSource & { width: number; height: number }, rgb: number[]) {
-  const canvas = document.createElement("canvas")
-  canvas.width = source.width
-  canvas.height = source.height
-  const ctx = canvas.getContext("2d", { willReadFrequently: true })
-  if (!ctx) return null
-  ctx.drawImage(source, 0, 0)
-  const image = ctx.getImageData(0, 0, canvas.width, canvas.height)
-  const d = image.data
-  for (let i = 0; i < d.length; i += 4) {
-    if (d[i + 1] > d[i] + 18 && d[i + 1] > d[i + 2] + 8) {
-      const shade = Math.min(1.15, d[i + 1] / 190)
-      d[i] = Math.min(255, rgb[0] * shade)
-      d[i + 1] = Math.min(255, rgb[1] * shade)
-      d[i + 2] = Math.min(255, rgb[2] * shade)
-    }
-  }
-  ctx.putImageData(image, 0, 0)
-  return canvas
-}
-
-/** The lettering on the side of the cargo box */
-function lettering() {
-  const canvas = document.createElement("canvas")
-  canvas.width = 1024
-  canvas.height = 512
-  const ctx = canvas.getContext("2d")
-  if (!ctx) return null
-  ctx.fillStyle = "#0a0a0a"
-  ctx.textAlign = "center"
-  ctx.textBaseline = "middle"
-  ctx.font = '700 228px "Archivo", sans-serif'
-  ctx.fillText("ZED OS", 512, 212, 940)
-  ctx.font = '600 50px "Archivo", sans-serif'
-  ctx.fillText("SUPPLY CHAIN · SOFTWARE · SYSTEMS", 512, 384, 900)
-  return canvas
-}
+const GROUND_MARGIN = 0.3
+/** The model is 4.51 units tall, 15.9 long, with wheels of radius 0.695. */
+const MODEL_SCALE = 0.333
+const TRUCK_LENGTH = 15.9 * MODEL_SCALE
+const WHEEL_RADIUS = 0.695 * MODEL_SCALE
+/** Wheel sets are named Empty012_7 and so on. Empty_2 is the cab, so it has to stay out. */
+const WHEEL_NODE = /^Empty\d+_/
 
 export function Truck3D({ className = "" }: { className?: string }) {
   const host = React.useRef<HTMLDivElement>(null)
   const canvas = React.useRef<HTMLCanvasElement>(null)
-  const toggle = React.useRef<() => void>(() => {})
 
   React.useEffect(() => {
     const box = host.current
@@ -78,10 +41,11 @@ export function Truck3D({ className = "" }: { className?: string }) {
     let stop = () => {}
 
     const start = async () => {
-      const [THREE, { GLTFLoader }] = await Promise.all([
+      const [THREE, { GLTFLoader }, { MeshoptDecoder }, { RoomEnvironment }] = await Promise.all([
         import("three"),
         import("three/examples/jsm/loaders/GLTFLoader.js"),
-        document.fonts?.load('700 228px "Archivo"').catch(() => undefined),
+        import("three/examples/jsm/libs/meshopt_decoder.module.js"),
+        import("three/examples/jsm/environments/RoomEnvironment.js"),
       ])
       if (disposed) return
 
@@ -92,13 +56,23 @@ export function Truck3D({ className = "" }: { className?: string }) {
         return // No WebGL: the road line stays and the footer is otherwise complete.
       }
       renderer.setClearColor(0x000000, 0)
+      // Neutral keeps the brand orange close to its real value, where filmic curves wash it out.
+      renderer.toneMapping = THREE.NeutralToneMapping
 
       const scene = new THREE.Scene()
-      scene.add(new THREE.HemisphereLight(0xffffff, 0x2a2a2a, 1.5))
-      const key = new THREE.DirectionalLight(0xffffff, 2.3)
+      // Paint and chrome read as real because of what they reflect, so this does most of the lighting.
+      const pmrem = new THREE.PMREMGenerator(renderer)
+      const room = new RoomEnvironment()
+      const environment = pmrem.fromScene(room, 0.04).texture
+      room.dispose()
+      pmrem.dispose()
+      scene.environment = environment
+      // Kept low on purpose: any brighter and white paint clips to flat white, losing the panel shading.
+      scene.environmentIntensity = 0.5
+      const key = new THREE.DirectionalLight(0xffffff, 1.0)
       key.position.set(3, 6, 7)
       scene.add(key)
-      const rim = new THREE.DirectionalLight(0xffffff, 1.2)
+      const rim = new THREE.DirectionalLight(0xffffff, 0.5)
       rim.position.set(-6, 3, -4)
       scene.add(rim)
 
@@ -108,70 +82,74 @@ export function Truck3D({ className = "" }: { className?: string }) {
       camera.position.set(0, target.y + Math.sin(TILT) * 20, Math.cos(TILT) * 20)
       camera.lookAt(target)
 
-      const gltf = await new GLTFLoader().loadAsync(MODEL)
+      const loader = new GLTFLoader()
+      loader.setMeshoptDecoder(MeshoptDecoder)
+      const [gltf, logo] = await Promise.all([
+        loader.loadAsync(MODEL),
+        new THREE.TextureLoader().loadAsync(LOGO).catch(() => null), // A plain white truck is still fine.
+      ])
       if (disposed) {
+        logo?.dispose()
+        environment.dispose()
         renderer.dispose()
         return
       }
-      const truck = gltf.scene
+
+      const model = gltf.scene
+      model.updateWorldMatrix(true, true)
+      model.position.y = -new THREE.Box3().setFromObject(model).min.y // Wheels on the road
+      const truck = new THREE.Group()
+      truck.add(model)
+      truck.scale.setScalar(MODEL_SCALE)
       truck.rotation.y = Math.PI / 2 - YAW
       scene.add(truck)
 
-      const wheels: { mesh: import("three").Object3D; rest: import("three").Quaternion }[] = []
+      const cabPaint = new THREE.MeshPhysicalMaterial({ color: PAINT, roughness: 0.32, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.08 })
+      const boxPaint = new THREE.MeshPhysicalMaterial({ color: PAINT, roughness: 0.45, metalness: 0, clearcoat: 0.4, clearcoatRoughness: 0.2 })
+      const windows = new THREE.MeshStandardMaterial({ color: 0x141b20, roughness: 0.06, metalness: 1 })
       const textures: import("three").Texture[] = []
-      truck.traverse((part) => {
-        if (part.name.startsWith("wheel-")) wheels.push({ mesh: part, rest: part.quaternion.clone() })
+
+      const wheels: { mesh: import("three").Object3D; rest: import("three").Quaternion; axis: import("three").Vector3 }[] = []
+      const forward = new THREE.Vector3(1, 0, 0)
+      model.traverse((part) => {
+        if (WHEEL_NODE.test(part.name)) {
+          // The file's nodes are rotated: this is the axle (the truck's X) in the wheel parent's own axes.
+          const axis = part.parent
+            ? forward.clone().transformDirection(part.parent.matrixWorld.clone().invert())
+            : forward.clone()
+          wheels.push({ mesh: part, rest: part.quaternion.clone(), axis })
+        }
+        const mesh = part as import("three").Mesh
+        if (!mesh.isMesh) return
+        const name = (mesh.material as import("three").Material).name
+        if (name === "head_paint") mesh.material = cabPaint
+        else if (name === "bodycolour") mesh.material = boxPaint
+        else if (name === "windglass") mesh.material = windows
       })
 
-      // Repaint: one texture per colour, swapped on click.
-      const body = truck.getObjectByName("body") as import("three").Mesh | undefined
-      const bodyMaterial = body?.material as import("three").MeshStandardMaterial | undefined
-      const original = bodyMaterial?.map ?? null
-      const paints = original
-        ? PAINT.map((rgb) => {
-            const painted = repaint(original.image as HTMLImageElement, rgb)
-            if (!painted) return original
-            const texture = new THREE.CanvasTexture(painted)
-            texture.colorSpace = THREE.SRGBColorSpace
-            texture.flipY = original.flipY
-            texture.magFilter = original.magFilter
-            texture.minFilter = original.minFilter
-            texture.needsUpdate = true
-            textures.push(texture)
-            return texture
-          })
-        : []
-      let paint = 0
-      const applyPaint = () => {
-        // The door and any other part share the body's palette.
-        truck.traverse((part) => {
-          const material = (part as import("three").Mesh).material as import("three").MeshStandardMaterial | undefined
-          if (material && material.map === original) material.map = paints[0] ?? original
-        })
-        if (bodyMaterial && paints[paint]) {
-          bodyMaterial.map = paints[paint]
-          bodyMaterial.needsUpdate = true
-        }
-      }
-      applyPaint()
-
-      const sign = lettering()
       let signMaterial: import("three").Material | null = null
       let signGeometry: import("three").BufferGeometry | null = null
-      if (sign) {
-        const texture = new THREE.CanvasTexture(sign)
-        texture.colorSpace = THREE.SRGBColorSpace
-        texture.anisotropy = 4
-        textures.push(texture)
-        signMaterial = new THREE.MeshBasicMaterial({ map: texture, transparent: true, depthWrite: false })
-        signGeometry = new THREE.PlaneGeometry(1.86, 0.93)
+      if (logo) {
+        logo.colorSpace = THREE.SRGBColorSpace
+        logo.anisotropy = 8
+        // Crops the PNG's empty margins down to the mark (x 67-443, y 133-377 of 512).
+        logo.repeat.set(376 / 512, 244 / 512)
+        logo.offset.set(67 / 512, 135 / 512)
+        textures.push(logo)
+        // Printed, not stuck on: the same paint as the box, so its white background is lit exactly like
+        // the panel around it and disappears, and the ink catches the same sheen.
+        const print = boxPaint.clone()
+        print.map = logo
+        signMaterial = print
+        signGeometry = new THREE.PlaneGeometry(2.55, 1.655)
         const plane = new THREE.Mesh(signGeometry, signMaterial)
-        plane.position.set(-0.752, 1.12, -0.62)
+        // Centred on the box's flat side panel (x -1.40, y -0.66 to 2.12, z -7.69 to 4.34), just off
+        // its surface and behind the frame around it.
+        plane.position.set(-1.405, 0.73, -1.675)
         plane.rotation.y = -Math.PI / 2
-        truck.add(plane)
+        model.add(plane)
       }
 
-      const AXIS_X = new THREE.Vector3(1, 0, 0)
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
       let width = 0
       let height = 0
@@ -180,8 +158,8 @@ export function Truck3D({ className = "" }: { className?: string }) {
       const place = (x: number, roll: number, time: number) => {
         truck.position.x = x
         truck.position.y = Math.sin(time * 15) * 0.005
-        wheels.forEach(({ mesh, rest }) => {
-          mesh.quaternion.setFromAxisAngle(AXIS_X, roll).multiply(rest)
+        wheels.forEach(({ mesh, rest, axis }) => {
+          mesh.quaternion.setFromAxisAngle(axis, roll).multiply(rest)
         })
       }
 
@@ -215,12 +193,6 @@ export function Truck3D({ className = "" }: { className?: string }) {
       resize()
       x = -reach()
       if (reduced) park()
-
-      toggle.current = () => {
-        paint = (paint + 1) % PAINT.length
-        applyPaint()
-        if (reduced) park()
-      }
 
       const ro = new ResizeObserver(() => {
         resize()
@@ -269,12 +241,11 @@ export function Truck3D({ className = "" }: { className?: string }) {
         textures.forEach((t) => t.dispose())
         signMaterial?.dispose()
         signGeometry?.dispose()
+        environment.dispose()
         truck.traverse((part) => {
           const mesh = part as import("three").Mesh
           mesh.geometry?.dispose()
-          const material = mesh.material as import("three").MeshStandardMaterial | undefined
-          material?.map?.dispose()
-          material?.dispose()
+          ;(mesh.material as import("three").Material | undefined)?.dispose()
         })
         renderer.dispose()
       }
@@ -299,12 +270,7 @@ export function Truck3D({ className = "" }: { className?: string }) {
   }, [])
 
   return (
-    <div
-      ref={host}
-      className={className}
-      aria-hidden="true"
-      onClick={() => toggle.current()}
-    >
+    <div ref={host} className={className} aria-hidden="true">
       <canvas ref={canvas} style={{ display: "block", width: "100%", height: "100%" }} />
     </div>
   )

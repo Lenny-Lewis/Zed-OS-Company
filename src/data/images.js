@@ -11,12 +11,16 @@ export const images = {
     contact: '/images/menu/contact.jpg', // 1534536281715-e28d76689b4d
   },
   devLogo: '/images/DevLogo.jpeg',
-  director: '/images/Director Lewis.png',
   hero: '/images/heroimage.png',
   pageHeroBg: '/images/page-hero-bg.jpg',
   aboutOffice: '/images/about-office.jpg',
   aboutTeam: '/images/about-team.jpg',
   partnerHandshake: '/images/partner-handshake.jpg',
+  // Large versions for the home page's services section, from the same Unsplash photos as the menu.
+  servicesWide: {
+    supplies: '/images/service-supplies-wide.jpg', // 1553413077-190dd305871c
+    software: '/images/service-software-wide.jpg', // 1531482615713-2afd69097998
+  },
   services: {
     supplies: '/images/service-supplies.jpg',
     vehicle: '/images/carhire.jpg',

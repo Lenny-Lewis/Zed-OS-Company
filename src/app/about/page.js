@@ -1,7 +1,5 @@
-import Image from 'next/image'
 import ScrollReveal from '@/components/ScrollReveal'
 import AboutUsSection from '@/components/ui/about-us-section'
-import { images } from '@/data/images'
 
 export const metadata = {
   title: 'About Us — Zed OS Technologies Limited',
@@ -39,35 +37,19 @@ export default function AboutPage() {
               Leadership
             </span>
             <h2 className="mt-4 text-4xl font-light tracking-[-0.04em] text-white sm:text-5xl md:text-6xl font-display">
-              Meet the Director
+              A Word from Our CEO
             </h2>
           </ScrollReveal>
 
-          <ScrollReveal delay={120} className="mx-auto mt-12 max-w-5xl border-y border-white/15 py-8 md:py-12">
-            {/* Landscape portrait: the image column is wider than the text and the frame keeps the
-                photo's own 1484×1060 proportions, so it shows whole at every width. */}
-            <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] md:gap-12">
-              <div className="relative aspect-[1484/1060] w-full overflow-hidden rounded-sm bg-neutral-950">
-                <Image
-                  src={images.director}
-                  alt="Lennox Lewis Odhiambo, Founder and Director, seated on a green sofa in a black suit"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1100px) 55vw, 560px"
-                />
-              </div>
-              <div>
-                <h3 className="text-3xl font-light tracking-[-0.04em] text-white md:text-4xl font-sans">
-                  Lennox Lewis Odhiambo
-                </h3>
-                <p className="mt-2 text-xs font-medium uppercase tracking-[0.16em] text-white/50 font-mono">
-                  Founder &amp; Director
-                </p>
-                <p className="mt-5 max-w-xl text-sm leading-relaxed text-white/70 font-sans">
-                  Lennox Lewis Odhiambo is a highly motivated and visionary Director, full stack developer, and certified ML engineer with a background in supply chain management and business consultation. Under his leadership, Zed OS Technologies delivers reliable, high-quality products and digital solutions with a commitment to excellence and innovation.
-                </p>
-              </div>
-            </div>
+          <ScrollReveal delay={120} className="mx-auto mt-12 max-w-5xl border-y border-white/15 py-12 md:py-16">
+            <figure className="mx-auto max-w-3xl text-center">
+              <blockquote className="font-serif text-2xl italic leading-snug tracking-[-0.02em] text-white/90 md:text-4xl">
+                &ldquo;Reliability is the standard we hold ourselves to. Whether we are delivering supplies or building digital systems, our clients should get quality they can count on, every time.&rdquo;
+              </blockquote>
+              <figcaption className="mt-8 text-xs font-medium uppercase tracking-[0.16em] text-white/50 font-mono">
+                CEO at ZedOS Tech
+              </figcaption>
+            </figure>
           </ScrollReveal>
         </div>
       </section>

@@ -1,28 +1,11 @@
-	
+"Truck" by ROY
+Source: https://sketchfab.com/3d-models/truck-eda924f23ba04cd5b1e5160abf2320fa
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+http://creativecommons.org/licenses/by/4.0/
 
-	Car Kit (3.1)
+Changes: truck.glb was compressed with glTF Transform (dedup, weld, meshopt).
+The site also repaints it and adds lettering when it loads
+(src/components/ui/truck-3d.tsx).
 
-	Created/distributed by Kenney (www.kenney.nl)
-	Creation date: 02-04-2026 14:03
-	
-			------------------------------
-
-	License: (Creative Commons Zero, CC0)
-	http://creativecommons.org/publicdomain/zero/1.0/
-
-	You can use this content for personal, educational, and commercial purposes.
-
-	Support by crediting 'Kenney' or 'www.kenney.nl' (this is not a requirement)
-
-			------------------------------
-
-	• Website : www.kenney.nl
-	• Donate  : www.kenney.nl/donate
-
-	• Patreon : patreon.com/kenney
-	
-	Follow on social media for updates:
-
-	• Twitter:	 twitter.com/KenneyNL
-	• BlueSky:	 kenney.bsky.social
-	• Instagram: instagram.com/kenney_nl
+The credit shown in the site footer is required by this license. Keep it while
+this model is in use.
