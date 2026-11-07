@@ -1,0 +1,320 @@
+.page { background: var(--bg); color: var(--fg); }
+
+.container { padding: 0 1.25rem; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: 1rem;
+  row-gap: 3rem;
+}
+.grid > * { grid-column: 1 / -1; }
+
+.cover { object-fit: cover; }
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Type scale, matching the services index */
+.h1, .h2, .h3, .h4, .h5 { margin: 0; }
+.h1 { font-size: var(--h1); font-weight: 400; line-height: 1.1; letter-spacing: -0.035em; }
+.h2 { font-size: var(--h2); font-weight: 500; line-height: 1.125; letter-spacing: -0.05em; }
+.h3 { font-size: var(--h3); font-weight: 500; line-height: 1.083; letter-spacing: -0.05em; }
+.h4 { font-size: var(--h4); font-weight: 500; line-height: 1.25; letter-spacing: -0.025em; }
+.h5 { font-size: var(--h5); font-weight: 500; line-height: 1.4; letter-spacing: -0.025em; }
+
+.body { font-size: 1rem; line-height: 1.5; }
+.body p { margin: 0 0 1.5rem; }
+.body p:last-child { margin-bottom: 0; }
+
+.textLink {
+  align-self: flex-start;
+  color: inherit;
+  font-size: 1rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.textLink:hover { color: var(--accent); }
+
+/* Sections */
+.section { padding: 4rem 0; }
+.light { background: var(--bg); color: var(--fg); }
+.dark { background: var(--dark); color: var(--on-dark); }
+
+/* Hero: the photo drifts down as you scroll; the giant name rises along the bottom. */
+.hero {
+  position: relative;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--dark);
+}
+
+.heroMedia { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.heroPhoto { position: absolute; inset: 0; will-change: transform; }
+.heroTint { position: absolute; inset: 0; background: rgba(20, 19, 20, 0.1); }
+.heroShade {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 50%;
+  background: linear-gradient(to bottom, rgba(20, 19, 20, 0.5), transparent);
+}
+
+.heroTitleWrap {
+  position: absolute;
+  inset: auto 0 0;
+  overflow: hidden;
+  color: rgba(238, 238, 238, 0.4);
+}
+
+.heroTitle {
+  display: flex;
+  width: max-content;
+  font-size: 100px;
+  font-weight: 700;
+  line-height: 0.75;
+  letter-spacing: -0.05em;
+  white-space: nowrap;
+}
+
+.heroChar { display: inline-block; padding-top: 0.08em; will-change: transform; }
+
+/* Intro */
+.introLeft,
+.storyLeft,
+.resultsLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.details,
+.resultList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.resultList { gap: 0; }
+
+.introRight,
+.storyRight {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2.5rem;
+}
+
+/* The line above each paragraph block */
+.storyRight .body,
+.introRight .body {
+  padding-top: 1.5rem;
+  border-top: 1px solid currentColor;
+  border-top-color: color-mix(in srgb, currentColor 15%, transparent);
+}
+
+/* Challenge and approach */
+.storyPhoto { position: relative; overflow: hidden; background: rgba(128, 128, 128, 0.15); }
+.photoSmall { width: min(100%, 21rem); aspect-ratio: 1.41; }
+.photoWide { width: 100%; aspect-ratio: 16 / 9; }
+
+/* Gallery */
+.gallerySection { padding: 1rem 0 4rem; }
+.galleryItem { position: relative; overflow: hidden; background: rgba(238, 238, 238, 0.06); }
+.galleryA { aspect-ratio: 4 / 3; }
+.galleryB { aspect-ratio: 4 / 3; }
+
+/* Full-width photo, taller than its frame, sliding through it */
+.wide {
+  position: relative;
+  height: 56.25vw;
+  max-height: 100svh;
+  min-height: 18rem;
+  overflow: hidden;
+  background: var(--dark);
+}
+.wideInner { position: absolute; inset: -15% 0; will-change: transform; }
+
+/* Results */
+.ask {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+.askActions { display: flex; flex-wrap: wrap; align-items: center; gap: 1.75rem; }
+
+.callButton {
+  display: inline-flex;
+  gap: 0.25rem;
+  color: var(--on-dark);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+.callLabel,
+.callPlus {
+  display: flex;
+  align-items: center;
+  height: 2.5rem;
+  background: var(--dark);
+  transition: background-color 0.3s, color 0.3s;
+}
+.callLabel { padding: 0 0.75rem; }
+.callPlus { justify-content: center; width: 2.5rem; font-size: 1rem; }
+.callButton:hover .callLabel,
+.callButton:hover .callPlus { background: var(--accent); color: var(--dark); }
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2rem;
+  min-height: 16rem;
+  padding: 1rem;
+  background: var(--dark);
+  color: var(--on-dark);
+}
+
+.cardValue {
+  font-size: var(--h3);
+  font-weight: 300;
+  line-height: 1.083;
+  letter-spacing: -0.05em;
+  overflow-wrap: anywhere;
+}
+
+.cardLabel {
+  font-family: var(--font-mono);
+  font-size: var(--label-sm);
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+/* Next service */
+.next { position: relative; height: 300vh; background: var(--dark); }
+
+.nextPanel {
+  position: sticky;
+  top: 0;
+  display: block;
+  height: 100dvh;
+  overflow: hidden;
+  color: var(--on-dark);
+}
+
+.nextPhoto { position: absolute; inset: 0; }
+
+.nextTop {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 16rem;
+  background: linear-gradient(to bottom, rgba(20, 19, 20, 0.5), transparent);
+}
+
+.keepScrolling {
+  position: absolute;
+  top: 6rem;
+  left: 0;
+  right: 0;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--label);
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.nextBottom {
+  position: absolute;
+  inset: auto 0 0;
+  height: 50%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
+}
+
+.nextText { position: absolute; inset: auto 0 0; padding-bottom: 2rem; }
+.nextGrid { row-gap: 0; align-items: end; }
+.nextClip { overflow: hidden; }
+
+.nextLabel {
+  margin: 0;
+  color: #818081;
+  font-size: var(--h2);
+  font-weight: 500;
+  line-height: 1.125;
+  letter-spacing: -0.05em;
+}
+
+.nextTitle {
+  margin: 0;
+  font-size: var(--h1);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+.progress {
+  position: absolute;
+  inset: auto 0 0;
+  height: 4px;
+  background: rgba(238, 238, 238, 0.1);
+}
+.progressBar {
+  height: 100%;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+@media (max-width: 767px) {
+  .cards { grid-template-columns: minmax(0, 1fr); }
+  .card { min-height: 10rem; }
+}
+
+@media (min-width: 1024px) {
+  .container { padding: 0 2rem; }
+  .section { padding: 8rem 0; }
+  .grid { row-gap: 0; }
+
+  .hero { height: 150vh; }
+
+  .introLeft { grid-column: 2 / span 4; }
+  .introRight { grid-column: 7 / span 5; }
+  .storyLeft { grid-column: 2 / span 4; }
+  .storyRight { grid-column: 7 / span 5; }
+  .resultsLeft { grid-column: 2 / span 3; }
+  .cards { grid-column: 6 / span 6; align-self: end; }
+
+  .galleryA { grid-column: 2 / span 4; }
+  .galleryB { grid-column: 6 / span 6; }
+  .gallerySection { padding: 0 0 8rem; }
+
+  .nextLabel { grid-column: 1 / span 6; }
+  .nextTitleClip { grid-column: 7 / span 6; text-align: right; }
+  .nextClip:first-child { grid-column: 1 / span 6; }
+  .card { min-height: 25rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroPhoto,
+  .wideInner,
+  .heroChar { will-change: auto; }
+}

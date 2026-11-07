@@ -1,0 +1,72 @@
+/* The light theme the services pages use, and the type scale shared by their sections. */
+.theme {
+  --bg: #eeeeee;
+  --fg: #141314;
+  --muted: #696869;
+  --surface: rgba(222, 222, 222, 0.75);
+  --surface-solid: #dedede;
+  --dark: #141314;
+  --on-dark: #eeeeee;
+  --accent: #fd551d;
+
+  --h1: clamp(3rem, 6.086vw, 7rem);
+  --h2: clamp(2.25rem, 4.19vw, 5rem);
+  --h3: clamp(1.75rem, 3.152vw, 3.6rem);
+  --h4: clamp(1.4rem, 2.186vw, 2.4rem);
+  --h5: 1.25rem;
+  --label: clamp(0.875rem, 1.093vw, 1.05rem);
+  --label-sm: clamp(0.8rem, 0.954vw, 0.95rem);
+
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+}
+
+.cover {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fd551d;
+}
+
+/* The site's own first-visit intro is already covering the screen (the attribute is set before the
+   first paint), so this loader stays out of the way rather than flashing underneath it. */
+:global(html[data-intro-active]) .cover { display: none; }
+
+.loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.squares {
+  position: relative;
+  width: 70px;
+  height: 16px;
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+.square {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  background: #141314;
+  transform: translateX(-16px);
+  transform-origin: bottom right;
+}
+
+.word {
+  color: #141314;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}

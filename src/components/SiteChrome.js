@@ -8,13 +8,15 @@ import Preloader from '@/components/Preloader'
 
 export default function SiteChrome({ children }) {
   const pathname = usePathname()
+  // A service page ends by scrolling on to the next service, so there's no footer to reach.
+  const showFooter = pathname !== '/' && !pathname.startsWith('/services/')
 
   return (
     <>
       <Preloader />
       <Navbar />
       {children}
-      {pathname !== '/' && <Footer />}
+      {showFooter && <Footer />}
       {pathname !== '/' && <WhatsAppButton />}
     </>
   )

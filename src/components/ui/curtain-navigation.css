@@ -43,6 +43,37 @@
   transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .cn-header[data-scrolled]::before { opacity: 1; }
+/* The light services pages: a solid bar from the top, since there's no dark page behind the logo. */
+html[data-header-solid] .cn-header::before {
+  inset: 0;
+  background: #141314;
+  -webkit-mask-image: none;
+  mask-image: none;
+  opacity: 1;
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+html[data-header-solid] .cn-brand,
+html[data-header-solid] .cn-brand svg {
+  transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s;
+}
+/* Over a service's cover photo there's no bar at all, just the logo and buttons on the photo. */
+html[data-header-solid][data-header-tone="none"] .cn-header::before { opacity: 0; }
+/* Over a light section, the bar turns light and the logo and menu button turn dark (not while the
+   menu is open, since that panel is always dark). */
+html[data-header-solid][data-header-tone="light"]:not([data-menu-open]) .cn-header::before { background: #dedede; }
+html[data-header-solid][data-header-tone="light"]:not([data-menu-open]) .cn-brand,
+html[data-header-solid][data-header-tone="light"]:not([data-menu-open]) .cn-brand svg { color: #141314; }
+html[data-header-solid][data-header-tone="light"]:not([data-menu-open]) .cn-ham:not([data-open]) {
+  border-color: #141314;
+  background: rgba(255, 255, 255, 0.35);
+  color: #141314;
+}
+@media (hover: hover) {
+  html[data-header-solid][data-header-tone="light"]:not([data-menu-open]) .cn-ham:not([data-open]):hover {
+    background: #141314;
+    color: #ffffff;
+  }
+}
 html[data-menu-open] .cn-header::before { opacity: 0; transition-duration: 0.25s; }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {

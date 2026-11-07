@@ -1,0 +1,21 @@
+.root { margin: 0; }
+
+.line {
+  position: relative;
+  display: block;
+  width: fit-content;
+  white-space: nowrap;
+}
+
+/* Hidden until the wipe plays; the script adds and removes the attribute. */
+.root[data-wipe-pending] .text { opacity: 0; }
+
+.block {
+  position: absolute;
+  inset: -0.1em -0.1em;
+  transform: scaleX(0);
+  pointer-events: none;
+}
+.accent { background: var(--accent, #fd551d); }
+/* The solid block takes the text's own colour, so it reads on light and dark sections alike. */
+.cover { background: currentColor; }

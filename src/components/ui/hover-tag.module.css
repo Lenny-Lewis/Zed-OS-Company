@@ -1,0 +1,35 @@
+/* The script moves the outer layer and leans the inner one. */
+.tag {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 125; /* Above the fixed header */
+  display: none;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.swing {
+  position: absolute;
+  left: 0;
+  bottom: 32px;
+  width: max-content;
+  transform-origin: bottom center;
+}
+
+.label {
+  display: block;
+  padding: 0.25rem 0.5rem;
+  background: #fd551d;
+  color: #000;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.4;
+  text-transform: uppercase;
+  transform: scale(0);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tag { display: block; }
+}

@@ -7,6 +7,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { images } from '@/data/images'
 import { useScramble } from '@/lib/use-scramble'
+import HoverTag from '@/components/ui/hover-tag'
 import styles from './HomeServices.module.css'
 
 if (typeof window !== 'undefined') {
@@ -14,38 +15,54 @@ if (typeof window !== 'undefined') {
 }
 
 const ACCENT = '#fd551d'
-/** Space kept clear of the fixed header when a thumbnail scrolls to its service. */
-const HEADER_SPACE = 96
-
-const HEADING_LINES = ['Our', 'services.']
+const HEADING_LINES = ['Our services.']
+const VIEW_ALL = 'View all services'
 
 const services = [
   { title: 'General Supplies', tags: ['Procurement', 'Offices & Institutions'], image: images.servicesWide.supplies },
-  { title: 'Vehicle Hire', tags: ['Fleet', 'Corporate & Field'], image: images.services.vehicle },
+  { title: 'Vehicle Hire', tags: ['Fleet', 'Corporate & Field'], image: images.servicesWide.vehicle },
   { title: 'Software Systems', tags: ['Custom Build', 'Operations'], image: images.servicesWide.software },
-  { title: 'AI & ML', tags: ['Automation', 'Analysis'], image: images.digital.aiMl },
+  { title: 'AI & ML', tags: ['Automation', 'Analysis'], image: images.servicesWide.ai },
 ]
 
 function ViewAll({ className = '' }) {
+  const { ref, run } = useScramble(VIEW_ALL)
   const arrow = (
     <svg viewBox="0 0 12 12" fill="none" aria-hidden="true">
       <path d="M1 6h10M6.5 1.5 11 6l-4.5 4.5" stroke="currentColor" strokeWidth="1.6" />
     </svg>
   )
   return (
-    <Link href="/services" className={`${styles.cta} ${className}`}>
+    <Link href="/services" className={`${styles.cta} ${className}`} aria-label={VIEW_ALL} onMouseEnter={run} onFocus={run}>
       <span className={`${styles.ctaIcon} ${styles.ctaIconIn}`}>{arrow}</span>
-      <span className={styles.ctaLabel}>View all services</span>
+      <span className={styles.ctaLabel}>
+        {/* Reserves the width, so the button doesn't change size while the characters do. */}
+        <span className={styles.ctaGhost} aria-hidden="true">
+          {VIEW_ALL}
+        </span>
+        <span ref={ref} className={styles.ctaLive} aria-hidden="true">
+          {VIEW_ALL}
+        </span>
+      </span>
       <span className={`${styles.ctaIcon} ${styles.ctaIconOut}`}>{arrow}</span>
     </Link>
   )
 }
 
-function ServiceItem({ service, itemRef }) {
+function ServiceItem({ service, index, itemRef, scramblesRef }) {
   const { ref: titleRef, run } = useScramble(service.title, ACCENT)
   const captionRef = useRef(null)
 
-  // The title scrambles in the first time its caption comes fully on screen.
+  // Lets the thumbnails scramble this title too.
+  useEffect(() => {
+    const scrambles = scramblesRef.current
+    scrambles[index] = run
+    return () => {
+      scrambles[index] = null
+    }
+  }, [scramblesRef, index, run])
+
+  // Scrambles in the first time the caption comes on screen.
   useEffect(() => {
     const caption = captionRef.current
     if (!caption) return
@@ -55,7 +72,7 @@ function ServiceItem({ service, itemRef }) {
         io.disconnect()
         run()
       },
-      { threshold: 1 },
+      { rootMargin: '0px 0px -5% 0px' },
     )
     io.observe(caption)
     return () => io.disconnect()
@@ -63,7 +80,13 @@ function ServiceItem({ service, itemRef }) {
 
   return (
     <article ref={itemRef} className={styles.item}>
-      <Link href="/services" className={styles.frame} aria-label={`${service.title}: view our services`}>
+      <Link
+        href="/services"
+        className={styles.frame}
+        aria-label={`${service.title}: view our services`}
+        data-hover-tag="View service"
+        onMouseEnter={run}
+      >
         <span className={styles.parallax} data-parallax>
           <span className={styles.zoom}>
             <Image
@@ -71,12 +94,12 @@ function ServiceItem({ service, itemRef }) {
               alt=""
               fill
               className={styles.photo}
-              sizes="(min-width: 1400px) 1200px, (min-width: 1024px) 85vw, 120vw"
+              sizes="(min-width: 1024px) 85vw, 100vw"
             />
           </span>
         </span>
       </Link>
-      <div ref={captionRef} className={styles.caption}>
+      <div ref={captionRef} className={styles.caption} data-caption>
         <h3 className={styles.title} aria-label={service.title}>
           {/* Reserves the width, so nothing shifts while the characters change. */}
           <span className={styles.titleGhost} aria-hidden="true">
@@ -100,21 +123,44 @@ export default function HomeServices() {
   const rootRef = useRef(null)
   const headingRef = useRef(null)
   const itemRefs = useRef([])
+  const scrambleRefs = useRef([])
+  const activeRef = useRef(0)
+  const scrollLock = useRef(null) // Stops the tween and restores scroll tracking, while a click is scrolling.
   const [active, setActive] = useState(0)
+  const [flips, setFlips] = useState(0)
 
-  // The active service is whichever one crosses the middle of the screen.
+  const syncActive = () => {
+    const middle = window.innerHeight / 2
+    const index = itemRefs.current.findIndex((item) => {
+      if (!item) return false
+      const { top, bottom } = item.getBoundingClientRect()
+      return top <= middle && bottom > middle
+    })
+    if (index === -1) return
+    activeRef.current = index
+    setActive(index)
+  }
+
+  // The active service is whichever one crosses the middle of the screen, unless a click is taking
+  // the visitor to a particular one. Then the marker goes straight there, not through the others.
   useEffect(() => {
     const items = itemRefs.current.filter(Boolean)
     const io = new IntersectionObserver(
       (entries) => {
+        if (scrollLock.current) return
         for (const entry of entries) {
-          if (entry.isIntersecting) setActive(items.indexOf(entry.target))
+          if (!entry.isIntersecting) continue
+          activeRef.current = items.indexOf(entry.target)
+          setActive(activeRef.current)
         }
       },
       { rootMargin: '-50% 0px -50% 0px' },
     )
     items.forEach((item) => io.observe(item))
-    return () => io.disconnect()
+    return () => {
+      io.disconnect()
+      scrollLock.current?.()
+    }
   }, [])
 
   useEffect(() => {
@@ -123,8 +169,9 @@ export default function HomeServices() {
     if (!root || !heading) return
 
     const mm = gsap.matchMedia(root)
-    mm.add('(prefers-reduced-motion: no-preference)', () => {
-      // Each photo is larger than its frame and slides through it as the frame crosses the screen.
+
+    // Each photo is larger than its frame and slides through it as the frame crosses the screen.
+    mm.add('(prefers-reduced-motion: no-preference) and (min-width: 1024px)', () => {
       root.querySelectorAll('[data-parallax]').forEach((layer) => {
         gsap.fromTo(
           layer,
@@ -137,8 +184,10 @@ export default function HomeServices() {
           },
         )
       })
+    })
 
-      // Two blocks wipe across each heading line. The text switches on while they cover it.
+    // Two blocks wipe across each heading line. The text switches on while they cover it.
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
       const timeline = gsap.timeline({
         scrollTrigger: { trigger: heading, start: 'top 85%', once: true },
       })
@@ -180,12 +229,46 @@ export default function HomeServices() {
 
   const showService = (index) => {
     const item = itemRefs.current[index]
-    if (!item) return
-    const { top, height } = item.getBoundingClientRect()
-    // Centred when the screen has room, so the item lands on the middle line and becomes active.
-    const space = Math.max(HEADER_SPACE, (window.innerHeight - height) / 2)
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    window.scrollTo({ top: window.scrollY + top - space, behavior: reduced ? 'auto' : 'smooth' })
+    if (!item || index === activeRef.current) return
+
+    scrollLock.current?.()
+    activeRef.current = index
+    setActive(index)
+    setFlips((count) => count + 1) // The marker only turns on a click, never while scrolling.
+
+    // Centres the photo and its caption, not the empty space below them.
+    const { top } = item.getBoundingClientRect()
+    const { bottom } = item.querySelector('[data-caption]').getBoundingClientRect()
+    const target = window.scrollY + top - window.innerHeight / 2 + (bottom - top) / 2
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      window.scrollTo({ top: target, behavior: 'instant' })
+      return
+    }
+
+    const position = { y: window.scrollY }
+    const release = () => {
+      tween.kill()
+      window.removeEventListener('wheel', interrupted)
+      window.removeEventListener('touchstart', interrupted)
+      scrollLock.current = null
+    }
+    // Scrolling by hand takes over straight away, and the marker catches up with wherever that lands.
+    const interrupted = () => {
+      release()
+      syncActive()
+    }
+    const tween = gsap.to(position, {
+      y: target,
+      duration: 0.8,
+      ease: 'power2.out',
+      // "instant" because the site sets smooth scrolling on html, which would fight every step.
+      onUpdate: () => window.scrollTo({ top: position.y, behavior: 'instant' }),
+      onComplete: release,
+    })
+    window.addEventListener('wheel', interrupted, { passive: true })
+    window.addEventListener('touchstart', interrupted, { passive: true })
+    scrollLock.current = release
   }
 
   return (
@@ -217,13 +300,19 @@ export default function HomeServices() {
                   aria-label={`Show ${service.title}`}
                   aria-current={index === active ? 'true' : undefined}
                   onClick={() => showService(index)}
+                  onMouseEnter={() => scrambleRefs.current[index]?.()}
                 >
                   <span className={styles.thumbImage}>
                     <Image src={service.image} alt="" fill className={styles.photo} sizes="128px" />
                   </span>
-                  {index === active && <span className={styles.marker} aria-hidden="true" />}
                 </button>
               ))}
+              <span
+                className={styles.marker}
+                style={{ '--index': active, '--flips': flips }}
+                aria-hidden="true"
+                data-marker
+              />
             </nav>
 
             <ViewAll className={styles.ctaWide} />
@@ -235,14 +324,18 @@ export default function HomeServices() {
             <ServiceItem
               key={service.title}
               service={service}
+              index={index}
               itemRef={(el) => {
                 itemRefs.current[index] = el
               }}
+              scramblesRef={scrambleRefs}
             />
           ))}
           <ViewAll className={styles.ctaNarrow} />
         </div>
       </div>
+
+      <HoverTag rootRef={rootRef} />
     </section>
   )
 }

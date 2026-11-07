@@ -16,10 +16,13 @@ export const images = {
   aboutOffice: '/images/about-office.jpg',
   aboutTeam: '/images/about-team.jpg',
   partnerHandshake: '/images/partner-handshake.jpg',
-  // Large versions for the home page's services section, from the same Unsplash photos as the menu.
+  // Large versions for the home page's services section, from Unsplash (free under the Unsplash
+  // License). Sources are https://images.unsplash.com/photo-<id>
   servicesWide: {
-    supplies: '/images/service-supplies-wide.jpg', // 1553413077-190dd305871c
-    software: '/images/service-software-wide.jpg', // 1531482615713-2afd69097998
+    supplies: '/images/service-warehouse-bw.jpg', // 1587293852726-70cdb56c2866, converted to black and white
+    vehicle: '/images/service-truck-wide.jpg', // 1695222833131-54ee679ae8e5
+    software: '/images/service-code-wide.jpg', // 1515879218367-8466d910aaa4
+    ai: '/images/service-ai-meditation.jpg', // The site's own "AI and ML.jpg", resized
   },
   services: {
     supplies: '/images/service-supplies.jpg',
