@@ -21,7 +21,7 @@ export default function Logo({ className = '', showTagline = false, size = 'nav'
           src={images.logo}
           alt="Zed OS Technologies logo"
           fill
-          className="object-cover"
+          className="object-contain p-1"
           priority={size === 'nav'}
         />
       </div>

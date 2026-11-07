@@ -1,40 +1,55 @@
-import Image from 'next/image'
-import PushpinTearFooter from '@/components/ui/pushpin-tear-footer'
+'use client'
+
+import { PenSignature } from '@/components/ui/pen-signature'
+import TruckFooter from '@/components/ui/truck-footer'
+
+// Same Formspree form as the contact and partner pages.
+async function subscribe({ name, email }) {
+  const body = new FormData()
+  body.append('name', name)
+  body.append('email', email)
+  body.append('_subject', 'New footer signup')
+  const response = await fetch('https://formspree.io/f/xbdeoozz', {
+    method: 'POST',
+    headers: { Accept: 'application/json' },
+    body,
+  })
+  return response.ok
+}
 
 export default function Footer() {
   return (
-    <PushpinTearFooter
-      brand="zed os."
-      name="Zed OS Technologies"
-      logoHref="/"
-      logo={<Image src="/eagle-dark-64.png" alt="Zed OS" width={64} height={64} className="tpf-logo-img" />}
-      signature={
-        <a href="https://lennoxlewis.co.ke" target="_blank" rel="noopener noreferrer" aria-label="Visit Lennox Lewis, website developer" title="Made by Lennox Lewis">
-          <Image src="/Signatures/signature_L_black.png" alt="Lennox Lewis signature" width={1278} height={784} />
-        </a>
-      }
-      sheet="#000000"
-      paper="#f3f3f1"
-      paperInk="#111111"
-      email="lennoxlewis.lenny@gmail.com"
-      newsletter={null}
-      tagline="Supply Chain · Software · Systems"
-      status={{ label: 'Let’s work together', href: '/contact' }}
-      mark="Kisumu, Kenya"
-      timeZone="Africa/Nairobi"
-      timeLabel="EAT"
+    <TruckFooter
+      // Above the fixed globe and scroll dots on /services (z-40), below the WhatsApp button (z-50).
+      className="z-45"
+      signupTitle="Don't miss out on future updates."
+      signupNote="News and updates from Zed OS."
+      onSubscribe={subscribe}
+      status={[
+        { label: 'Let’s work together.', href: '/contact' },
+        { label: 'Kisumu, Kenya' },
+      ]}
+      quickLinks={[
+        { label: 'About', href: '/about' },
+        { label: 'Services', href: '/services' },
+        { label: 'Products', href: '/products' },
+        { label: 'Partner', href: '/partner' },
+        { label: 'Contact', href: '/contact' },
+      ]}
+      contactLinks={[
+        { label: 'lennoxlewis.lenny@gmail.com', href: 'mailto:lennoxlewis.lenny@gmail.com' },
+        { label: '+254 758 296 887', href: 'tel:+254758296887' },
+        { label: 'WhatsApp', href: 'https://wa.me/254758296887' },
+      ]}
       socials={[
-        { icon: 'ig', label: 'Instagram', href: 'https://www.instagram.com/zedostechnologies?igsh=MXFyamJ2NjFvY2F0eQ==' },
-        { icon: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/in/zedos-technologies-576bb3414' },
-        { icon: 'x', label: 'X', href: 'https://x.com/zedostechnology' },
+        { label: 'Instagram', href: 'https://www.instagram.com/zedostechnologies?igsh=MXFyamJ2NjFvY2F0eQ==' },
+        { label: 'LinkedIn', href: 'https://www.linkedin.com/in/zedos-technologies-576bb3414' },
+        { label: 'X', href: 'https://x.com/zedostechnology' },
       ]}
-      sideLinks={[
-        { icon: 'globe', label: 'services', href: '/services' },
-        { icon: 'chat', label: 'WhatsApp', href: 'https://wa.me/254758296887' },
-      ]}
-      chat={{ label: 'say hello', href: '/contact' }}
-      copyright={`© ${new Date().getFullYear()} Zed OS Technologies Limited`}
-      handle={{ label: '+254 758 296 887', href: 'tel:+254758296887' }}
+      company="Zed OS Technologies Limited."
+      tagline="Supply Chain · Software · Systems."
+      wordmark={['Zed', 'OS']}
+      signature={<PenSignature href="https://lennoxlewis.co.ke" label="Visit Lennox Lewis, website developer" title="Made by Lennox Lewis" />}
     />
   )
 }

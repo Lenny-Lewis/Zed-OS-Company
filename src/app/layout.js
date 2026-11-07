@@ -7,14 +7,14 @@ export const metadata = {
   description: 'General Supplies & Consultancy Services — Kisumu, Kenya',
   icons: {
     icon: [
-      { url: '/eagle-light.ico', media: '(prefers-color-scheme: light)' },
-      { url: '/eagle-dark.ico', media: '(prefers-color-scheme: dark)' },
-      { url: '/eagle-light-16.png', sizes: '16x16', type: 'image/png', media: '(prefers-color-scheme: light)' },
-      { url: '/eagle-light-32.png', sizes: '32x32', type: 'image/png', media: '(prefers-color-scheme: light)' },
-      { url: '/eagle-dark-16.png', sizes: '16x16', type: 'image/png', media: '(prefers-color-scheme: dark)' },
-      { url: '/eagle-dark-32.png', sizes: '32x32', type: 'image/png', media: '(prefers-color-scheme: dark)' },
+      { url: '/orbit-light.ico', media: '(prefers-color-scheme: light)' },
+      { url: '/orbit-dark.ico', media: '(prefers-color-scheme: dark)' },
+      { url: '/orbit-light-16.png', sizes: '16x16', type: 'image/png', media: '(prefers-color-scheme: light)' },
+      { url: '/orbit-light-32.png', sizes: '32x32', type: 'image/png', media: '(prefers-color-scheme: light)' },
+      { url: '/orbit-dark-16.png', sizes: '16x16', type: 'image/png', media: '(prefers-color-scheme: dark)' },
+      { url: '/orbit-dark-32.png', sizes: '32x32', type: 'image/png', media: '(prefers-color-scheme: dark)' },
     ],
-    apple: [{ url: '/eagle-light-180.png', sizes: '180x180', type: 'image/png' }],
+    apple: [{ url: '/orbit-light-180.png', sizes: '180x180', type: 'image/png' }],
   },
   manifest: '/site.webmanifest',
 }
@@ -50,13 +50,10 @@ export default function RootLayout({ children }) {
     // second section showed first. With it, Next jumps straight to the top on navigation.
     <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
       <head suppressHydrationWarning>
-        {/* The intro loader forms this eagle: fetch it with the HTML. crossOrigin matches the
-            loader's own request, so the browser reuses this download instead of fetching twice. */}
-        <link rel="preload" as="image" href="/eagle-dark-512.png" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap"
           rel="stylesheet"
         />
         <script

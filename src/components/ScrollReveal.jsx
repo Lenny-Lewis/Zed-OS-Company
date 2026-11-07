@@ -1,6 +1,7 @@
 'use client'
 
-import { motion, useReducedMotion } from 'framer-motion'
+import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion'
+import { motion } from 'framer-motion'
 
 const ease = [0.16, 1, 0.3, 1]
 
@@ -48,7 +49,7 @@ export default function ScrollReveal({
   duration = 0.75,
   amount = 0.18,
 }) {
-  const shouldReduceMotion = useReducedMotion()
+  const shouldReduceMotion = usePrefersReducedMotion()
   const MotionElement = motion[as] || motion.div
   const preset = variants[variant] || variants.up
 
@@ -67,7 +68,7 @@ export default function ScrollReveal({
 }
 
 export function Stagger({ children, className = '', delay = 0, stagger = 0.08, amount = 0.12 }) {
-  const shouldReduceMotion = useReducedMotion()
+  const shouldReduceMotion = usePrefersReducedMotion()
 
   return (
     <motion.div
@@ -91,7 +92,7 @@ export function Stagger({ children, className = '', delay = 0, stagger = 0.08, a
 }
 
 export function StaggerItem({ children, className = '', variant = 'up' }) {
-  const shouldReduceMotion = useReducedMotion()
+  const shouldReduceMotion = usePrefersReducedMotion()
   const preset = variants[variant] || variants.up
 
   return (

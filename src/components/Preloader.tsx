@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { GlassReveal21st, preloadGlassReveal21st } from '@/components/ui/liquid-glass-logo-reveal'
+import { ZedOrbitForm } from '@/components/ui/zed-orbit-mark'
 
 const SESSION_KEY = 'zedos:intro-seen'
 const ACTIVE_ATTR = 'data-intro-active'
@@ -9,7 +9,7 @@ const SEEN_ATTR = 'data-intro-seen'
 /** Beat on the finished logo before the overlay fades */
 const SETTLE_MS = 350
 const FADE_MS = 700
-/** Shortest time the overlay stays up (reduced motion, no WebGL) */
+/** Shortest time the overlay stays up (reduced motion) */
 const MIN_MS = 600
 /** After the animation ends, wait at most this long for the page to finish loading */
 const LOAD_GRACE_MS = 2500
@@ -20,12 +20,6 @@ const MAX_MS = 12000
 const HERO_INK = '#ececec'
 
 type Phase = 'visible' | 'leaving' | 'done'
-
-// Start decoding the mark and building its distance field as soon as this bundle runs, in
-// parallel with hydration, so the reveal can begin the moment it mounts.
-if (typeof window !== 'undefined' && !document.documentElement.hasAttribute(SEEN_ATTR)) {
-  preloadGlassReveal21st()
-}
 
 /** Resolves once the window has loaded and web fonts are ready, so the site is revealed complete. */
 function pageReady() {
@@ -136,13 +130,10 @@ function Intro() {
           phase === 'leaving' ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'
         }`}
       >
-        <GlassReveal21st
-          className="h-full w-full"
-          look="dark"
-          background="#000000"
+        <ZedOrbitForm
+          className="w-[min(58vw,380px)]"
           // Same ink as the hero's 3D sculpture (InkOrbitHero, dark theme)
-          logoColor={HERO_INK}
-          loop={false}
+          style={{ color: HERO_INK }}
           onComplete={onComplete}
         />
       </div>

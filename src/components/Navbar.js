@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { Component as SterlingGateKineticNavigation } from '@/components/ui/sterling-gate-kinetic-navigation'
+import { CurtainNavigation } from '@/components/ui/curtain-navigation'
 
 export default function Navbar() {
   useEffect(() => {
@@ -10,7 +10,7 @@ export default function Navbar() {
 
   return (
     <div data-site-chrome suppressHydrationWarning>
-      <SterlingGateKineticNavigation />
+      <CurtainNavigation />
     </div>
   )
 }

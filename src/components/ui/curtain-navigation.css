@@ -1,0 +1,269 @@
+:root {
+  --color-primary: #ffffff;
+  --cn-bg: #0a0a0a;
+  --cn-ink: #ececec;
+  --cn-accent: #fd551d;
+  --cn-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Header. The class name is shared with globals.css, which hides it during the intro. */
+.site-header-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 120;
+  width: 100%;
+  pointer-events: none;
+}
+
+.cn-header {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem clamp(1rem, 3vw, 2.5rem);
+}
+
+/* Glass that fades in once content scrolls beneath, melting into the page at its lower edge. */
+.cn-header::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 -1.5rem 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.55) 55%, rgba(0, 0, 0, 0) 100%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.cn-header[data-scrolled]::before { opacity: 1; }
+html[data-menu-open] .cn-header::before { opacity: 0; transition-duration: 0.25s; }
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .cn-header::before {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.7) 55%, rgba(0, 0, 0, 0) 100%);
+  }
+}
+
+.cn-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #ffffff;
+  font-family: var(--cn-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  pointer-events: auto;
+  transition: opacity 0.2s ease;
+}
+.cn-brand:hover { opacity: 0.85; }
+.cn-brand:focus-visible { outline: 2px solid var(--cn-accent); outline-offset: 4px; }
+
+.cn-actions { display: flex; align-items: stretch; gap: 0.6rem; pointer-events: auto; }
+
+.cn-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  height: 3rem;
+  padding: 0 1.1rem;
+  border-radius: 0.6rem;
+  background: var(--cn-accent);
+  color: #0a0a0a;
+  font-family: var(--cn-sans);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background-color 0.25s ease;
+}
+.cn-cta svg { width: 0.75rem; height: 0.75rem; transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); }
+/* Only with a real pointer: on touch, :hover sticks after a tap. */
+@media (hover: hover) {
+  .cn-cta:hover { background: #ffffff; }
+  .cn-cta:hover svg { transform: translateX(3px); }
+}
+.cn-cta:focus-visible { outline: 2px solid #ffffff; outline-offset: 2px; }
+
+/* Two offset bars that cross into an x. Filled once open, and white under the pointer. */
+.cn-ham {
+  position: relative;
+  flex: none;
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  border: 1.5px solid #ffffff;
+  border-radius: 0.6rem;
+  background: rgba(0, 0, 0, 0.35);
+  color: #ffffff;
+  cursor: pointer;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+.cn-ham i {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1.1rem;
+  height: 2px;
+  margin: -1px 0 0 -0.55rem;
+  background: currentColor;
+  transition: transform 0.45s cubic-bezier(0.65, 0.05, 0, 1), width 0.3s ease;
+}
+.cn-ham i:first-child { transform: translate(0.2rem, -0.22rem) scaleX(0.7); }
+.cn-ham i:last-child { transform: translate(-0.2rem, 0.22rem) scaleX(0.7); }
+@media (hover: hover) {
+  .cn-ham:not([data-open]):hover i:first-child { transform: translate(0, -0.22rem); }
+  .cn-ham:not([data-open]):hover i:last-child { transform: translate(0, 0.22rem); }
+}
+.cn-ham[data-open] { border-color: var(--cn-accent); background: var(--cn-accent); color: #0a0a0a; }
+.cn-ham[data-open] i:first-child { transform: rotate(45deg) scaleX(0.8); }
+.cn-ham[data-open] i:last-child { transform: rotate(-45deg) scaleX(0.8); }
+@media (hover: hover) {
+  .cn-ham:hover { border-color: #ffffff; background: #ffffff; color: #0a0a0a; }
+}
+.cn-ham:focus-visible { outline: 2px solid var(--cn-accent); outline-offset: 2px; }
+
+/* Panel */
+.cn-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 110;
+  display: none;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  /* Holds the row to the screen: the photo columns are a little taller than it. */
+  grid-template-rows: minmax(0, 1fr);
+  overflow: hidden;
+  background: var(--cn-bg);
+  color: var(--cn-ink);
+  font-family: var(--cn-sans);
+}
+
+.cn-bg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+
+/* Keeps the logo readable when a photo drifts up under it. */
+.cn-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 6.5rem;
+  background: linear-gradient(180deg, var(--cn-bg) 25%, transparent);
+  pointer-events: none;
+}
+
+/* Photos */
+.cn-images {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3.4vw;
+  padding-left: 3.2vw;
+  min-width: 0;
+  min-height: 0;
+}
+.cn-col { flex: 1 1 0; display: flex; flex-direction: column; gap: 4vh; min-width: 0; }
+.cn-tile { position: relative; flex: none; height: 33vh; overflow: hidden; background: #161616; }
+.cn-base, .cn-top { object-fit: cover; }
+.cn-base { filter: grayscale(1) contrast(0.88) brightness(0.72); }
+.cn-top { z-index: 1; opacity: 0; }
+
+/* Links */
+.cn-menu {
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr);
+  justify-items: center;
+  padding: 1rem 1rem 1.75rem;
+  min-width: 0;
+  min-height: 0;
+}
+.cn-center { display: flex; flex-direction: column; align-items: center; }
+.cn-links { display: flex; flex-direction: column; align-items: center; margin: 0; padding: 0; list-style: none; }
+.cn-link {
+  position: relative;
+  display: block;
+  color: var(--cn-ink);
+  font-size: min(4.6vw, 6.8vh);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.cn-link:focus-visible { outline: 2px solid var(--cn-accent); outline-offset: 2px; }
+.cn-link[data-current] .cn-word { opacity: 0.68; }
+/* Letters roll up into a coloured copy of themselves. */
+.cn-word { display: block; overflow: hidden; white-space: nowrap; }
+.cn-char {
+  display: inline-block;
+  line-height: 1;
+  text-shadow: 0 1em 0 var(--cn-accent);
+  will-change: transform;
+}
+
+.cn-strike {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  display: none;
+  width: 100%;
+  height: 0.36em;
+  margin-top: -0.18em;
+  color: var(--cn-accent);
+  overflow: visible;
+  pointer-events: none;
+}
+.cn-link[data-current] .cn-strike { display: block; }
+
+.cn-emblem { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; margin-top: 1.75rem; }
+.cn-emblem-mark { width: 5rem; height: auto; }
+.cn-emblem p {
+  margin: 0;
+  color: rgba(236, 236, 236, 0.6);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.cn-bottom { align-self: end; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.cn-bottom-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem 1.6rem; }
+/* A block of colour wipes off each one as it arrives. */
+.cn-extra {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.cn-extra-text { transition: color 0.2s ease; }
+@media (hover: hover) {
+  .cn-extra:hover .cn-extra-text { color: var(--cn-accent); }
+}
+.cn-extra:focus-visible { outline: 2px solid var(--cn-accent); outline-offset: 2px; }
+.cn-extra-cover { position: absolute; inset: 0; background: var(--cn-accent); transform-origin: right center; pointer-events: none; }
+
+/* A phone keeps the links and loses the photos. */
+@media (max-width: 767px) {
+  .cn-panel { grid-template-columns: minmax(0, 1fr); }
+  .cn-images { display: none; }
+  .cn-link { font-size: clamp(2.2rem, 10.3vw, 3rem); }
+  .cn-menu { padding-bottom: 1.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cn-ham i, .cn-cta svg { transition: none; }
+}

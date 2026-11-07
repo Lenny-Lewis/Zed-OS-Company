@@ -1,0 +1,247 @@
+.azf-clip {
+  position: relative;
+  overflow: hidden;
+  background: #000000;
+  /* The footer and page share one black: this space and the rule below are what separate them. */
+  margin-top: 112px;
+  /* The page's own black, with warm bone type stepped down by opacity. */
+  --azf-bg: #000000;
+  --azf-fg: #e9e4da;
+  --azf-link: rgba(233, 228, 218, 0.78);
+  --azf-muted: rgba(233, 228, 218, 0.45);
+  --azf-brand: #fd551d;
+  --azf-field: #111111;
+  --azf-border: rgba(233, 228, 218, 0.14);
+  --azf-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --azf-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --azf-ease: cubic-bezier(0.76, 0, 0.24, 1);
+  --azf-line-ease: cubic-bezier(0.625, 0.05, 0, 1);
+  --azf-gutter: clamp(20px, 3.4vw, 44px);
+}
+
+.azf {
+  position: relative;
+  overflow: hidden;
+  background: var(--azf-bg);
+  color: var(--azf-fg);
+  font-family: var(--azf-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  will-change: transform;
+}
+
+/* The separator. It sits outside the sliding footer, so it's in place from the moment it's reached. */
+.azf-separator {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 var(--azf-gutter);
+  padding-top: clamp(12px, 1.6vw, 18px);
+  border-top: 0.5px solid rgba(233, 228, 218, 0.16);
+  background: var(--azf-bg);
+}
+.azf-up {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--azf-link);
+  font-family: var(--azf-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.azf-up:hover, .azf-up:focus-visible { color: var(--azf-fg); }
+.azf-up:focus-visible { outline: 1px solid var(--azf-link); outline-offset: 3px; }
+
+.azf ul { list-style: none; margin: 0; padding: 0; }
+.azf p { margin: 0; }
+.azf a { color: inherit; text-decoration: none; }
+
+.azf-layout {
+  position: relative;
+  z-index: 2;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(18px, 2.6vw, 30px) var(--azf-gutter) 0;
+  pointer-events: none;
+}
+
+.azf-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; }
+.azf-col { pointer-events: auto; }
+.azf-col-left { grid-column: 1 / span 3; display: flex; flex-direction: column; gap: 16px; }
+.azf-col-mid { grid-column: 5 / span 4; display: flex; flex-direction: column; align-items: center; }
+.azf-col-right { grid-column: 10 / span 3; display: flex; flex-direction: column; gap: 16px; }
+
+/* Signup */
+.azf-title { margin-bottom: 8px !important; font-weight: 500; color: var(--azf-fg); }
+.azf-form { display: flex; flex-direction: column; gap: 6px; }
+.azf-input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 40px;
+  padding: 8px 12px;
+  border: 1px solid var(--azf-border);
+  border-radius: 0;
+  outline: none;
+  background: var(--azf-field);
+  color: var(--azf-fg);
+  font: inherit;
+  font-size: 14px;
+  transition: border-color 0.2s ease-out;
+}
+.azf-input::placeholder { color: var(--azf-muted); opacity: 1; }
+.azf-input:focus { border-color: var(--azf-fg); }
+.azf-trap { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+.azf-submit {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  height: 40px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  color: var(--azf-bg);
+  font-family: var(--azf-mono);
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.azf-submit:disabled { cursor: progress; opacity: 0.6; }
+.azf-submit:focus-visible { outline: 2px solid var(--azf-brand); outline-offset: 2px; }
+.azf-submit > span { transition: transform 0.7s var(--azf-ease); }
+.azf-plus {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  background: var(--azf-fg);
+}
+.azf-plus svg { width: 0.75em; height: 0.75em; }
+.azf-plus-in { transform: rotate(-45deg) scale(0); transform-origin: left center; }
+.azf-plus-out { position: absolute; right: 0; transform-origin: right center; }
+.azf-submit-label {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 12px;
+  background: var(--azf-fg);
+  transform: translateX(-46px);
+}
+.azf-submit:hover .azf-plus-in,
+.azf-submit:focus-visible .azf-plus-in { transform: none; }
+.azf-submit:hover .azf-plus-out,
+.azf-submit:focus-visible .azf-plus-out { transform: rotate(-45deg) scale(0); }
+.azf-submit:hover .azf-submit-label,
+.azf-submit:focus-visible .azf-submit-label { transform: none; }
+
+.azf-note { font-size: 14px; color: var(--azf-muted); opacity: 0.6; }
+.azf-done { font-size: 14px; color: var(--azf-fg); }
+
+.azf-status { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.azf-status li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--azf-muted);
+  font-family: var(--azf-mono);
+  font-size: 13.7px;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+.azf-status i { flex: none; width: 8px; height: 8px; background: var(--azf-brand); animation: azf-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.azf-status a:hover, .azf-status a:focus-visible { color: var(--azf-fg); }
+@keyframes azf-pulse { 50% { opacity: 0.5; } }
+
+/* Quick links */
+.azf-nav { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.azf-nav-link {
+  color: var(--azf-link) !important;
+  font-family: var(--azf-mono);
+  font-size: 15.7px;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+.azf-nav-link:focus-visible { outline: 1px solid var(--azf-muted); outline-offset: 3px; }
+.azf-measure { position: relative; display: inline-block; white-space: nowrap; }
+.azf-ghost { visibility: hidden; }
+.azf-live { position: absolute; top: 0; left: 0; }
+
+/* Contact and socials: the underline leaves one way and comes back the other. */
+.azf-lines { display: flex; flex-direction: column; color: var(--azf-link); }
+.azf-line-link { position: relative; display: inline-block; }
+.azf-line-link:focus-visible { outline: 1px solid var(--azf-muted); outline-offset: 3px; }
+.azf-rule { position: absolute; inset: auto 0 1px; height: 1px; pointer-events: none; }
+.azf-rule i { position: absolute; inset: 0; background: currentColor; transition: transform 0.7s var(--azf-line-ease); }
+.azf-rule i:first-child { transform-origin: left; transition-delay: 0.3s; }
+.azf-rule i:last-child { transform: scaleX(0); transform-origin: right; }
+.azf-line-link:hover .azf-rule i:first-child,
+.azf-line-link:focus-visible .azf-rule i:first-child { transform: scaleX(0); transform-origin: right; transition-delay: 0s; }
+.azf-line-link:hover .azf-rule i:last-child,
+.azf-line-link:focus-visible .azf-rule i:last-child { transform: none; transform-origin: left; transition-delay: 0.3s; }
+
+/* Centre block */
+.azf-colophon { margin-top: 20px; color: var(--azf-muted); font-size: 15px; text-align: center; }
+.azf-signature { width: 124px; margin: 12px auto 0; }
+.azf-signature a { display: block; opacity: 0.85; transition: opacity 0.25s; }
+.azf-signature a:hover, .azf-signature a:focus-visible { opacity: 1; }
+
+/* Wordmark, with the road along the top of its letters */
+/* A lane for the truck: nothing else shares this strip, so it's never cut off. */
+.azf-word-wrap { position: relative; flex: none; margin-top: clamp(112px, 11vw, 164px); border-top: 1px solid rgba(233, 228, 218, 0.14); }
+.azf-truck {
+  position: absolute;
+  /* Lowers the canvas's empty strip below the road line, so the wheels sit on it. */
+  bottom: calc(100% - 1.6vw);
+  left: calc(var(--azf-gutter) * -1);
+  right: calc(var(--azf-gutter) * -1);
+  z-index: 1;
+  height: clamp(100px, 12.6vw, 186px);
+  cursor: pointer;
+  pointer-events: auto;
+}
+.azf-word {
+  /* Crops the letters along the bottom edge, which keeps the footer from getting tall. */
+  aspect-ratio: 7.4;
+  container-type: inline-size;
+  overflow: hidden;
+  opacity: 0.1;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.azf-word-inner {
+  display: block;
+  color: var(--azf-fg);
+  font-family: var(--azf-sans);
+  font-size: 31.2cqw;
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 0.74;
+  white-space: nowrap;
+}
+.azf-lean { display: inline-block; transform: skewX(-11deg); transform-origin: bottom; }
+
+@media (max-width: 1023px) {
+  .azf-clip { margin-top: 80px; }
+  .azf-grid { row-gap: 48px; }
+  .azf-col-left, .azf-col-mid, .azf-col-right { grid-column: 1 / -1; }
+  .azf-nav { align-items: flex-start; }
+  .azf-col-mid { align-items: stretch; }
+  .azf-colophon { margin-top: 48px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .azf-status i { animation: none; }
+  .azf-submit > span, .azf-rule i, .azf-input { transition: none; }
+}

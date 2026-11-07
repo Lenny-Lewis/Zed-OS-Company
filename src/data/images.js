@@ -1,5 +1,15 @@
 export const images = {
-  logo: '/images/ZedOS_New Logo.jpg',
+  logo: '/orbit-dark-512.png',
+  // Nav menu photos, from Unsplash (free under the Unsplash License). Sources are
+  // https://images.unsplash.com/photo-<id>
+  menu: {
+    home: '/images/menu/home.jpg', // 1611348524140-53c9a25263d6
+    about: '/images/menu/about.jpg', // 1531482615713-2afd69097998
+    products: '/images/menu/products.jpg', // 1553413077-190dd305871c
+    services: '/images/menu/services.jpg', // 1601584115197-04ecc0da31d7
+    partner: '/images/menu/partner.jpg', // 1600880292089-90a7e086ee0c
+    contact: '/images/menu/contact.jpg', // 1534536281715-e28d76689b4d
+  },
   devLogo: '/images/DevLogo.jpeg',
   director: '/images/Director Lewis.png',
   hero: '/images/heroimage.png',

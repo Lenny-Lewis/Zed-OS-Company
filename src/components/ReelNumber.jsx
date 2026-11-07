@@ -5,7 +5,8 @@
 // value, with a motion blur that peaks mid-spin. Plays once when 40% in view; click to replay.
 // Reduced motion shows the plain number.
 
-import { motion, useInView, useReducedMotion } from 'framer-motion'
+import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion'
+import { motion, useInView } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 
 const ROWS = 8 // digits on each reel
@@ -64,7 +65,7 @@ function Reel({ digit, index, replay, active }) {
 export default function ReelNumber({ value, suffix, label, className = '', suffixClassName = '' }) {
   const ref = useRef(null)
   const timer = useRef(0)
-  const reduced = useReducedMotion()
+  const reduced = usePrefersReducedMotion()
   const inView = useInView(ref, { once: true, amount: 0.4 })
   const [replayed, setReplayed] = useState(false) // true while a click-replay is running
   const [replay, setReplay] = useState(0)

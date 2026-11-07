@@ -1,9 +1,10 @@
 "use client";
 
+import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion"
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import { ArrowRight, Clock, Mail, MapPin, Phone } from "lucide-react";
 import * as SeparatorPrimitive from "@radix-ui/react-separator";
 // Named imports so only d3-geo ships, not the whole d3 bundle.
@@ -30,7 +31,7 @@ interface GlobeWireframeProps {
 function GlobeWireframe({ className, autoRotate = true, autoRotateSpeed = 0.45, strokeWidth = 0.6 }: GlobeWireframeProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     const container = containerRef.current;
@@ -190,7 +191,7 @@ export default function ContactWithGlobe({
   className,
 }: ContactWithGlobeProps) {
   const router = useRouter();
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = usePrefersReducedMotion();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const submitLock = useRef(false);

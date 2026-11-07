@@ -1,8 +1,9 @@
 'use client'
 
+import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { useRef } from 'react'
 import { images } from '@/data/images'
 import ScrollReveal, { Stagger, StaggerItem } from '@/components/ScrollReveal'
@@ -17,7 +18,7 @@ const stats = [
 
 export default function HomeAbout() {
   const imageRef = useRef(null)
-  const shouldReduceMotion = useReducedMotion()
+  const shouldReduceMotion = usePrefersReducedMotion()
   const { scrollYProgress } = useScroll({
     target: imageRef,
     offset: ['start end', 'end start'],
