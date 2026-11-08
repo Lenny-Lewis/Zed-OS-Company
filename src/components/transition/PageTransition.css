@@ -1,0 +1,127 @@
+/*
+ * Page transition. A square far bigger than the screen swings in from the left like a hand on a dial,
+ * pivoting on the bottom edge, covers the page while it changes, then swings on and out to the right
+ * around a pivot one screen further over. The page behind it blurs, and four small squares rise in
+ * the middle while it waits. The phase is on <html data-transition-phase>, set by PageTransition.jsx.
+ */
+
+:root {
+  --pt-ease: cubic-bezier(0.76, 0, 0.24, 1);
+  /* In portrait the pivot moves a screen left, so the square's sweep still clears a tall screen. */
+  --pt-extend: 0px;
+}
+@media (orientation: portrait) {
+  :root {
+    --pt-extend: 100vw;
+  }
+}
+
+.pt-square {
+  position: fixed;
+  bottom: 0;
+  left: calc(-50vw - var(--pt-extend));
+  width: 200vmax;
+  height: 200vmax;
+  background: var(--brand);
+  z-index: 115; /* Over the page and the open menu (110), under the header (120) */
+  pointer-events: none;
+  transform-origin: calc(50vw + var(--pt-extend)) 100%;
+  transform: rotate(-90deg);
+  visibility: hidden;
+}
+.pt-square[data-phase='entering'] {
+  visibility: visible;
+  transition: transform 1s var(--pt-ease);
+  transform: rotate(0deg);
+}
+.pt-square[data-phase='holding'] {
+  visibility: visible;
+  /* Same place, new pivot: one screen to the right, ready to swing out that way. */
+  transform-origin: calc(50vw + var(--pt-extend) + 100vw) 100%;
+  transition: none;
+  transform: rotate(0deg);
+}
+.pt-square[data-phase='exiting'] {
+  visibility: visible;
+  transform-origin: calc(50vw + var(--pt-extend) + 100vw) 100%;
+  transition: transform 1s var(--pt-ease) 0.1s;
+  transform: rotate(90deg);
+}
+
+/* The header stays on top of the square; its orange "Let's talk" turns black so it still shows. */
+html[data-transition-phase] .cn-cta {
+  background: var(--brand-ink);
+  color: #fafafa;
+}
+
+/* The page behind softens while the square passes. */
+.pt-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 114;
+  pointer-events: none;
+  background: rgba(10, 10, 10, 0);
+  -webkit-backdrop-filter: blur(0);
+  backdrop-filter: blur(0);
+  visibility: hidden;
+}
+.pt-veil[data-phase='entering'],
+.pt-veil[data-phase='holding'] {
+  visibility: visible;
+  background: rgba(10, 10, 10, 0.25);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.pt-veil[data-phase='entering'] {
+  transition:
+    background-color 1s var(--pt-ease),
+    backdrop-filter 1s var(--pt-ease),
+    -webkit-backdrop-filter 1s var(--pt-ease);
+}
+.pt-veil[data-phase='exiting'] {
+  visibility: visible;
+  transition:
+    background-color 0.6s var(--pt-ease) 0.3s,
+    backdrop-filter 0.6s var(--pt-ease) 0.3s,
+    -webkit-backdrop-filter 0.6s var(--pt-ease) 0.3s;
+}
+
+/* Four small squares that rise into place once the screen is covered, and on up and away after. */
+.pt-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 116;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  visibility: hidden;
+}
+.pt-loader[data-phase='entering'],
+.pt-loader[data-phase='holding'],
+.pt-loader[data-phase='exiting'] {
+  visibility: visible;
+}
+.pt-loader-row {
+  display: flex;
+  gap: 2px;
+  overflow: hidden;
+}
+.pt-loader-row span {
+  width: 16px;
+  height: 16px;
+  background: var(--brand-ink);
+  transform: translateY(110%);
+  transition: transform 0ms;
+}
+.pt-loader[data-phase='entering'] span {
+  transform: translateY(0%);
+  transition: transform 350ms cubic-bezier(0.215, 0.61, 0.355, 1) calc(650ms + var(--i) * 60ms);
+}
+.pt-loader[data-phase='holding'] span {
+  transform: translateY(0%);
+}
+.pt-loader[data-phase='exiting'] span {
+  transform: translateY(-110%);
+  transition: transform 350ms cubic-bezier(0.215, 0.61, 0.355, 1) calc(var(--i) * 60ms);
+}

@@ -66,7 +66,6 @@ export function CurtainNavigation() {
   const reduced = React.useRef(false)
 
   const [isOpen, setIsOpen] = React.useState(false)
-  const [isScrolled, setIsScrolled] = React.useState(false)
   // Photos are fetched once someone reaches for the menu, not on every page view.
   const [warm, setWarm] = React.useState(false)
   // Restarts the forming emblem on every open.
@@ -81,12 +80,53 @@ export function CurtainNavigation() {
 
   const currentIndex = LINKS.findIndex((l) => isCurrent(pathname, l.href))
 
+  // The bar takes the tone of the section beneath it (<html data-nav-tone>). Looks just below the
+  // bar: the first thing there that says (data-header-tone) or has a solid background decides.
   React.useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 24)
-    onScroll()
-    window.addEventListener("scroll", onScroll, { passive: true })
-    return () => window.removeEventListener("scroll", onScroll)
-  }, [])
+    const root = document.documentElement
+    const headerEl = root.querySelector(".cn-header")
+    let frame = 0
+    const toneAt = (x: number, y: number) => {
+      for (const hit of document.elementsFromPoint(x, y)) {
+        if (hit.closest(".site-header-wrapper")) continue
+        for (let el: Element | null = hit; el && el !== root; el = el.parentElement) {
+          const said = el.getAttribute("data-header-tone")
+          if (said === "light" || said === "dark") return said
+          const bg = getComputedStyle(el).backgroundColor
+          const m = bg.match(/rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?/)
+          if (!m || (m[4] !== undefined && Number(m[4]) < 0.5)) continue
+          const luminance = (0.2126 * Number(m[1]) + 0.7152 * Number(m[2]) + 0.0722 * Number(m[3])) / 255
+          return luminance > 0.55 ? "light" : "dark"
+        }
+        break
+      }
+      return "dark"
+    }
+    const check = () => {
+      frame = 0
+      const bottom = headerEl ? headerEl.getBoundingClientRect().bottom : 72
+      const tone = toneAt(window.innerWidth / 2, bottom + 2)
+      if (root.getAttribute("data-nav-tone") !== tone) root.setAttribute("data-nav-tone", tone)
+      // At the top of the page (as on good-fella, within 50px) the bar is see-through over the hero;
+      // it fills in once you scroll.
+      root.toggleAttribute("data-nav-top", window.scrollY <= 50)
+    }
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(check)
+    }
+    check()
+    // Things change under the bar without a scroll too (loaders and covers lifting, pinned sections,
+    // page transitions), so it also looks twice a second. One hit test each time: cheap.
+    const settle = window.setInterval(schedule, 500)
+    window.addEventListener("scroll", schedule, { passive: true })
+    window.addEventListener("resize", schedule)
+    return () => {
+      cancelAnimationFrame(frame)
+      window.clearInterval(settle)
+      window.removeEventListener("scroll", schedule)
+      window.removeEventListener("resize", schedule)
+    }
+  }, [pathname])
 
   // The whole open sequence
   React.useEffect(() => {
@@ -243,18 +283,23 @@ export function CurtainNavigation() {
     setIsOpen((open) => !open)
   }
   const close = () => setIsOpen(false)
+  // Going somewhere else, the page transition sweeps over the open menu and the route change closes
+  // it underneath. Only a link to this same page closes it straight away.
+  const closeIfHere = (href: string) => () => {
+    if (href === pathname) close()
+  }
   const warmUp = () => setWarm(true)
 
   return (
     <div ref={root}>
       <div className="site-header-wrapper">
-        <header className="cn-header" data-scrolled={isScrolled ? "" : undefined}>
-          <Link href="/" aria-label="ZedOS Technologies home" className="cn-brand" onClick={close}>
-            <ZedOrbitMark className="h-7 w-auto text-white" />
+        <header className="cn-header">
+          <Link href="/" aria-label="ZedOS Technologies home" className="cn-brand" onClick={closeIfHere("/")}>
+            <ZedOrbitMark className="h-7 w-auto" />
             <span>Zed</span>
           </Link>
           <div className="cn-actions">
-            <Link href="/contact" className="cn-cta" onClick={close}>
+            <Link href="/contact" className="cn-cta" onClick={closeIfHere("/contact")}>
               Let&apos;s talk
               <svg viewBox="0 0 12 12" fill="none" aria-hidden="true">
                 <path d="M1 6h9.2M6.4 2.2 10.2 6l-3.8 3.8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="square" />
@@ -324,7 +369,7 @@ export function CurtainNavigation() {
                     data-current={index === currentIndex ? "" : undefined}
                     aria-label={link.label}
                     aria-current={index === currentIndex ? "page" : undefined}
-                    onClick={close}
+                    onClick={closeIfHere(link.href)}
                     onPointerEnter={(e) => onLinkEnter(e, index)}
                     onPointerLeave={onLinkLeave}
                   >

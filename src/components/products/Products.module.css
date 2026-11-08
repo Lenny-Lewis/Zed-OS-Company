@@ -1,0 +1,566 @@
+/* Products page. Shares the About page's tokens and pieces (About.module.css); these are its own. */
+
+/* ---------- Hero ---------- */
+
+.hero {
+  --title-size: min(18.5vw, 34svh);
+}
+.hero .title {
+  top: 17svh;
+  font-size: var(--title-size);
+}
+.heroTagline {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  top: calc(17svh + var(--title-size) * 0.9);
+  margin: 0;
+  text-align: center;
+  font-size: clamp(1rem, 1.5vw, 1.3rem);
+  color: var(--muted);
+  z-index: 5;
+}
+/* Where the crate sits, under the title. */
+.heroCrate {
+  position: absolute;
+  left: 50%;
+  top: 60svh;
+  width: min(30vw, 420px);
+  aspect-ratio: 1.1;
+  translate: -50% -50%;
+  pointer-events: none;
+}
+.hero .heroRow {
+  bottom: 8svh;
+}
+.hero .heroCard {
+  width: 14.5vw;
+  max-height: 28svh;
+}
+.heroCaption {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  left: 0;
+  right: 0;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- Aisle ---------- */
+
+.aisle,
+.process,
+.cta {
+  position: relative;
+  z-index: 1;
+}
+.aislePin {
+  height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(260px, 27vw) minmax(0, 1fr);
+}
+.aisleCrateSticky {
+  display: none;
+}
+.rail {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: clamp(5.5rem, 13svh, 7.5rem) var(--gutter) clamp(1.5rem, 5svh, 3rem);
+  border-right: 1px solid var(--line);
+}
+.railTitle {
+  font-size: clamp(3rem, 6vw, 6rem);
+}
+.counter {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+}
+.railCrate {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  max-height: 34svh;
+  pointer-events: none;
+}
+.railQuote {
+  align-self: flex-start;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+.aisleViewport {
+  overflow: hidden;
+  padding: clamp(5.5rem, 13svh, 7.5rem) 0 clamp(1.5rem, 5svh, 3rem);
+}
+.aisleTrack {
+  display: flex;
+  gap: clamp(2rem, 4vw, 4.5rem);
+  width: max-content;
+  height: 100%;
+  padding: 0 var(--gutter);
+  will-change: transform;
+}
+.panel {
+  width: clamp(340px, 38vw, 620px);
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 1.5rem;
+}
+.panelFrame {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 6px;
+  min-height: 0;
+}
+.panelFrame img {
+  filter: grayscale(1) contrast(1.05);
+  transition: filter 0.7s var(--ease-out), transform 1.1s var(--ease-out);
+}
+.panel:hover .panelFrame img {
+  filter: none;
+  transform: scale(1.05);
+}
+.panelIndex {
+  position: absolute;
+  left: 1rem;
+  bottom: 0.5rem;
+  font-family: 'Anton', 'Archivo', sans-serif;
+  font-size: clamp(3rem, 6vw, 6rem);
+  line-height: 1;
+  color: #fff;
+  mix-blend-mode: difference;
+}
+.panelBody {
+  display: grid;
+  gap: 0.9rem;
+  justify-items: start;
+}
+.panelTitle {
+  margin: 0;
+  font-family: 'Anton', 'Archivo', sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: clamp(2rem, 3.4vw, 3.4rem);
+  line-height: 1;
+}
+.panelText {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tag {
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(250, 250, 250, 0.75);
+}
+.addButton {
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  transition:
+    background-color 0.4s ease,
+    color 0.4s ease,
+    border-color 0.4s ease;
+}
+.addButton[data-added] {
+  background: var(--brand);
+  color: var(--brand-ink);
+  border-color: var(--brand);
+}
+
+/* ---------- Process ---------- */
+
+.process {
+  padding: clamp(6rem, 12vw, 10rem) var(--gutter) clamp(4rem, 8vw, 7rem);
+}
+.stepsWrap {
+  position: relative;
+}
+.routeTrack {
+  position: absolute;
+  top: 6px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--line);
+}
+.route {
+  position: absolute;
+  inset: 0;
+  background: var(--brand);
+  transform-origin: left center;
+}
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 3rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.step {
+  position: relative;
+  padding-top: 2.5rem;
+}
+.stop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 13px;
+  height: 13px;
+  border: 1px solid var(--brand);
+  border-radius: 50%;
+  background: var(--bg);
+}
+.stepTitle {
+  margin: 0.75rem 0 0.5rem;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 2.4vw, 2.4rem);
+  letter-spacing: -0.02em;
+}
+.stepText {
+  margin: 0;
+  max-width: 30ch;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ---------- Close ---------- */
+
+.cta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5rem);
+  padding: clamp(4rem, 8vw, 7rem) var(--gutter) clamp(6rem, 12vw, 10rem);
+  border-top: 1px solid var(--line);
+}
+.ctaCrate {
+  width: 100%;
+  max-width: 560px;
+  aspect-ratio: 1.1;
+  justify-self: center;
+  pointer-events: none;
+}
+.ctaBody {
+  display: grid;
+  gap: 1.25rem;
+  justify-items: start;
+}
+.ctaNote {
+  margin: 0;
+  max-width: 36ch;
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+.ctaActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.ctaActions button {
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+
+/* ---------- Quote button and drawer ---------- */
+
+.dockButton {
+  position: fixed;
+  left: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 48;
+  background: rgba(0, 0, 0, 0.75);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  font: inherit;
+  padding-right: 0.45rem;
+  transform: translateY(160%);
+  transition: transform 0.6s var(--ease-roll);
+}
+.dockButton[data-show] {
+  transform: none;
+}
+.dockCount {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding: 0 0.5rem;
+  border-radius: 999px;
+  background: var(--brand);
+  color: var(--brand-ink);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+.drawerRoot {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+}
+.drawerRoot[data-open] {
+  pointer-events: auto;
+}
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.drawerRoot[data-open] .backdrop {
+  opacity: 1;
+}
+.drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(540px, 100vw);
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  padding: 1.75rem clamp(1.25rem, 3vw, 2.25rem) 2.5rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: #0a0a0a;
+  border-left: 1px solid var(--line);
+  transform: translateX(100%);
+  transition: transform 0.6s var(--ease-roll);
+}
+.drawerRoot[data-open] .drawer {
+  transform: none;
+}
+.drawerHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.drawerTitle {
+  margin: 0;
+  font-family: 'Anton', 'Archivo', sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: 2.6rem;
+  line-height: 1;
+}
+.drawerClose {
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.chosen {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+.chosenItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 1.05rem;
+}
+.chosenRemove {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.chosenRemove:hover,
+.chosenRemove:focus-visible {
+  background: var(--ink);
+  color: var(--bg);
+}
+.drawerEmpty {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.addMore {
+  display: grid;
+  gap: 0.75rem;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.chip {
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+.chip[aria-pressed='true'] {
+  background: var(--brand);
+  color: var(--brand-ink);
+  border-color: var(--brand);
+}
+.drawerForm {
+  display: grid;
+  gap: 1.6rem;
+}
+.drawerForm textarea::placeholder {
+  color: rgba(250, 250, 250, 0.3);
+}
+.drawerClose:focus-visible,
+.chip:focus-visible,
+.dockButton:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+}
+
+/* ---------- Phones ---------- */
+
+@media (max-width: 767px) {
+  .hero {
+    --title-size: 18vw;
+  }
+  /* Clear of the two-line labels above it. */
+  .hero .title {
+    top: 23svh;
+  }
+  .heroTagline {
+    top: calc(23svh + var(--title-size) * 0.9);
+  }
+  .heroCrate {
+    width: 62vw;
+    top: 56svh;
+  }
+  .hero .heroCard {
+    width: 21vw;
+  }
+
+  .aislePin {
+    height: auto;
+    display: block;
+  }
+  .aisleCrateSticky {
+    display: block;
+    position: sticky;
+    top: 5rem;
+    z-index: 0;
+    width: 34vw;
+    aspect-ratio: 1.1;
+    margin: 0 var(--gutter) calc(-34vw / 1.1) auto;
+    pointer-events: none;
+  }
+  .rail {
+    border-right: 0;
+    padding-bottom: 2.5rem;
+  }
+  .railCrate,
+  .counter {
+    display: none;
+  }
+  .aisleViewport {
+    overflow: visible;
+    padding-top: 0;
+  }
+  .aisleTrack {
+    flex-direction: column;
+    width: auto;
+    gap: 4rem;
+  }
+  .panel {
+    width: auto;
+  }
+  .panelFrame {
+    aspect-ratio: 4 / 3;
+  }
+
+  .routeTrack {
+    top: 0;
+    bottom: 0;
+    left: 6px;
+    right: auto;
+    width: 1px;
+    height: auto;
+  }
+  .route {
+    transform-origin: center top;
+  }
+  .steps {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .step {
+    padding: 0 0 0 2.25rem;
+  }
+
+  .cta {
+    grid-template-columns: 1fr;
+  }
+  .ctaCrate {
+    max-width: 80vw;
+  }
+
+  .dockButton {
+    left: 1rem;
+    bottom: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dockButton,
+  .drawer,
+  .backdrop,
+  .panelFrame img {
+    transition: none;
+  }
+}

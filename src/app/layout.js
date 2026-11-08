@@ -4,7 +4,7 @@ import SiteChrome from '@/components/SiteChrome'
 
 export const metadata = {
   title: 'Zed OS Technologies Limited',
-  description: 'General Supplies & Consultancy Services — Kisumu, Kenya',
+  description: 'One partner for supplies, systems and insight. General supplies, software systems, websites, data analytics, AI & ML and consultancy, from Kisumu Town West to clients across East Africa.',
   icons: {
     icon: [
       { url: '/orbit-light.ico', media: '(prefers-color-scheme: light)' },
@@ -24,15 +24,20 @@ const jsonLd = {
   '@type': 'Organization',
   'name': 'Zed OS Technologies Limited',
   'url': 'https://zedostechnologies.co.ke',
+  'telephone': '+254758296887',
+  'email': 'lennoxlewis.lenny@gmail.com',
   'address': {
     '@type': 'PostalAddress',
+    'streetAddress': 'Kisumu Town West',
+    'postOfficeBoxNumber': '2371',
+    'postalCode': '40100',
     'addressLocality': 'Kisumu',
     'addressRegion': 'Kisumu County',
     'addressCountry': 'KE',
   },
   'sameAs': [
     'https://www.instagram.com/zedostechnologies?igsh=MXFyamJ2NjFvY2F0eQ==',
-    'www.linkedin.com/in/zedos-technologies-576bb3414',
+    'https://www.linkedin.com/in/zedos-technologies-576bb3414',
     'https://x.com/zedostechnology',
   ],
 }
@@ -48,7 +53,7 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Inter+Tight:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap"
           rel="stylesheet"
         />
         <script

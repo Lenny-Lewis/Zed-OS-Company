@@ -4,6 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useLayoutEffect, use
 import { usePathname, useRouter } from 'next/navigation'
 import gsap from 'gsap'
 import { useScramble } from '@/lib/use-scramble'
+import { screenCovered } from '@/components/about/motion'
 import styles from './ServicesShell.module.css'
 
 /*
@@ -93,23 +94,24 @@ export default function ServicesShell({ children }) {
     [enter],
   )
 
-  // Arrival. Skipped when the site's own first-visit intro is already covering the screen.
+  // Arrival. Skipped when something else already covers the screen: the site's first-visit intro,
+  // or the site-wide page transition that brought the visitor here.
   useLayoutEffect(() => {
     const cover = coverRef.current
     const root = document.documentElement
     root.setAttribute('data-header-solid', '')
 
-    if (root.hasAttribute('data-intro-active') || reducedMotion()) {
+    if (screenCovered() || reducedMotion()) {
       cover.style.visibility = 'hidden'
-      if (!root.hasAttribute('data-intro-active')) {
+      if (!screenCovered()) {
         enter()
       } else {
         const watch = new MutationObserver(() => {
-          if (root.hasAttribute('data-intro-active')) return
+          if (screenCovered()) return
           watch.disconnect()
           enter()
         })
-        watch.observe(root, { attributes: true, attributeFilter: ['data-intro-active'] })
+        watch.observe(root, { attributes: true, attributeFilter: ['data-intro-active', 'data-transition-phase'] })
         return () => {
           watch.disconnect()
           root.removeAttribute('data-header-solid')

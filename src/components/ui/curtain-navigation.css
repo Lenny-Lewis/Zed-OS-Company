@@ -17,83 +17,61 @@
   pointer-events: none;
 }
 
+/*
+ * The header bar, after good-fella.com's: a solid bar inset from the top and sides (the page grid's
+ * margins) that appears once you scroll, in the "surface" colour of whatever section is beneath it: grey #333 with light type
+ * over dark sections, #d5d5d5 with dark type over light ones. CurtainNavigation decides which
+ * (<html data-nav-tone>) from the background under the bar, so every page adapts on its own.
+ */
+:root {
+  --nav-margin: 1rem;
+  --nav-surface: #333333;
+  --nav-ink: #eeeeee;
+}
+@media (min-width: 640px) { :root { --nav-margin: 1.5rem; } }
+@media (min-width: 1024px) { :root { --nav-margin: 2rem; } }
+html[data-nav-tone="light"]:not([data-menu-open]) {
+  --nav-surface: #d5d5d5;
+  --nav-ink: #141314;
+}
+
+.site-header-wrapper { padding-top: 16px; }
+
 .cn-header {
   position: relative;
-  isolation: isolate;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
-  padding: 1rem clamp(1rem, 3vw, 2.5rem);
+  width: calc(100vw - var(--nav-margin) * 2);
+  max-width: 1920px;
+  margin-inline: auto;
+  padding: 8px 8px 8px 16px;
+  background: var(--nav-surface);
+  color: var(--nav-ink);
+  transition: background-color 0.5s ease-out, color 0.5s ease-out, padding 0.5s ease-out;
 }
-
-/* Glass that fades in once content scrolls beneath, melting into the page at its lower edge. */
-.cn-header::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 -1.5rem 0;
-  z-index: -1;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.55) 55%, rgba(0, 0, 0, 0) 100%);
-  -webkit-backdrop-filter: blur(12px) saturate(140%);
-  backdrop-filter: blur(12px) saturate(140%);
-  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%);
-  mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%);
-  opacity: 0;
-  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+/* At the top of the page: no bar, and the logo and buttons sit on the page's own margins. Scrolling
+   fills the bar in and eases the padding open. */
+html[data-nav-top] .cn-header {
+  background: transparent;
+  padding-left: 0;
+  padding-right: 0;
 }
-.cn-header[data-scrolled]::before { opacity: 1; }
-/* The light services pages: a solid bar from the top, since there's no dark page behind the logo. */
-html[data-header-solid] .cn-header::before {
-  inset: 0;
-  background: #141314;
-  -webkit-mask-image: none;
-  mask-image: none;
-  opacity: 1;
-  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-html[data-header-solid] .cn-brand,
-html[data-header-solid] .cn-brand svg {
-  transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s;
-}
-/* Over a service's cover photo there's no bar at all, just the logo and buttons on the photo. */
-html[data-header-solid][data-header-tone="none"] .cn-header::before { opacity: 0; }
-/* Over a light section, the bar turns light and the logo and menu button turn dark (not while the
-   menu is open, since that panel is always dark). */
-html[data-header-solid][data-header-tone="light"]:not([data-menu-open]) .cn-header::before { background: #dedede; }
-html[data-header-solid][data-header-tone="light"]:not([data-menu-open]) .cn-brand,
-html[data-header-solid][data-header-tone="light"]:not([data-menu-open]) .cn-brand svg { color: #141314; }
-html[data-header-solid][data-header-tone="light"]:not([data-menu-open]) .cn-ham:not([data-open]) {
-  border-color: #141314;
-  background: rgba(255, 255, 255, 0.35);
-  color: #141314;
-}
-@media (hover: hover) {
-  html[data-header-solid][data-header-tone="light"]:not([data-menu-open]) .cn-ham:not([data-open]):hover {
-    background: #141314;
-    color: #ffffff;
-  }
-}
-html[data-menu-open] .cn-header::before { opacity: 0; transition-duration: 0.25s; }
-
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .cn-header::before {
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.7) 55%, rgba(0, 0, 0, 0) 100%);
-  }
-}
+/* Over the open menu the bar steps back, leaving the logo and buttons on the panel. */
+html[data-menu-open] .cn-header { background: transparent; }
 
 .cn-brand {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  color: #ffffff;
+  color: var(--nav-ink);
   font-family: var(--cn-sans);
   font-size: 0.95rem;
   font-weight: 600;
   letter-spacing: -0.01em;
   text-decoration: none;
   pointer-events: auto;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease, color 0.3s ease-out;
 }
 .cn-brand:hover { opacity: 0.85; }
 .cn-brand:focus-visible { outline: 2px solid var(--cn-accent); outline-offset: 4px; }
@@ -104,9 +82,9 @@ html[data-menu-open] .cn-header::before { opacity: 0; transition-duration: 0.25s
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  height: 3rem;
-  padding: 0 1.1rem;
-  border-radius: 0.6rem;
+  height: 2.5rem;
+  padding: 0 1rem;
+  border-radius: 0;
   background: var(--cn-accent);
   color: #0a0a0a;
   font-family: var(--cn-sans);
@@ -120,7 +98,7 @@ html[data-menu-open] .cn-header::before { opacity: 0; transition-duration: 0.25s
 .cn-cta svg { width: 0.75rem; height: 0.75rem; transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); }
 /* Only with a real pointer: on touch, :hover sticks after a tap. */
 @media (hover: hover) {
-  .cn-cta:hover { background: #ffffff; }
+  .cn-cta:hover { background: var(--nav-ink); color: var(--nav-surface); }
   .cn-cta:hover svg { transform: translateX(3px); }
 }
 .cn-cta:focus-visible { outline: 2px solid #ffffff; outline-offset: 2px; }
@@ -129,13 +107,13 @@ html[data-menu-open] .cn-header::before { opacity: 0; transition-duration: 0.25s
 .cn-ham {
   position: relative;
   flex: none;
-  width: 3rem;
-  height: 3rem;
+  width: 2.5rem;
+  height: 2.5rem;
   padding: 0;
-  border: 1.5px solid #ffffff;
-  border-radius: 0.6rem;
-  background: rgba(0, 0, 0, 0.35);
-  color: #ffffff;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--nav-ink);
   cursor: pointer;
   transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
 }
@@ -159,7 +137,7 @@ html[data-menu-open] .cn-header::before { opacity: 0; transition-duration: 0.25s
 .cn-ham[data-open] i:first-child { transform: rotate(45deg) scaleX(0.8); }
 .cn-ham[data-open] i:last-child { transform: rotate(-45deg) scaleX(0.8); }
 @media (hover: hover) {
-  .cn-ham:hover { border-color: #ffffff; background: #ffffff; color: #0a0a0a; }
+  .cn-ham:hover { background: var(--nav-ink); color: var(--nav-surface); }
 }
 .cn-ham:focus-visible { outline: 2px solid var(--cn-accent); outline-offset: 2px; }
 

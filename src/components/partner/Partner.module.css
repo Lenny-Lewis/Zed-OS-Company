@@ -1,0 +1,291 @@
+/* Partner page. Shares the About page's tokens and pieces (About.module.css); these are its own. */
+
+/* ---------- Hero ---------- */
+
+.hero {
+  --title-size: min(23vw, 40svh);
+}
+.heroOrbit {
+  position: absolute;
+  left: 50%;
+  top: calc(26svh + var(--title-size) * 0.42);
+  width: min(72vw, 940px);
+  aspect-ratio: 422 / 272;
+  translate: -50% -50%;
+  pointer-events: none;
+}
+/* Two classes, so it wins over the About hero title whatever order the stylesheets load in. */
+.hero .title {
+  top: 26svh;
+  font-size: var(--title-size);
+}
+.heroFoot {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: clamp(1.5rem, 6svh, 3.5rem);
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  text-align: center;
+  z-index: 5;
+}
+.subtitle {
+  margin: 0;
+  max-width: 34ch;
+  font-size: clamp(1rem, 1.6vw, 1.35rem);
+  color: var(--muted);
+}
+.lockedMask {
+  margin: 0;
+  overflow: hidden;
+}
+.locked {
+  display: block;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.6rem, 3vw, 2.8rem);
+  letter-spacing: -0.02em;
+}
+
+/* ---------- Who we work with ---------- */
+
+.audiences {
+  position: relative;
+  z-index: 1;
+  padding: clamp(4rem, 8vw, 7rem) var(--gutter) clamp(6rem, 12vw, 10rem);
+}
+.audList {
+  position: relative;
+}
+.audRows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid var(--line);
+}
+.audRow {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1.3fr) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: clamp(1.4rem, 2.6vw, 2.2rem) 0;
+  border-top: 1px solid var(--line);
+  cursor: default;
+  transition: opacity 0.4s ease;
+}
+/* Hovering one row quiets the others. */
+.audRows:hover .audRow:not(:hover) {
+  opacity: 0.35;
+}
+.audTitle {
+  margin: 0;
+  font-family: 'Anton', 'Archivo', sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: clamp(2.4rem, 5.5vw, 5.5rem);
+  line-height: 1;
+}
+.audText {
+  margin: 0;
+  max-width: 40ch;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.audInline {
+  display: none;
+}
+.audPreview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: clamp(200px, 22vw, 340px);
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 6px;
+  pointer-events: none;
+  z-index: 3;
+  visibility: hidden;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+}
+.audFrame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* ---------- Form ---------- */
+
+.formSection {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  padding: clamp(4rem, 8vw, 7rem) var(--gutter) clamp(6rem, 12vw, 10rem);
+  border-top: 1px solid var(--line);
+}
+.formIntro {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.formNote {
+  margin: 0;
+  max-width: 32ch;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+/* Where the locked-together emblem settles. */
+.formOrbit {
+  width: min(30vw, 420px);
+  aspect-ratio: 422 / 272;
+  margin-top: auto;
+  pointer-events: none;
+}
+.form {
+  display: grid;
+  gap: 2rem;
+}
+.fieldPair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+.field {
+  position: relative;
+  display: grid;
+  gap: 0.6rem;
+}
+.fieldLabel {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.input {
+  width: 100%;
+  padding: 0.4rem 0 0.8rem;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+  outline: none;
+}
+.select {
+  appearance: none;
+  cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position:
+    calc(100% - 12px) 55%,
+    calc(100% - 6px) 55%;
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+}
+.select option {
+  background: #111;
+  color: var(--ink);
+}
+.textarea {
+  resize: vertical;
+  min-height: 7rem;
+}
+/* The underline fills white from the left while the field has focus. */
+.fieldLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--brand);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.6s var(--ease-roll);
+}
+.field:focus-within .fieldLine {
+  transform: scaleX(1);
+}
+.gotcha {
+  display: none;
+}
+.formActions {
+  display: grid;
+  justify-items: start;
+  gap: 1rem;
+}
+.submit {
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+}
+.submit:disabled {
+  cursor: progress;
+  opacity: 0.6;
+}
+.formError {
+  margin: 0;
+  color: #f87171;
+  font-size: 0.9rem;
+}
+
+/* ---------- Phones and touch ---------- */
+
+@media (max-width: 767px), (hover: none) {
+  .audPreview {
+    display: none;
+  }
+  .audInline {
+    display: block;
+    position: relative;
+    grid-column: 1 / -1;
+    margin: 0.5rem 0 0;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-radius: 6px;
+  }
+  .audInline img {
+    filter: grayscale(1);
+  }
+  .audRows:hover .audRow:not(:hover) {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 767px) {
+  .heroOrbit {
+    width: 86vw;
+  }
+  .audRow {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+  }
+  .audText {
+    grid-column: 2;
+  }
+  .audArrow {
+    display: none;
+  }
+  .formSection {
+    grid-template-columns: 1fr;
+  }
+  .formOrbit {
+    width: 70vw;
+    margin: 1rem auto 0;
+  }
+  .fieldPair {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fieldLine {
+    transition: none;
+  }
+}
