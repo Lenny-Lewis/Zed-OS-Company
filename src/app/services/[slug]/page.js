@@ -14,7 +14,7 @@ export async function generateMetadata({ params }) {
   const service = getService(slug)
   if (!service) return {}
   return {
-    title: `${service.title} — Zed OS Technologies Limited`,
+    title: service.title,
     description: `${service.tagline} ${service.intro[0]}`,
   }
 }

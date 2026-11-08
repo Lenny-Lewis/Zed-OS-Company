@@ -193,14 +193,19 @@
   padding: 1rem;
   background: var(--dark);
   color: var(--on-dark);
+  container-type: inline-size;
 }
 
+/* Words never split mid-word. Instead the size steps down when the card is too narrow for it: 17%
+   of the card's width keeps the longest values ("Responsive", "Maintained") on one line. */
 .cardValue {
-  font-size: var(--h3);
+  font-size: min(var(--h3), 17cqi);
   font-weight: 300;
   line-height: 1.083;
   letter-spacing: -0.05em;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: manual;
 }
 
 .cardLabel {

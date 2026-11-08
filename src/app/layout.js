@@ -3,7 +3,8 @@ import './globals.css'
 import SiteChrome from '@/components/SiteChrome'
 
 export const metadata = {
-  title: 'Zed OS Technologies Limited',
+  // Each page names itself ("About | Zed"); the home page is just "Zed".
+  title: { default: 'Zed', template: '%s | Zed' },
   description: 'One partner for supplies, systems and insight. General supplies, software systems, websites, data analytics, AI & ML and consultancy, from Kisumu Town West to clients across East Africa.',
   icons: {
     icon: [

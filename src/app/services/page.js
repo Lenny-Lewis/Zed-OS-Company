@@ -2,7 +2,7 @@ import ServicesIndex from '@/components/services/ServicesIndex'
 import { services, serviceTags } from '@/data/services'
 
 export const metadata = {
-  title: 'Services — Zed OS Technologies Limited',
+  title: 'Services',
   description:
     'End-to-end solutions for general supplies, fleet hire, conference facilities, supply chain consultancy, custom software, data analytics and AI in Kenya and East Africa.',
 }

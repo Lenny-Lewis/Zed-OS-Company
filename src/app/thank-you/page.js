@@ -2,7 +2,7 @@ import Link from 'next/link'
 import ScrollReveal from '@/components/ScrollReveal'
 
 export const metadata = {
-  title: 'Thank You | Zed OS Technologies Limited',
+  title: 'Thank you',
   description: 'Your message has been sent successfully.',
 }
 
